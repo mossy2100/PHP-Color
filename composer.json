@@ -1,5 +1,5 @@
 {
-    "name": "mossy2100/color",
+    "name": "galaxon/color",
     "description": "PHP class for CSS colors.",
     "type": "library",
     "license": "MIT",
@@ -9,7 +9,7 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0 || ^11.0"
+        "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0"
     },
     "autoload": {
         "psr-4": {
