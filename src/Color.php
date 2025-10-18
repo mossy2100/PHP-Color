@@ -9,6 +9,7 @@ use DomainException;
 use RangeException;
 use Stringable;
 use UnexpectedValueException;
+use Galaxon\Math\Double;
 
 /**
  * Color class.
@@ -18,7 +19,6 @@ use UnexpectedValueException;
  */
 class Color implements Stringable
 {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Internal representation
 
     /**
@@ -28,7 +28,7 @@ class Color implements Stringable
      *
      * This approach was adopted over 32-bit unsigned int, which would not have worked on 32-bit systems because of
      * the way PHP converts ints to floats when they're outside the int range.
-     * This approach is also preferable to storing 4 individual bytes for the color components, as that would
+     * This approach is also preferable to storing 4 individual integers for the color components, as that would
      * consume 16 bytes on a 32-bit system or 32 bytes on a 64-bit system.
      *
      * @var string
@@ -37,7 +37,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Constants
 
     /**
@@ -57,7 +56,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Virtual properties
 
     /**
@@ -113,7 +111,7 @@ class Color implements Stringable
     }
 
     /**
-     * Get/set the hue of the color.
+     * Get/set the hue of the color, as an angle in degrees in the range [0, 360).
      *
      * @var float
      */
@@ -121,16 +119,16 @@ class Color implements Stringable
         get => $this->toHsla()['hue'];
 
         set {
-            // Get the current saturation and lightness values.
-            ['saturation' => $s, 'lightness' => $l] = $this->toHsla();
+            // Get the current HSL values.
+            $c = $this->toHsla();
 
-            // Update the value.
-            $this->_setRgbaBytesFromHsl($value, $s, $l);
+            // Update the color, setting the hue to the provided value.
+            $this->_setRgbaBytesFromHsl($value, $c['saturation'], $c['lightness']);
         }
     }
 
     /**
-     * Get/set the saturation of the color.
+     * Get/set the saturation of the color as a fraction in the range [0.0, 1.0].
      *
      * @var float
      */
@@ -141,16 +139,16 @@ class Color implements Stringable
             // Check the provided value is in the range [0.0, 1.0].
             self::_validateFrac($value);
 
-            // Get the current hue and lightness values.
-            ['hue' => $h, 'lightness' => $l] = $this->toHsla();
+            // Get the current HSL values.
+            $c = $this->toHsla();
 
-            // Update the value.
-            $this->_setRgbaBytesFromHsl($h, $value, $l);
+            // Update the color, setting the saturation to the provided value.
+            $this->_setRgbaBytesFromHsl($c['hue'], $value, $c['lightness']);
         }
     }
 
     /**
-     * Get/set the lightness of the color.
+     * Get/set the lightness of the color as a fraction in the range [0.0, 1.0.
      *
      * @var float
      */
@@ -161,11 +159,11 @@ class Color implements Stringable
             // Check the provided value is in the range [0.0, 1.0].
             self::_validateFrac($value);
 
-            // Get the current hue and saturation values.
-            ['hue' => $h, 'saturation' => $s] = $this->toHsla();
+            // Get the current HSL values.
+            $c = $this->toHsla();
 
-            // Update the value.
-            $this->_setRgbaBytesFromHsl($h, $s, $value);
+            // Update the color, setting the lightness to the provided value.
+            $this->_setRgbaBytesFromHsl($c['hue'], $c['saturation'], $value);
         }
     }
 
@@ -270,7 +268,7 @@ class Color implements Stringable
     public static function fromHsla(float $hue, float $saturation, float $lightness, int $alpha = 0xff): self
     {
         // Check the arguments.
-        $hue = self::wrapDegrees($hue);
+        $hue = Double::wrap($hue, 360);
         self::_validateFrac($saturation);
         self::_validateFrac($lightness);
         self::_validateByte($alpha);
@@ -484,7 +482,7 @@ class Color implements Stringable
         }
 
         // Calculate the averages.
-        $avg = fn($sum) => (int)round($sum / (float)$n);
+        $avg = static fn($sum) => (int)round($sum / (float)$n);
         $r   = $avg($sum_r);
         $g   = $avg($sum_g);
         $b   = $avg($sum_b);
@@ -524,8 +522,8 @@ class Color implements Stringable
      */
     private function _setRgbaBytesFromHsl(float $h, float $s, float $l): void
     {
-        ['red' => $r, 'green' => $g, 'blue' => $b] = self::hslToRgb($h, $s, $l);
-        $this->_setRgbaBytes($r, $g, $b, $this->alpha);
+        $c = self::hslToRgb($h, $s, $l);
+        $this->_setRgbaBytes($c['red'], $c['green'], $c['blue'], $this->alpha);
     }
 
     /**
@@ -562,7 +560,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Methods for converting a Color to a string
 
     /**
@@ -690,7 +687,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Static methods for converting between RGB and HSL.
 
     /**
@@ -743,7 +739,7 @@ class Color implements Stringable
                 $h = ($r - $g) / $c + 4;
             }
             // Wrap hue to [0, 360).
-            $h = self::wrapDegrees($h * 60);
+            $h = Double::wrap($h * 60, 360);
 
             // Calculate saturation.
             if ($l <= 0.0 || $l >= 1.0) {
@@ -774,12 +770,12 @@ class Color implements Stringable
     public static function hslToRgb(float $hue, float $saturation, float $lightness): array
     {
         // Ensure all values are in the desired ranges.
-        $hue = self::wrapDegrees($hue);
+        $hue = Double::wrap($hue, 360);
         self::_validateFrac($saturation);
         self::_validateFrac($lightness);
 
         // Conversion function.
-        $f = function ($n) use ($hue, $saturation, $lightness): int {
+        $f = static function ($n) use ($hue, $saturation, $lightness): int {
             $k = fmod($n + $hue / 30, 12);
             $a = $saturation * min($lightness, 1 - $lightness);
             $c = $lightness - $a * max(-1, min($k - 3, 9 - $k, 1));
@@ -795,8 +791,7 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // region Static members for working with hex strings and named colors
+    // region Static members for working with hex strings and named colors.
 
     /**
      * Returns true if the string is a valid hex color string.
@@ -929,7 +924,7 @@ class Color implements Stringable
      */
     public static function colorNameToHex(string $name): string
     {
-        $name = trim(strtolower($name));
+        $name = strtolower(trim($name));
 
         // Check the provided color name is valid.
         if (!self::isValidColorName($name)) {
@@ -977,7 +972,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Validation and conversion methods
 
     /**
@@ -1045,44 +1039,6 @@ class Color implements Stringable
 
     // endregion
 
-    // region Helper methods
-
-    /**
-     * Normalize degrees into [0, 360).
-     *
-     * @param float $degrees The angle in degrees.
-     * @return float The normalized angle in degrees.
-     */
-    public static function wrapDegrees(float $degrees): float
-    {
-        $deg_per_turn = 360;
-
-        // Reduce using fmod to avoid large magnitudes.
-        $r = fmod($degrees, $deg_per_turn);
-
-        // Get the range bounds.
-        $min = 0.0;
-        $max = $deg_per_turn;
-
-        // Adjust into the half-open interval [min, max) if necessary.
-        if ($r < $min) {
-            $r += $deg_per_turn;
-        }
-        elseif ($r >= $max) {
-            $r -= $deg_per_turn;
-        }
-
-        // Canonicalize -0.0 to 0.0.
-        if ($r == 0.0) {
-            $r = 0.0;
-        }
-
-        return $r;
-    }
-
-    // endregion
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region CSS color names
 
     /**
