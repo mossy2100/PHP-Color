@@ -4,12 +4,16 @@ declare(strict_types = 1);
 
 namespace Galaxon\Color;
 
-use BadMethodCallException;
-use DomainException;
-use RangeException;
+// Interfaces
 use Stringable;
-use UnexpectedValueException;
-use Galaxon\Math\Double;
+
+// Throwables
+use ArgumentCountError;
+use ValueError;
+use RangeException;
+
+// Galaxon
+use Galaxon\Core\Double;
 
 /**
  * Color class.
@@ -220,7 +224,7 @@ class Color implements Stringable
      * Defaults to black.
      *
      * @param string $color The color as a CSS hexadecimal color string or named color.
-     * @throws UnexpectedValueException If the provided string is not a valid CSS color.
+     * @throws ValueError If the provided string is not a valid CSS color.
      */
     public function __construct(string $color = 'black')
     {
@@ -454,14 +458,14 @@ class Color implements Stringable
      * @static
      * @param Color ...$colors The colors to average.
      * @return self The average color.
-     * @throws BadMethodCallException If no colors are provided.
+     * @throws ArgumentCountError If no colors are provided.
      */
     public static function average(self ...$colors): self
     {
         // Get the number of colors and make sure we have at least one.
         $n = count($colors);
         if ($n === 0) {
-            throw new BadMethodCallException('At least one color must be provided.');
+            throw new ArgumentCountError('At least one color must be provided.');
         }
 
         // If there's only one, return it.
@@ -856,13 +860,13 @@ class Color implements Stringable
      *
      * @param string $hex A CSS hex color string.
      * @return string The canonical hex string.
-     * @throws UnexpectedValueException if the provided string is not a valid CSS hex color string.
+     * @throws ValueError if the provided string is not a valid CSS hex color string.
      */
     public static function normalizeHex(string $hex): string
     {
         // Check the input string is a valid format.
         if (!self::isValidHexString($hex)) {
-            throw new UnexpectedValueException("The provided string '$hex' is not a valid CSS hexadecimal color string.");
+            throw new ValueError("The provided string '$hex' is not a valid CSS hexadecimal color string.");
         }
 
         // Remove a leading # character if present and lower-case letter digits.
@@ -888,13 +892,13 @@ class Color implements Stringable
      *
      * @param string $hex A CSS hex color string.
      * @return array{red:int, green:int, blue:int, alpha:int} Array of color components as bytes.
-     * @throws UnexpectedValueException If the provided string is not a valid CSS hex color string.
+     * @throws ValueError If the provided string is not a valid CSS hex color string.
      */
     public static function hexStringToBytes(string $hex): array
     {
         // Check the input string is a valid format.
         if (!self::isValidHexString($hex)) {
-            throw new UnexpectedValueException("The provided string '$hex' is not a valid CSS hexadecimal color string.");
+            throw new ValueError("The provided string '$hex' is not a valid CSS hexadecimal color string.");
         }
 
         // Normalize to 8 hex digits.
@@ -920,7 +924,7 @@ class Color implements Stringable
      * @static
      * @param string $name A CSS color name.
      * @return string The hex value for this color.
-     * @throws DomainException If the provided string is not a valid color name.
+     * @throws ValueError If the provided string is not a valid color name.
      */
     public static function colorNameToHex(string $name): string
     {
@@ -928,7 +932,7 @@ class Color implements Stringable
 
         // Check the provided color name is valid.
         if (!self::isValidColorName($name)) {
-            throw new DomainException("Invalid color name '$name'.");
+            throw new ValueError("Invalid color name '$name'.");
         }
 
         // Look up the hex value for the color.
@@ -941,7 +945,7 @@ class Color implements Stringable
      * @static
      * @param string $name A CSS color name.
      * @return array{red:int, green:int, blue:int, alpha:int} Array of color components as bytes.
-     * @throws DomainException if the provided string is not a valid color name.
+     * @throws ValueError if the provided string is not a valid color name.
      */
     public static function colorNameToBytes(string $name): array
     {
@@ -955,7 +959,7 @@ class Color implements Stringable
      * @static
      * @param string $str The color string.
      * @return array{red:int, green:int, blue:int, alpha:int} Array of color components as bytes.
-     * @throws UnexpectedValueException If the provided string is not a valid CSS color name or hex color string.
+     * @throws ValueError If the provided string is not a valid CSS color name or hex color string.
      */
     public static function colorStringToBytes(string $str): array
     {
