@@ -13,7 +13,7 @@ use ValueError;
 use RangeException;
 
 // Galaxon
-use Galaxon\Core\Double;
+use Galaxon\Core\Angle;
 
 /**
  * Color class.
@@ -272,7 +272,7 @@ class Color implements Stringable
     public static function fromHsla(float $hue, float $saturation, float $lightness, int $alpha = 0xff): self
     {
         // Check the arguments.
-        $hue = Double::wrap($hue, 360);
+        $hue = Angle::wrapDegrees($hue);
         self::_validateFrac($saturation);
         self::_validateFrac($lightness);
         self::_validateByte($alpha);
@@ -743,7 +743,7 @@ class Color implements Stringable
                 $h = ($r - $g) / $c + 4;
             }
             // Wrap hue to [0, 360).
-            $h = Double::wrap($h * 60, 360);
+            $h = Angle::wrapDegrees($h * 60);
 
             // Calculate saturation.
             if ($l <= 0.0 || $l >= 1.0) {
@@ -774,7 +774,7 @@ class Color implements Stringable
     public static function hslToRgb(float $hue, float $saturation, float $lightness): array
     {
         // Ensure all values are in the desired ranges.
-        $hue = Double::wrap($hue, 360);
+        $hue = Angle::wrapDegrees($hue);
         self::_validateFrac($saturation);
         self::_validateFrac($lightness);
 
