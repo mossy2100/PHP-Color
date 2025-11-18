@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Galaxon\Color\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Galaxon\Color;
+use Galaxon\Color\Color;
 
 #[CoversClass(Color::class)]
-final class ColorTests extends TestCase
+final class ColorTest extends TestCase
 {
-    #[Test]
-    public function constructHexAndProperties(): void
+    public function testConstructHexAndProperties(): void
     {
         $color = new Color('#0f8');
         $this->assertSame(0, $color->red);
@@ -22,8 +20,7 @@ final class ColorTests extends TestCase
         $this->assertSame(255, $color->alpha);
     }
 
-    #[Test]
-    public function constructColorNameCaseInsensitive(): void
+    public function testConstructColorNameCaseInsensitive(): void
     {
         $color = new Color('ReD');
         $this->assertSame(255, $color->red);
@@ -31,8 +28,7 @@ final class ColorTests extends TestCase
         $this->assertSame(0, $color->blue);
     }
 
-    #[Test]
-    public function constructHexWithAlpha(): void
+    public function testConstructHexWithAlpha(): void
     {
         $color = new Color('#1234');
         $this->assertSame(0x11, $color->red);
@@ -41,8 +37,7 @@ final class ColorTests extends TestCase
         $this->assertSame(0x44, $color->alpha);
     }
 
-    #[Test]
-    public function fromRgbaAndVirtualProperties(): void
+    public function testFromRgbaAndVirtualProperties(): void
     {
         $color = Color::fromRgba(10, 20, 30, 127);
         $this->assertSame(10, $color->red);
@@ -51,8 +46,7 @@ final class ColorTests extends TestCase
         $this->assertSame(40, $color->blue);
     }
 
-    #[Test]
-    public function fromHsla(): void
+    public function testFromHsla(): void
     {
         $color = Color::fromHsla(120, 1, 0.5, 64);
         $this->assertSame(0, $color->red);

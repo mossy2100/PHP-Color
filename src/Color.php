@@ -1,19 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Galaxon\Color;
 
-// Interfaces
-use Stringable;
-
-// Throwables
 use ArgumentCountError;
-use ValueError;
-use RangeException;
-
-// Galaxon
 use Galaxon\Core\Angle;
+use RangeException;
+use Stringable;
+use ValueError;
 
 /**
  * Color class.
@@ -37,7 +32,7 @@ class Color implements Stringable
      *
      * @var string
      */
-    private string $_rgba;
+    private string $rgba;
 
     // endregion
 
@@ -62,16 +57,18 @@ class Color implements Stringable
 
     // region Virtual properties
 
+    // PHP_Codesniffer doesn't know property hooks yet.
+    // phpcs:disable
     /**
      * Get/set the red component of the color.
      *
      * @var int
      */
     public int $red {
-        get => $this->_getByte(0);
+        get => $this->getByte(0);
 
         set {
-            $this->_setByte(0, $value);
+            $this->setByte(0, $value);
         }
     }
 
@@ -81,10 +78,10 @@ class Color implements Stringable
      * @var int
      */
     public int $green {
-        get => $this->_getByte(1);
+        get => $this->getByte(1);
 
         set {
-            $this->_setByte(1, $value);
+            $this->setByte(1, $value);
         }
     }
 
@@ -94,10 +91,10 @@ class Color implements Stringable
      * @var int
      */
     public int $blue {
-        get => $this->_getByte(2);
+        get => $this->getByte(2);
 
         set {
-            $this->_setByte(2, $value);
+            $this->setByte(2, $value);
         }
     }
 
@@ -107,10 +104,10 @@ class Color implements Stringable
      * @var int
      */
     public int $alpha {
-        get => $this->_getByte(3);
+        get => $this->getByte(3);
 
         set {
-            $this->_setByte(3, $value);
+            $this->setByte(3, $value);
         }
     }
 
@@ -127,7 +124,7 @@ class Color implements Stringable
             $c = $this->toHsla();
 
             // Update the color, setting the hue to the provided value.
-            $this->_setRgbaBytesFromHsl($value, $c['saturation'], $c['lightness']);
+            $this->setRgbaBytesFromHsl($value, $c['saturation'], $c['lightness']);
         }
     }
 
@@ -141,13 +138,13 @@ class Color implements Stringable
 
         set {
             // Check the provided value is in the range [0.0, 1.0].
-            self::_validateFrac($value);
+            self::validateFrac($value);
 
             // Get the current HSL values.
             $c = $this->toHsla();
 
             // Update the color, setting the saturation to the provided value.
-            $this->_setRgbaBytesFromHsl($c['hue'], $value, $c['lightness']);
+            $this->setRgbaBytesFromHsl($c['hue'], $value, $c['lightness']);
         }
     }
 
@@ -161,13 +158,13 @@ class Color implements Stringable
 
         set {
             // Check the provided value is in the range [0.0, 1.0].
-            self::_validateFrac($value);
+            self::validateFrac($value);
 
             // Get the current HSL values.
             $c = $this->toHsla();
 
             // Update the color, setting the lightness to the provided value.
-            $this->_setRgbaBytesFromHsl($c['hue'], $c['saturation'], $value);
+            $this->setRgbaBytesFromHsl($c['hue'], $c['saturation'], $value);
         }
     }
 
@@ -190,7 +187,7 @@ class Color implements Stringable
             $y = 0.2126 * $rlin + 0.7152 * $glin + 0.0722 * $blin;
 
             // Clamp to range [0.0, 1.0] just to be sure.
-            return self::_clamp($y);
+            return self::clamp($y);
         }
     }
 
@@ -208,13 +205,13 @@ class Color implements Stringable
             $l_star = ($y <= self::EPSILON) ? (self::KAPPA * $y) : (116.0 * ($y ** (1.0 / 3.0)) - 16.0);
 
             // Normalize to [0.0, 1.0].
-            return self::_clamp($l_star / 100.0);
+            return self::clamp($l_star / 100.0);
         }
     }
+    // phpcs:enable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Constructor and factory methods
 
     /**
@@ -229,7 +226,7 @@ class Color implements Stringable
     public function __construct(string $color = 'black')
     {
         $c = self::colorStringToBytes($color);
-        $this->_setRgbaBytes($c['red'], $c['green'], $c['blue'], $c['alpha']);
+        $this->setRgbaBytes($c['red'], $c['green'], $c['blue'], $c['alpha']);
     }
 
     /**
@@ -248,13 +245,13 @@ class Color implements Stringable
         $color = new self();
 
         // Check the arguments.
-        self::_validateByte($red);
-        self::_validateByte($green);
-        self::_validateByte($blue);
-        self::_validateByte($alpha);
+        self::validateByte($red);
+        self::validateByte($green);
+        self::validateByte($blue);
+        self::validateByte($alpha);
 
         // Set the byte values.
-        $color->_setRgbaBytes($red, $green, $blue, $alpha);
+        $color->setRgbaBytes($red, $green, $blue, $alpha);
 
         return $color;
     }
@@ -273,9 +270,9 @@ class Color implements Stringable
     {
         // Check the arguments.
         $hue = Angle::wrapDegrees($hue);
-        self::_validateFrac($saturation);
-        self::_validateFrac($lightness);
-        self::_validateByte($alpha);
+        self::validateFrac($saturation);
+        self::validateFrac($lightness);
+        self::validateByte($alpha);
 
         // Convert the HSL components to RGB components.
         ['red' => $red, 'green' => $green, 'blue' => $blue] = self::hslToRgb($hue, $saturation, $lightness);
@@ -286,7 +283,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Methods for converting a Color to an array.
 
     /**
@@ -315,33 +311,26 @@ class Color implements Stringable
      */
     public function toHsla(): array
     {
-        $hsla          = self::rgbToHsl($this->red, $this->green, $this->blue);
+        $hsla = self::rgbToHsl($this->red, $this->green, $this->blue);
         $hsla['alpha'] = $this->alpha;
         return $hsla;
     }
 
     /**
-     * Get the color as an array, with RGBA, HSL, and some other useful properties.
+     * Get the color as an array with RGBA and HSL properties.
      *
-     * @return array An array of color properties.
+     * @return array<string, int|float> An array of color properties.
      */
     public function toArray(): array
     {
         return array_merge(
             $this->toRgba(),
-            $this->toHsla(),
-            [
-                'relativeLuminance'  => $this->relativeLuminance,
-                'perceivedLightness' => $this->perceivedLightness,
-                'hex'                => $this->toHexString(),
-                'bestTextColor'      => $this->bestTextColor(),
-            ]
+            $this->toHsla()
         );
     }
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Color utilities
 
     /**
@@ -352,7 +341,7 @@ class Color implements Stringable
      */
     public function equals(self $other): bool
     {
-        return $this->_rgba === $other->_rgba;
+        return $this->rgba === $other->rgba;
     }
 
     /**
@@ -367,7 +356,8 @@ class Color implements Stringable
      * @param int $byte The RGB byte value.
      * @return float The transfer function value.
      */
-    public static function gamma(int $byte): float {
+    public static function gamma(int $byte): float
+    {
         // Convert RGB byte to a float in the range [0.0, 1.0].
         $c = $byte / 255.0;
 
@@ -393,10 +383,10 @@ class Color implements Stringable
      *
      * This function returns a string, either "black" or "white", which is useful in some contexts.
      * If a Color is desired, this string can be passed to new Color().
+     * @return string The best text color as a string (either "black" or "white").
      * @example
      * new Color($color->bestTextColor())
      *
-     * @return string The best text color as a string (either "black" or "white").
      */
     public function bestTextColor(): string
     {
@@ -419,7 +409,7 @@ class Color implements Stringable
     public function mix(Color $other, float $frac = 0.5): self
     {
         // Validate the fraction.
-        self::_validateFrac($frac);
+        self::validateFrac($frac);
 
         // Check for 100% this color.
         if ($frac >= 1.0 - self::DELTA) {
@@ -432,10 +422,10 @@ class Color implements Stringable
 
         // Compute the components of the new color.
         $frac2 = 1.0 - $frac;
-        $r     = (int)round(($this->red * $frac) + ($other->red * $frac2));
-        $g     = (int)round(($this->green * $frac) + ($other->green * $frac2));
-        $b     = (int)round(($this->blue * $frac) + ($other->blue * $frac2));
-        $a     = (int)round(($this->alpha * $frac) + ($other->alpha * $frac2));
+        $r = (int)round(($this->red * $frac) + ($other->red * $frac2));
+        $g = (int)round(($this->green * $frac) + ($other->green * $frac2));
+        $b = (int)round(($this->blue * $frac) + ($other->blue * $frac2));
+        $a = (int)round(($this->alpha * $frac) + ($other->alpha * $frac2));
 
         // Create and return the mixed color.
         return self::fromRgba($r, $g, $b, $a);
@@ -487,10 +477,10 @@ class Color implements Stringable
 
         // Calculate the averages.
         $avg = static fn($sum) => (int)round($sum / (float)$n);
-        $r   = $avg($sum_r);
-        $g   = $avg($sum_g);
-        $b   = $avg($sum_b);
-        $a   = $avg($sum_a);
+        $r = $avg($sum_r);
+        $g = $avg($sum_g);
+        $b = $avg($sum_b);
+        $a = $avg($sum_a);
 
         // Create and return the average color.
         return self::fromRgba($r, $g, $b, $a);
@@ -498,7 +488,6 @@ class Color implements Stringable
 
     // endregion
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // region Private instance helper methods
 
     /**
@@ -511,9 +500,9 @@ class Color implements Stringable
      * @param int $blue The blue component as a byte.
      * @param int $alpha The alpha value as a byte.
      */
-    private function _setRgbaBytes(int $red, int $green, int $blue, int $alpha): void
+    private function setRgbaBytes(int $red, int $green, int $blue, int $alpha): void
     {
-        $this->_rgba = chr($red) . chr($green) . chr($blue) . chr($alpha);
+        $this->rgba = chr($red) . chr($green) . chr($blue) . chr($alpha);
     }
 
     /**
@@ -524,10 +513,10 @@ class Color implements Stringable
      * @param float $s The saturation as a fraction (0.0–1.0).
      * @param float $l The lightness as a fraction (0.0–1.0).
      */
-    private function _setRgbaBytesFromHsl(float $h, float $s, float $l): void
+    private function setRgbaBytesFromHsl(float $h, float $s, float $l): void
     {
         $c = self::hslToRgb($h, $s, $l);
-        $this->_setRgbaBytes($c['red'], $c['green'], $c['blue'], $this->alpha);
+        $this->setRgbaBytes($c['red'], $c['green'], $c['blue'], $this->alpha);
     }
 
     /**
@@ -538,9 +527,9 @@ class Color implements Stringable
      * @param int $offset The offset, which will be 0 for red, 1 for green, 2 for blue, and 3 for alpha.
      * @return int The byte value at the given position.
      */
-    private function _getByte(int $offset): int
+    private function getByte(int $offset): int
     {
-        return ord($this->_rgba[$offset]);
+        return ord($this->rgba[$offset]);
     }
 
     /**
@@ -553,13 +542,13 @@ class Color implements Stringable
      * @return void
      * @throws RangeException If the provided value isn't valid.
      */
-    private function _setByte(int $offset, int $byte): void
+    private function setByte(int $offset, int $byte): void
     {
         // Check valid byte range.
-        self::_validateByte($byte);
+        self::validateByte($byte);
 
         // Update the color value.
-        $this->_rgba[$offset] = chr($byte);
+        $this->rgba[$offset] = chr($byte);
     }
 
     // endregion
@@ -572,7 +561,7 @@ class Color implements Stringable
      * @param float $angle The angle to format.
      * @return string The formatted angle string.
      */
-    private static function _angleToString(float $angle): string
+    private static function angleToString(float $angle): string
     {
         return round($angle, 6) . 'deg';
     }
@@ -583,7 +572,7 @@ class Color implements Stringable
      * @param float $frac The fraction to format as a percentage.
      * @return string The formatted percentage string.
      */
-    private static function _fracToPercentString(float $frac): string
+    private static function fracToPercentString(float $frac): string
     {
         return round($frac * 100, 6) . '%';
     }
@@ -594,9 +583,9 @@ class Color implements Stringable
      * @param int $byte The byte value to format.
      * @return string The byte formatted as a fraction.
      */
-    private static function _byteToFracString(int $byte): string
+    private static function byteToFracString(int $byte): string
     {
-        return (string)round(self::_byteToFrac($byte), 6);
+        return (string)round(self::byteToFrac($byte), 6);
     }
 
     /**
@@ -610,7 +599,7 @@ class Color implements Stringable
     public function toHexString(bool $include_alpha = true, bool $include_hash = true, bool $upper_case = false): string
     {
         // Convert the 4-byte binary string to an 8-character hexadecimal string.
-        $hex = bin2hex($this->_rgba);
+        $hex = bin2hex($this->rgba);
 
         // Remove the last 2 characters if alpha isn't required.
         if (!$include_alpha) {
@@ -643,7 +632,7 @@ class Color implements Stringable
      */
     public function toRgbaString(): string
     {
-        $a = self::_byteToFracString($this->alpha);
+        $a = self::byteToFracString($this->alpha);
         return "rgba($this->red, $this->green, $this->blue, $a)";
     }
 
@@ -655,9 +644,9 @@ class Color implements Stringable
     public function toHslString(): string
     {
         $hsla = $this->toHsla();
-        $h    = self::_angleToString($hsla['hue']);
-        $s    = self::_fracToPercentString($hsla['saturation']);
-        $l    = self::_fracToPercentString($hsla['lightness']);
+        $h = self::angleToString($hsla['hue']);
+        $s = self::fracToPercentString($hsla['saturation']);
+        $l = self::fracToPercentString($hsla['lightness']);
         return "hsl($h, $s, $l)";
     }
 
@@ -669,10 +658,10 @@ class Color implements Stringable
     public function toHslaString(): string
     {
         $hsl = $this->toHsla();
-        $h   = self::_angleToString($hsl['hue']);
-        $s   = self::_fracToPercentString($hsl['saturation']);
-        $l   = self::_fracToPercentString($hsl['lightness']);
-        $a   = self::_byteToFracString($hsl['alpha']);
+        $h = self::angleToString($hsl['hue']);
+        $s = self::fracToPercentString($hsl['saturation']);
+        $l = self::fracToPercentString($hsl['lightness']);
+        $a = self::byteToFracString($hsl['alpha']);
         return "hsla($h, $s, $l, $a)";
     }
 
@@ -711,35 +700,32 @@ class Color implements Stringable
     public static function rgbToHsl(int $red, int $green, int $blue): array
     {
         // Check the red, green and blue bytes are in range:
-        self::_validateByte($red);
-        self::_validateByte($green);
-        self::_validateByte($blue);
+        self::validateByte($red);
+        self::validateByte($green);
+        self::validateByte($blue);
 
         // Convert to fractions.
-        $r = self::_byteToFrac($red);
-        $g = self::_byteToFrac($green);
-        $b = self::_byteToFrac($blue);
+        $r = self::byteToFrac($red);
+        $g = self::byteToFrac($green);
+        $b = self::byteToFrac($blue);
 
         // Get the min and max values.
         $min = min($r, $g, $b);
         $max = max($r, $g, $b);
-        $c   = $max - $min;
-        $l   = ($min + $max) / 2;
+        $c = $max - $min;
+        $l = ($min + $max) / 2;
 
         // Check for gray.
         if ($c === 0.0) {
             $h = 0.0;
             $s = 0.0;
-        }
-        else {
+        } else {
             // Calculate hue.
             if ($max === $r) {
                 $h = fmod(($g - $b) / $c, 6);
-            }
-            elseif ($max === $g) {
+            } elseif ($max === $g) {
                 $h = ($b - $r) / $c + 2;
-            }
-            else { // $max === $b
+            } else { // $max === $b
                 $h = ($r - $g) / $c + 4;
             }
             // Wrap hue to [0, 360).
@@ -748,8 +734,7 @@ class Color implements Stringable
             // Calculate saturation.
             if ($l <= 0.0 || $l >= 1.0) {
                 $s = 0.0;
-            }
-            else {
+            } else {
                 $s = $c / (1 - abs(2 * $l - 1));
             }
         }
@@ -775,15 +760,15 @@ class Color implements Stringable
     {
         // Ensure all values are in the desired ranges.
         $hue = Angle::wrapDegrees($hue);
-        self::_validateFrac($saturation);
-        self::_validateFrac($lightness);
+        self::validateFrac($saturation);
+        self::validateFrac($lightness);
 
         // Conversion function.
         $f = static function ($n) use ($hue, $saturation, $lightness): int {
             $k = fmod($n + $hue / 30, 12);
             $a = $saturation * min($lightness, 1 - $lightness);
             $c = $lightness - $a * max(-1, min($k - 3, 9 - $k, 1));
-            return self::_fracToByte($c);
+            return self::fracToByte($c);
         };
 
         return [
@@ -880,7 +865,7 @@ class Color implements Stringable
 
         // Expand string to 8 characters as needed.
         $rgb = $len === 6 ? $hex : ($hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2]);
-        $a   = $len === 4 ? ($hex[3] . $hex[3]) : 'ff';
+        $a = $len === 4 ? ($hex[3] . $hex[3]) : 'ff';
         return $rgb . $a;
     }
 
@@ -905,9 +890,13 @@ class Color implements Stringable
         $hex = self::normalizeHex($hex);
 
         // Convert string into bytes.
+        /** @var int $r */
         $r = hexdec(substr($hex, 0, 2));
+        /** @var int $g */
         $g = hexdec(substr($hex, 2, 2));
+        /** @var int $b */
         $b = hexdec(substr($hex, 4, 2));
+        /** @var int $a */
         $a = hexdec(substr($hex, 6, 2));
 
         return [
@@ -984,7 +973,7 @@ class Color implements Stringable
      * @param float $value The value to clamp.
      * @return float The clamped value.
      */
-    private static function _clamp(float $value): float
+    private static function clamp(float $value): float
     {
         return max(0.0, min($value, 1.0));
     }
@@ -996,7 +985,7 @@ class Color implements Stringable
      * @return void
      * @throws RangeException If the byte is out of range.
      */
-    private static function _validateByte(int $byte): void
+    private static function validateByte(int $byte): void
     {
         if ($byte < 0 || $byte > 255) {
             throw new RangeException("Invalid byte value. Byte values must be in the range [0, 255].");
@@ -1010,7 +999,7 @@ class Color implements Stringable
      * @return void
      * @throws RangeException If the fraction is out of range.
      */
-    private static function _validateFrac(float $frac): void
+    private static function validateFrac(float $frac): void
     {
         if ($frac < 0 || $frac > 1) {
             throw new RangeException("Invalid fraction value. Fractions must be in the range [0.0, 1.0].");
@@ -1024,9 +1013,9 @@ class Color implements Stringable
      * @param int $byte The byte value.
      * @return float The fraction.
      */
-    private static function _byteToFrac(int $byte): float
+    private static function byteToFrac(int $byte): float
     {
-        return self::_clamp($byte / 255.0);
+        return self::clamp($byte / 255.0);
     }
 
     /**
@@ -1036,9 +1025,9 @@ class Color implements Stringable
      * @param float $frac The fraction to convert.
      * @return int The byte value.
      */
-    private static function _fracToByte(float $frac): int
+    private static function fracToByte(float $frac): int
     {
-        return (int)round(self::_clamp($frac) * 255.0);
+        return (int)round(self::clamp($frac) * 255.0);
     }
 
     // endregion

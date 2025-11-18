@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1763426471">
+  <project timestamp="1763426471" name="Clover Coverage">
+    <package name="Galaxon\Color">
+      <file name="C:\Users\shaun\Projects\PHP\Galaxon\Color\src\Color.php">
+        <class name="Galaxon\Color\Color" namespace="Galaxon\Color">
+          <metrics complexity="72" methods="41" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="192" coveredstatements="75" elements="233" coveredelements="87"/>
+        </class>
+        <line num="226" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="228" type="stmt" count="5"/>
+        <line num="229" type="stmt" count="5"/>
+        <line num="243" type="method" name="fromRgba" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="245" type="stmt" count="2"/>
+        <line num="248" type="stmt" count="2"/>
+        <line num="249" type="stmt" count="2"/>
+        <line num="250" type="stmt" count="2"/>
+        <line num="251" type="stmt" count="2"/>
+        <line num="254" type="stmt" count="2"/>
+        <line num="256" type="stmt" count="2"/>
+        <line num="269" type="method" name="fromHsla" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="272" type="stmt" count="1"/>
+        <line num="273" type="stmt" count="1"/>
+        <line num="274" type="stmt" count="1"/>
+        <line num="275" type="stmt" count="1"/>
+        <line num="278" type="stmt" count="1"/>
+        <line num="281" type="stmt" count="1"/>
+        <line num="293" type="method" name="toRgba" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="295" type="stmt" count="0"/>
+        <line num="296" type="stmt" count="0"/>
+        <line num="297" type="stmt" count="0"/>
+        <line num="298" type="stmt" count="0"/>
+        <line num="299" type="stmt" count="0"/>
+        <line num="300" type="stmt" count="0"/>
+        <line num="312" type="method" name="toHsla" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="314" type="stmt" count="0"/>
+        <line num="315" type="stmt" count="0"/>
+        <line num="316" type="stmt" count="0"/>
+        <line num="324" type="method" name="toArray" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="326" type="stmt" count="0"/>
+        <line num="327" type="stmt" count="0"/>
+        <line num="328" type="stmt" count="0"/>
+        <line num="329" type="stmt" count="0"/>
+        <line num="342" type="method" name="equals" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="344" type="stmt" count="0"/>
+        <line num="359" type="method" name="gamma" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="362" type="stmt" count="0"/>
+        <line num="365" type="stmt" count="0"/>
+        <line num="374" type="method" name="contrastRatio" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="376" type="stmt" count="0"/>
+        <line num="377" type="stmt" count="0"/>
+        <line num="378" type="stmt" count="0"/>
+        <line num="391" type="method" name="bestTextColor" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="393" type="stmt" count="0"/>
+        <line num="394" type="stmt" count="0"/>
+        <line num="395" type="stmt" count="0"/>
+        <line num="409" type="method" name="mix" visibility="public" complexity="3" crap="12" count="0"/>
+        <line num="412" type="stmt" count="0"/>
+        <line num="415" type="stmt" count="0"/>
+        <line num="416" type="stmt" count="0"/>
+        <line num="419" type="stmt" count="0"/>
+        <line num="420" type="stmt" count="0"/>
+        <line num="424" type="stmt" count="0"/>
+        <line num="425" type="stmt" count="0"/>
+        <line num="426" type="stmt" count="0"/>
+        <line num="427" type="stmt" count="0"/>
+        <line num="428" type="stmt" count="0"/>
+        <line num="431" type="stmt" count="0"/>
+        <line num="439" type="method" name="complement" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="441" type="stmt" count="0"/>
+        <line num="442" type="stmt" count="0"/>
+        <line num="453" type="method" name="average" visibility="public" complexity="4" crap="20" count="0"/>
+        <line num="456" type="stmt" count="0"/>
+        <line num="457" type="stmt" count="0"/>
+        <line num="458" type="stmt" count="0"/>
+        <line num="462" type="stmt" count="0"/>
+        <line num="463" type="stmt" count="0"/>
+        <line num="467" type="stmt" count="0"/>
+        <line num="468" type="stmt" count="0"/>
+        <line num="469" type="stmt" count="0"/>
+        <line num="470" type="stmt" count="0"/>
+        <line num="471" type="stmt" count="0"/>
+        <line num="472" type="stmt" count="0"/>
+        <line num="473" type="stmt" count="0"/>
+        <line num="474" type="stmt" count="0"/>
+        <line num="475" type="stmt" count="0"/>
+        <line num="479" type="stmt" count="0"/>
+        <line num="480" type="stmt" count="0"/>
+        <line num="481" type="stmt" count="0"/>
+        <line num="482" type="stmt" count="0"/>
+        <line num="483" type="stmt" count="0"/>
+        <line num="486" type="stmt" count="0"/>
+        <line num="503" type="method" name="setRgbaBytes" visibility="private" complexity="1" crap="1" count="5"/>
+        <line num="505" type="stmt" count="5"/>
+        <line num="516" type="method" name="setRgbaBytesFromHsl" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="518" type="stmt" count="0"/>
+        <line num="519" type="stmt" count="0"/>
+        <line num="530" type="method" name="getByte" visibility="private" complexity="1" crap="1" count="5"/>
+        <line num="532" type="stmt" count="5"/>
+        <line num="545" type="method" name="setByte" visibility="private" complexity="1" crap="1" count="1"/>
+        <line num="548" type="stmt" count="1"/>
+        <line num="551" type="stmt" count="1"/>
+        <line num="564" type="method" name="angleToString" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="566" type="stmt" count="0"/>
+        <line num="575" type="method" name="fracToPercentString" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="577" type="stmt" count="0"/>
+        <line num="586" type="method" name="byteToFracString" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="588" type="stmt" count="0"/>
+        <line num="599" type="method" name="toHexString" visibility="public" complexity="4" crap="20" count="0"/>
+        <line num="602" type="stmt" count="0"/>
+        <line num="605" type="stmt" count="0"/>
+        <line num="606" type="stmt" count="0"/>
+        <line num="610" type="stmt" count="0"/>
+        <line num="611" type="stmt" count="0"/>
+        <line num="615" type="stmt" count="0"/>
+        <line num="623" type="method" name="toRgbString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="625" type="stmt" count="0"/>
+        <line num="633" type="method" name="toRgbaString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="635" type="stmt" count="0"/>
+        <line num="636" type="stmt" count="0"/>
+        <line num="644" type="method" name="toHslString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="646" type="stmt" count="0"/>
+        <line num="647" type="stmt" count="0"/>
+        <line num="648" type="stmt" count="0"/>
+        <line num="649" type="stmt" count="0"/>
+        <line num="650" type="stmt" count="0"/>
+        <line num="658" type="method" name="toHslaString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="660" type="stmt" count="0"/>
+        <line num="661" type="stmt" count="0"/>
+        <line num="662" type="stmt" count="0"/>
+        <line num="663" type="stmt" count="0"/>
+        <line num="664" type="stmt" count="0"/>
+        <line num="665" type="stmt" count="0"/>
+        <line num="676" type="method" name="__toString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="678" type="stmt" count="0"/>
+        <line num="700" type="method" name="rgbToHsl" visibility="public" complexity="6" crap="42" count="0"/>
+        <line num="703" type="stmt" count="0"/>
+        <line num="704" type="stmt" count="0"/>
+        <line num="705" type="stmt" count="0"/>
+        <line num="708" type="stmt" count="0"/>
+        <line num="709" type="stmt" count="0"/>
+        <line num="710" type="stmt" count="0"/>
+        <line num="713" type="stmt" count="0"/>
+        <line num="714" type="stmt" count="0"/>
+        <line num="715" type="stmt" count="0"/>
+        <line num="716" type="stmt" count="0"/>
+        <line num="719" type="stmt" count="0"/>
+        <line num="720" type="stmt" count="0"/>
+        <line num="721" type="stmt" count="0"/>
+        <line num="724" type="stmt" count="0"/>
+        <line num="725" type="stmt" count="0"/>
+        <line num="726" type="stmt" count="0"/>
+        <line num="727" type="stmt" count="0"/>
+        <line num="729" type="stmt" count="0"/>
+        <line num="732" type="stmt" count="0"/>
+        <line num="735" type="stmt" count="0"/>
+        <line num="736" type="stmt" count="0"/>
+        <line num="738" type="stmt" count="0"/>
+        <line num="742" type="stmt" count="0"/>
+        <line num="743" type="stmt" count="0"/>
+        <line num="744" type="stmt" count="0"/>
+        <line num="745" type="stmt" count="0"/>
+        <line num="746" type="stmt" count="0"/>
+        <line num="759" type="method" name="hslToRgb" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="762" type="stmt" count="1"/>
+        <line num="763" type="stmt" count="1"/>
+        <line num="764" type="stmt" count="1"/>
+        <line num="767" type="stmt" count="1"/>
+        <line num="768" type="stmt" count="1"/>
+        <line num="769" type="stmt" count="1"/>
+        <line num="770" type="stmt" count="1"/>
+        <line num="771" type="stmt" count="1"/>
+        <line num="772" type="stmt" count="1"/>
+        <line num="774" type="stmt" count="1"/>
+        <line num="775" type="stmt" count="1"/>
+        <line num="776" type="stmt" count="1"/>
+        <line num="777" type="stmt" count="1"/>
+        <line num="778" type="stmt" count="1"/>
+        <line num="793" type="method" name="isValidHexString" visibility="public" complexity="5" crap="5.20" count="5"/>
+        <line num="795" type="stmt" count="5"/>
+        <line num="798" type="stmt" count="5"/>
+        <line num="799" type="stmt" count="0"/>
+        <line num="803" type="stmt" count="5"/>
+        <line num="804" type="stmt" count="5"/>
+        <line num="805" type="stmt" count="0"/>
+        <line num="809" type="stmt" count="5"/>
+        <line num="810" type="stmt" count="2"/>
+        <line num="811" type="stmt" count="2"/>
+        <line num="815" type="stmt" count="5"/>
+        <line num="825" type="method" name="isValidColorName" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="827" type="stmt" count="5"/>
+        <line num="837" type="method" name="isValidColorString" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="839" type="stmt" count="0"/>
+        <line num="850" type="method" name="normalizeHex" visibility="public" complexity="5" crap="5.03" count="5"/>
+        <line num="853" type="stmt" count="5"/>
+        <line num="854" type="stmt" count="0"/>
+        <line num="858" type="stmt" count="5"/>
+        <line num="861" type="stmt" count="5"/>
+        <line num="862" type="stmt" count="5"/>
+        <line num="863" type="stmt" count="3"/>
+        <line num="867" type="stmt" count="2"/>
+        <line num="868" type="stmt" count="2"/>
+        <line num="869" type="stmt" count="2"/>
+        <line num="882" type="method" name="hexStringToBytes" visibility="public" complexity="2" crap="2.00" count="5"/>
+        <line num="885" type="stmt" count="5"/>
+        <line num="886" type="stmt" count="0"/>
+        <line num="890" type="stmt" count="5"/>
+        <line num="894" type="stmt" count="5"/>
+        <line num="896" type="stmt" count="5"/>
+        <line num="898" type="stmt" count="5"/>
+        <line num="900" type="stmt" count="5"/>
+        <line num="902" type="stmt" count="5"/>
+        <line num="903" type="stmt" count="5"/>
+        <line num="904" type="stmt" count="5"/>
+        <line num="905" type="stmt" count="5"/>
+        <line num="906" type="stmt" count="5"/>
+        <line num="907" type="stmt" count="5"/>
+        <line num="918" type="method" name="colorNameToHex" visibility="public" complexity="2" crap="2.06" count="3"/>
+        <line num="920" type="stmt" count="3"/>
+        <line num="923" type="stmt" count="3"/>
+        <line num="924" type="stmt" count="0"/>
+        <line num="928" type="stmt" count="3"/>
+        <line num="939" type="method" name="colorNameToBytes" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="941" type="stmt" count="3"/>
+        <line num="942" type="stmt" count="3"/>
+        <line num="953" type="method" name="colorStringToBytes" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="955" type="stmt" count="5"/>
+        <line num="958" type="stmt" count="5"/>
+        <line num="959" type="stmt" count="3"/>
+        <line num="963" type="stmt" count="2"/>
+        <line num="976" type="method" name="clamp" visibility="private" complexity="1" crap="1" count="1"/>
+        <line num="978" type="stmt" count="1"/>
+        <line num="988" type="method" name="validateByte" visibility="private" complexity="3" crap="4.12" count="2"/>
+        <line num="990" type="stmt" count="2"/>
+        <line num="991" type="stmt" count="0"/>
+        <line num="1002" type="method" name="validateFrac" visibility="private" complexity="3" crap="4.12" count="1"/>
+        <line num="1004" type="stmt" count="1"/>
+        <line num="1005" type="stmt" count="0"/>
+        <line num="1016" type="method" name="byteToFrac" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="1018" type="stmt" count="0"/>
+        <line num="1028" type="method" name="fracToByte" visibility="private" complexity="1" crap="1" count="1"/>
+        <line num="1030" type="stmt" count="1"/>
+        <metrics loc="1196" ncloc="700" classes="1" methods="41" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="192" coveredstatements="75" elements="233" coveredelements="87"/>
+      </file>
+    </package>
+    <metrics files="1" loc="1196" ncloc="700" classes="1" methods="41" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="192" coveredstatements="75" elements="233" coveredelements="87"/>
+  </project>
+</coverage>
