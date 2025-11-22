@@ -50,12 +50,12 @@ $cyan = new Color('0ff');
 $semiTransparent = new Color('#ff000080');
 
 // From RGB values (0-255) with optional alpha channel (0-255)
-$purple = Color::fromRgb(128, 0, 255);
-$withAlpha = Color::fromRgb(255, 0, 0, 128);
+$purple = Color::fromRGB(128, 0, 255);
+$withAlpha = Color::fromRGB(255, 0, 0, 128);
 
 // From HSLA values (hue in degrees, saturation/lightness as fractions) with optional alpha channel (0-255)
-$green = Color::fromHsl(120, 1.0, 0.5);
-$pastel = Color::fromHsl(200, 0.5, 0.8, 200);
+$green = Color::fromHSL(120, 1.0, 0.5);
+$pastel = Color::fromHSL(200, 0.5, 0.8, 200);
 ```
 
 ### Accessing Color Properties
@@ -108,7 +108,7 @@ $red->hue;  // Still 0
 ### String Output
 
 ```php
-$color = Color::fromRgb(255, 128, 0, 200);
+$color = Color::fromRGB(255, 128, 0, 200);
 
 // Hex strings
 (string)$color;                  // '#ff8000c8'
@@ -118,8 +118,8 @@ $color->toHex(true, false);      // 'ff8000c8' (no hash)
 $color->toHex(true, true, true); // '#FF8000C8' (upper-case)
 
 // CSS functional notation (modern syntax)
-$color->toRgbString();  // 'rgb(255 128 0 / 0.784314)'
-$color->toHslString();   // 'hsl(30.117647deg 100% 50% / 0.784314)'
+$color->toRGBString();  // 'rgb(255 128 0 / 0.784314)'
+$color->toHSLString();   // 'hsl(30.117647deg 100% 50% / 0.784314)'
 ```
 
 ### Color Operations
@@ -182,10 +182,10 @@ $bytes = Color::parseToBytes('#ff8000');
 
 ```php
 // RGB to HSL (returns list: [hue, saturation, lightness])
-$hsl = Color::rgbToHsl(255, 0, 0);  // [0.0, 1.0, 0.5]
+$hsl = Color::RGBToHSL(255, 0, 0);  // [0.0, 1.0, 0.5]
 
 // HSL to RGB (returns list: [red, green, blue])
-$rgb = Color::hslToRgb(120, 1.0, 0.5);  // [0, 255, 0]
+$rgb = Color::HSLToRGB(120, 1.0, 0.5);  // [0, 255, 0]
 
 // Gamma correction (sRGB transfer function)
 $linear = Color::gamma(128);  // ~0.215

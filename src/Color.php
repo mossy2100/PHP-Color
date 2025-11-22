@@ -35,14 +35,14 @@ class Color implements Stringable, Equatable
      *
      * @var string
      */
-    private string $rgba;
+    private string $RGBA;
 
     /**
      * Cache for HSL properties.
      *
      * @var null|float[]
      */
-    private ?array $hsl = null;
+    private ?array $HSL = null;
 
     // endregion
 
@@ -112,8 +112,8 @@ class Color implements Stringable, Equatable
      */
     public float $hue {
         get {
-            $this->computeHsl();
-            return $this->hsl[0]; // @phpstan-ignore offsetAccess.notFound
+            $this->computeHSL();
+            return $this->HSL[0]; // @phpstan-ignore offsetAccess.notFound
         }
     }
 
@@ -124,8 +124,8 @@ class Color implements Stringable, Equatable
      */
     public float $saturation {
         get {
-            $this->computeHsl();
-            return $this->hsl[1]; // @phpstan-ignore offsetAccess.notFound
+            $this->computeHSL();
+            return $this->HSL[1]; // @phpstan-ignore offsetAccess.notFound
         }
     }
 
@@ -136,8 +136,8 @@ class Color implements Stringable, Equatable
      */
     public float $lightness {
         get {
-            $this->computeHsl();
-            return $this->hsl[2]; // @phpstan-ignore offsetAccess.notFound
+            $this->computeHSL();
+            return $this->HSL[2]; // @phpstan-ignore offsetAccess.notFound
         }
     }
 
@@ -210,7 +210,7 @@ class Color implements Stringable, Equatable
      * @return self
      * @throws RangeException If any inputs are invalid.
      */
-    public static function fromRgb(int $red, int $green, int $blue, int $alpha = 0xff): self
+    public static function fromRGB(int $red, int $green, int $blue, int $alpha = 0xff): self
     {
         $color = new self();
 
@@ -237,7 +237,7 @@ class Color implements Stringable, Equatable
      * @return self
      * @throws RangeException If any inputs are invalid.
      */
-    public static function fromHsl(float $hue, float $saturation, float $lightness, int $alpha = 0xff): self
+    public static function fromHSL(float $hue, float $saturation, float $lightness, int $alpha = 0xff): self
     {
         // Check the arguments.
         $hue = Angle::wrapDegrees($hue, false);
@@ -246,13 +246,13 @@ class Color implements Stringable, Equatable
         self::validateByte($alpha);
 
         // Convert the HSL components to RGB components.
-        [$red, $green, $blue] = self::hslToRgb($hue, $saturation, $lightness);
+        [$red, $green, $blue] = self::HSLToRGB($hue, $saturation, $lightness);
 
         // Construct a new Color.
-        $color = self::fromRgb($red, $green, $blue, $alpha);
+        $color = self::fromRGB($red, $green, $blue, $alpha);
 
         // Cache the HSL properties.
-        $color->hsl = [$hue, $saturation, $lightness];
+        $color->HSL = [$hue, $saturation, $lightness];
 
         return $color;
     }
@@ -271,7 +271,7 @@ class Color implements Stringable, Equatable
     public function withRed(int $red): self
     {
         self::validateByte($red);
-        return self::fromRgb($red, $this->green, $this->blue, $this->alpha);
+        return self::fromRGB($red, $this->green, $this->blue, $this->alpha);
     }
 
     /**
@@ -284,7 +284,7 @@ class Color implements Stringable, Equatable
     public function withGreen(int $green): self
     {
         self::validateByte($green);
-        return self::fromRgb($this->red, $green, $this->blue, $this->alpha);
+        return self::fromRGB($this->red, $green, $this->blue, $this->alpha);
     }
 
     /**
@@ -297,7 +297,7 @@ class Color implements Stringable, Equatable
     public function withBlue(int $blue): self
     {
         self::validateByte($blue);
-        return self::fromRgb($this->red, $this->green, $blue, $this->alpha);
+        return self::fromRGB($this->red, $this->green, $blue, $this->alpha);
     }
 
     /**
@@ -310,7 +310,7 @@ class Color implements Stringable, Equatable
     public function withAlpha(int $alpha): self
     {
         self::validateByte($alpha);
-        return self::fromRgb($this->red, $this->green, $this->blue, $alpha);
+        return self::fromRGB($this->red, $this->green, $this->blue, $alpha);
     }
 
     /**
@@ -322,7 +322,7 @@ class Color implements Stringable, Equatable
     public function withHue(float $hue): self
     {
         $hue = Angle::wrapDegrees($hue, false);
-        return self::fromHsl($hue, $this->saturation, $this->lightness, $this->alpha);
+        return self::fromHSL($hue, $this->saturation, $this->lightness, $this->alpha);
     }
 
     /**
@@ -335,7 +335,7 @@ class Color implements Stringable, Equatable
     public function withSaturation(float $saturation): self
     {
         self::validateFraction($saturation);
-        return self::fromHsl($this->hue, $saturation, $this->lightness, $this->alpha);
+        return self::fromHSL($this->hue, $saturation, $this->lightness, $this->alpha);
     }
 
     /**
@@ -348,7 +348,7 @@ class Color implements Stringable, Equatable
     public function withLightness(float $lightness): self
     {
         self::validateFraction($lightness);
-        return self::fromHsl($this->hue, $this->saturation, $lightness, $this->alpha);
+        return self::fromHSL($this->hue, $this->saturation, $lightness, $this->alpha);
     }
 
     // endregion
@@ -364,7 +364,7 @@ class Color implements Stringable, Equatable
     #[Override]
     public function equals(mixed $other): bool
     {
-        return $other instanceof self && $this->rgba === $other->rgba;
+        return $other instanceof self && $this->RGBA === $other->RGBA;
     }
 
     /**
@@ -401,7 +401,7 @@ class Color implements Stringable, Equatable
         $a = (int)round(($this->alpha * $frac2) + ($other->alpha * $frac));
 
         // Create and return the mixed color.
-        return self::fromRgb($r, $g, $b, $a);
+        return self::fromRGB($r, $g, $b, $a);
     }
 
     /**
@@ -477,7 +477,7 @@ class Color implements Stringable, Equatable
         $a = $avg($sum_a);
 
         // Create and return the average color.
-        return self::fromRgb($r, $g, $b, $a);
+        return self::fromRGB($r, $g, $b, $a);
     }
 
     // endregion
@@ -530,7 +530,7 @@ class Color implements Stringable, Equatable
      */
     private function setBytes(int $red, int $green, int $blue, int $alpha): void
     {
-        $this->rgba = chr($red) . chr($green) . chr($blue) . chr($alpha);
+        $this->RGBA = chr($red) . chr($green) . chr($blue) . chr($alpha);
     }
 
     /**
@@ -543,7 +543,7 @@ class Color implements Stringable, Equatable
      */
     private function getByte(int $offset): int
     {
-        return ord($this->rgba[$offset]);
+        return ord($this->RGBA[$offset]);
     }
 
     /**
@@ -551,10 +551,10 @@ class Color implements Stringable, Equatable
      *
      * @return void
      */
-    private function computeHsl(): void
+    private function computeHSL(): void
     {
-        if ($this->hsl === null) {
-            $this->hsl = self::rgbToHsl($this->red, $this->green, $this->blue);
+        if ($this->HSL === null) {
+            $this->HSL = self::RGBToHSL($this->red, $this->green, $this->blue);
         }
     }
 
@@ -567,7 +567,7 @@ class Color implements Stringable, Equatable
      *
      * @return array{red:int, green:int, blue:int, alpha:int} Array of color components as bytes.
      */
-    public function toRgbArray(): array
+    public function toRGBArray(): array
     {
         return [
             'red'   => $this->red,
@@ -586,7 +586,7 @@ class Color implements Stringable, Equatable
      *
      * @return array{hue:float, saturation:float, lightness:float, alpha:int} Array of color components as numbers.
      */
-    public function toHslArray(): array
+    public function toHSLArray(): array
     {
         return [
             'hue'        => $this->hue,
@@ -604,8 +604,8 @@ class Color implements Stringable, Equatable
     public function toArray(): array
     {
         return array_merge(
-            $this->toRgbArray(),
-            $this->toHslArray()
+            $this->toRGBArray(),
+            $this->toHSLArray()
         );
     }
 
@@ -657,7 +657,7 @@ class Color implements Stringable, Equatable
     public function toHex(bool $include_alpha = true, bool $include_hash = true, bool $upper_case = false): string
     {
         // Convert the 4-byte binary string to an 8-character hexadecimal string.
-        $hex = bin2hex($this->rgba);
+        $hex = bin2hex($this->RGBA);
 
         // Remove the last 2 characters if alpha isn't required.
         if (!$include_alpha) {
@@ -679,7 +679,7 @@ class Color implements Stringable, Equatable
      * @return string The Color as a CSS-compatible "rgb" color string, e.g. "rgb(120 50 50 / 0.67)".
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/rgb
      */
-    public function toRgbString(): string
+    public function toRGBString(): string
     {
         $a = self::formatByteAsFraction($this->alpha);
         return "rgb($this->red $this->green $this->blue / $a)";
@@ -691,7 +691,7 @@ class Color implements Stringable, Equatable
      * @return string The Color as a CSS-compatible "hsl" color string, e.g. "hsl(120deg 50% 50% / 0.75)".
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/hsl
      */
-    public function toHslString(): string
+    public function toHSLString(): string
     {
         $h = self::formatAngle($this->hue);
         $s = self::formatPercent($this->saturation);
@@ -735,7 +735,7 @@ class Color implements Stringable, Equatable
      * @return float[] Array of floats with HSL values.
      * @throws RangeException If the provided values are not in the valid range for RGB bytes.
      */
-    public static function rgbToHsl(int $red, int $green, int $blue): array
+    public static function RGBToHSL(int $red, int $green, int $blue): array
     {
         // Check the red, green and blue bytes are in range:
         self::validateByte($red);
@@ -789,7 +789,7 @@ class Color implements Stringable, Equatable
      * @return int[] An array of red, green, and blue bytes.
      * @throws RangeException If the provided values are not in the valid range for HSL values.
      */
-    public static function hslToRgb(float $hue, float $saturation, float $lightness): array
+    public static function HSLToRGB(float $hue, float $saturation, float $lightness): array
     {
         // Ensure all values are in the desired ranges.
         $hue = Angle::wrapDegrees($hue, false);
@@ -987,30 +987,28 @@ class Color implements Stringable, Equatable
      * Check if a byte value is valid.
      *
      * @param int $byte The value to check.
-     * @return int The byte value.
+     * @return void
      * @throws RangeException If the byte is out of range.
      */
-    private static function validateByte(int $byte): int
+    private static function validateByte(int $byte): void
     {
         if ($byte < 0 || $byte > 255) {
             throw new RangeException('Invalid byte value. Byte values must be in the range [0, 255].');
         }
-        return $byte;
     }
 
     /**
      * Check if a fraction value is valid.
      *
      * @param float $frac The fraction to check.
-     * @return float The fraction.
+     * @return void
      * @throws RangeException If the fraction is out of range.
      */
-    private static function validateFraction(float $frac): float
+    private static function validateFraction(float $frac): void
     {
         if ($frac < 0 || $frac > 1) {
             throw new RangeException('Invalid fraction value. Fractions must be in the range [0.0, 1.0].');
         }
-        return $frac;
     }
 
     /**
