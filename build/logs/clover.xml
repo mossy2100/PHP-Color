@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1763789846">
-  <project timestamp="1763789846" name="Clover Coverage">
+<coverage generated="1763877631">
+  <project timestamp="1763877631" name="Clover Coverage">
     <package name="Galaxon\Color">
       <file name="C:\Users\shaun\Projects\PHP\Galaxon\Color\src\Color.php">
         <class name="Galaxon\Color\Color" namespace="Galaxon\Color">
-          <metrics complexity="73" methods="44" coveredmethods="44" conditionals="0" coveredconditionals="0" statements="183" coveredstatements="183" elements="227" coveredelements="227"/>
+          <metrics complexity="73" methods="44" coveredmethods="44" conditionals="0" coveredconditionals="0" statements="181" coveredstatements="181" elements="225" coveredelements="225"/>
         </class>
         <line num="196" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="90"/>
         <line num="198" type="stmt" count="90"/>
@@ -224,18 +224,16 @@
         <line num="993" type="method" name="validateByte" visibility="private" complexity="3" crap="3" count="64"/>
         <line num="995" type="stmt" count="64"/>
         <line num="996" type="stmt" count="5"/>
-        <line num="998" type="stmt" count="62"/>
-        <line num="1008" type="method" name="validateFraction" visibility="private" complexity="3" crap="3" count="42"/>
-        <line num="1010" type="stmt" count="42"/>
-        <line num="1011" type="stmt" count="5"/>
-        <line num="1013" type="stmt" count="38"/>
-        <line num="1023" type="method" name="byteToFraction" visibility="private" complexity="1" crap="1" count="16"/>
-        <line num="1025" type="stmt" count="16"/>
-        <line num="1035" type="method" name="fractionToByte" visibility="private" complexity="1" crap="1" count="33"/>
-        <line num="1037" type="stmt" count="33"/>
-        <metrics loc="1203" ncloc="677" classes="1" methods="44" coveredmethods="44" conditionals="0" coveredconditionals="0" statements="183" coveredstatements="183" elements="227" coveredelements="227"/>
+        <line num="1007" type="method" name="validateFraction" visibility="private" complexity="3" crap="3" count="42"/>
+        <line num="1009" type="stmt" count="42"/>
+        <line num="1010" type="stmt" count="5"/>
+        <line num="1021" type="method" name="byteToFraction" visibility="private" complexity="1" crap="1" count="16"/>
+        <line num="1023" type="stmt" count="16"/>
+        <line num="1033" type="method" name="fractionToByte" visibility="private" complexity="1" crap="1" count="33"/>
+        <line num="1035" type="stmt" count="33"/>
+        <metrics loc="1201" ncloc="675" classes="1" methods="44" coveredmethods="44" conditionals="0" coveredconditionals="0" statements="181" coveredstatements="181" elements="225" coveredelements="225"/>
       </file>
     </package>
-    <metrics files="1" loc="1203" ncloc="677" classes="1" methods="44" coveredmethods="44" conditionals="0" coveredconditionals="0" statements="183" coveredstatements="183" elements="227" coveredelements="227"/>
+    <metrics files="1" loc="1201" ncloc="675" classes="1" methods="44" coveredmethods="44" conditionals="0" coveredconditionals="0" statements="181" coveredstatements="181" elements="225" coveredelements="225"/>
   </project>
 </coverage>
