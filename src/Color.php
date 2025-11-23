@@ -172,10 +172,10 @@ class Color implements Stringable, Equatable
             $y = $this->relativeLuminance;
 
             // Compute CIE L* (perceived lightness) as a value in the range [0, 100].
-            $l_star = ($y <= self::EPSILON) ? (self::KAPPA * $y) : (116.0 * ($y ** (1.0 / 3.0)) - 16.0);
+            $lStar = ($y <= self::EPSILON) ? (self::KAPPA * $y) : (116.0 * ($y ** (1.0 / 3.0)) - 16.0);
 
             // Normalize to [0.0, 1.0].
-            return self::clamp($l_star / 100.0);
+            return self::clamp($lStar / 100.0);
         }
     }
     // phpcs:enable
@@ -458,23 +458,23 @@ class Color implements Stringable, Equatable
         }
 
         // Sum the color components.
-        $sum_r = 0;
-        $sum_g = 0;
-        $sum_b = 0;
-        $sum_a = 0;
+        $sumR = 0;
+        $sumG = 0;
+        $sumB = 0;
+        $sumA = 0;
         foreach ($colors as $color) {
-            $sum_r += $color->red;
-            $sum_g += $color->green;
-            $sum_b += $color->blue;
-            $sum_a += $color->alpha;
+            $sumR += $color->red;
+            $sumG += $color->green;
+            $sumB += $color->blue;
+            $sumA += $color->alpha;
         }
 
         // Calculate the averages.
         $avg = static fn($sum) => (int)round($sum / $n);
-        $r = $avg($sum_r);
-        $g = $avg($sum_g);
-        $b = $avg($sum_b);
-        $a = $avg($sum_a);
+        $r = $avg($sumR);
+        $g = $avg($sumG);
+        $b = $avg($sumB);
+        $a = $avg($sumA);
 
         // Create and return the average color.
         return self::fromRGB($r, $g, $b, $a);
@@ -649,28 +649,28 @@ class Color implements Stringable, Equatable
     /**
      * Outputs the color as a 6-digit hexadecimal string, or 8-digit if alpha is included.
      *
-     * @param bool $include_alpha If the 2 characters for the alpha byte should be included.
-     * @param bool $include_hash If the result should have a leading '#'.
-     * @param bool $upper_case If letter digits should be upper-case.
+     * @param bool $includeAlpha If the 2 characters for the alpha byte should be included.
+     * @param bool $includeHash If the result should have a leading '#'.
+     * @param bool $upperCase If letter digits should be upper-case.
      * @return string The color formatted as a CSS hexadecimal color string.
      */
-    public function toHex(bool $include_alpha = true, bool $include_hash = true, bool $upper_case = false): string
+    public function toHex(bool $includeAlpha = true, bool $includeHash = true, bool $upperCase = false): string
     {
         // Convert the 4-byte binary string to an 8-character hexadecimal string.
         $hex = bin2hex($this->RGBA);
 
         // Remove the last 2 characters if alpha isn't required.
-        if (!$include_alpha) {
+        if (!$includeAlpha) {
             $hex = substr($hex, 0, 6);
         }
 
         // Convert to upper-case if required.
-        if ($upper_case) {
+        if ($upperCase) {
             $hex = strtoupper($hex);
         }
 
         // Add a leading '#' if required.
-        return $include_hash ? "#$hex" : $hex;
+        return $includeHash ? "#$hex" : $hex;
     }
 
     /**
