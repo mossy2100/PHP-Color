@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `fromHsl()` factory method for creating colors from HSL values
   - Properties: `hue`, `saturation`, `lightness` (read-only, lazily computed and cached)
   - Immutable setters: `withHue()`, `withSaturation()`, `withLightness()`
-  - Static conversion methods: `rgbToHsl()`, `hslToRgb()`
+  - Static conversion methods: `RGBToHSL()`, `HSLToRGB()`
 - **CSS output formats** (using modern CSS color syntax)
   - `toHex()` - Configurable hex output (alpha, hash prefix, case)
   - `toRgbString()` - Modern CSS `rgb(r g b / a)` format
@@ -49,5 +49,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CSS color names** - Support for all 147 standard CSS color names plus 'transparent'
 - **Utility methods**
   - `gamma()` - sRGB transfer function for gamma correction
-  - `toRgbArray()`, `toHslArray()`, `toArray()` - Convert to array representations
+  - `toRGBArray()`, `toHSLArray()`, `toArray()` - Convert to array representations
 - Comprehensive test suite with 100% code coverage

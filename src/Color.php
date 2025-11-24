@@ -56,13 +56,6 @@ class Color implements Stringable, Equatable
     private const float EPSILON = 216 / 24389; // 0.008856451679...
     private const float KAPPA = 24389 / 27;  // 903.296296...
 
-    /**
-     * Small value for float comparisons.
-     *
-     * @var float
-     */
-    public const float DELTA = 1e-9;
-
     // endregion
 
     // region Virtual properties
@@ -202,17 +195,33 @@ class Color implements Stringable, Equatable
     /**
      * Create a color from RGBA values.
      *
+     * Each RGBA channel can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
+     *
      * @static
-     * @param int $red The red component byte value.
-     * @param int $green The green component byte value.
-     * @param int $blue The blue component byte value.
-     * @param int $alpha Optional alpha value as a byte. Defaults to 0xff, which is equivalent to 100% opacity.
+     * @param int|float $red The red component value.
+     * @param int|float $green The green component value.
+     * @param int|float $blue The blue component value.
+     * @param int|float $alpha Optional alpha value. Defaults to 255, equivalent to 1.0 (100% opacity).
      * @return self
      * @throws RangeException If any inputs are invalid.
      */
-    public static function fromRGB(int $red, int $green, int $blue, int $alpha = 0xff): self
+    public static function fromRGB(int|float $red, int|float $green, int|float $blue, int|float $alpha = 255): self
     {
         $color = new self();
+
+        // Convert float arguments to bytes.
+        if (is_float($red)) {
+            $red = self::fractionToByte($red);
+        }
+        if (is_float($green)) {
+            $green = self::fractionToByte($green);
+        }
+        if (is_float($blue)) {
+            $blue = self::fractionToByte($blue);
+        }
+        if (is_float($alpha)) {
+            $alpha = self::fractionToByte($alpha);
+        }
 
         // Check the arguments.
         self::validateByte($red);
@@ -229,17 +238,24 @@ class Color implements Stringable, Equatable
     /**
      * Create a color from HSLA values.
      *
+     * The alpha can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
+     *
      * @static
      * @param float $hue The hue in degrees.
      * @param float $saturation The saturation as a fraction in the range [0.0, 1.0].
      * @param float $lightness The lightness as a fraction in the range [0.0, 1.0].
-     * @param int $alpha Optional alpha value as a byte. Defaults to 0xff, which is equivalent to 100% opacity.
+     * @param int|float $alpha Optional alpha value. Defaults to 255, equivalent to 1.0 (100% opacity).
      * @return self
      * @throws RangeException If any inputs are invalid.
      */
-    public static function fromHSL(float $hue, float $saturation, float $lightness, int $alpha = 0xff): self
+    public static function fromHSL(float $hue, float $saturation, float $lightness, int|float $alpha = 255): self
     {
-        // Check the arguments.
+        // If alpha was provided as a float, convert it to a byte.
+        if (is_float($alpha)) {
+            $alpha = self::fractionToByte($alpha);
+        }
+
+        // Validate the arguments.
         $hue = Angle::wrapDegrees($hue, false);
         self::validateFraction($saturation);
         self::validateFraction($lightness);
@@ -255,6 +271,100 @@ class Color implements Stringable, Equatable
         $color->HSL = [$hue, $saturation, $lightness];
 
         return $color;
+    }
+
+    // endregion
+
+    // region Static methods for converting between RGB and HSL.
+
+    /**
+     * Convert RGB values to HSL.
+     *
+     * The returned array will have the following keys and values in the ranges below:
+     *    hue        => [0, 360)
+     *    saturation => [0.0, 1.0]
+     *    lightness  => [0.0, 1.0]
+     *
+     * Algorithm:
+     * @see https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
+     *
+     * @static
+     * @param int $red The red byte value.
+     * @param int $green The green byte value.
+     * @param int $blue The blue byte value.
+     * @return float[] Array of floats with HSL values.
+     * @throws RangeException If the provided values are not in the valid range for RGB bytes.
+     */
+    public static function RGBToHSL(int $red, int $green, int $blue): array
+    {
+        // Check the red, green and blue bytes are in range:
+        self::validateByte($red);
+        self::validateByte($green);
+        self::validateByte($blue);
+
+        // Convert to fractions.
+        $r = self::byteToFraction($red);
+        $g = self::byteToFraction($green);
+        $b = self::byteToFraction($blue);
+
+        // Get the min and max values.
+        $min = min($r, $g, $b);
+        $max = max($r, $g, $b);
+        $c = $max - $min;
+        $l = ($min + $max) / 2;
+
+        // Check for gray.
+        if (Floats::approxEqual($c, 0)) {
+            $h = 0.0;
+            $s = 0.0;
+        } else {
+            // Calculate hue.
+            if ($max === $r) {
+                $h = fmod(($g - $b) / $c, 6);
+            } elseif ($max === $g) {
+                $h = ($b - $r) / $c + 2;
+            } else { // $max === $b
+                $h = ($r - $g) / $c + 4;
+            }
+            // Calculate hue and wrap to [0, 360).
+            $h = Angle::wrapDegrees($h * 60, false);
+
+            // Calculate saturation.
+            // Note: $l cannot be 0 or 1 here because that would require $c == 0,
+            // which is handled by the if branch above.
+            $s = $c / (1 - abs(2 * $l - 1));
+        }
+
+        return [$h, $s, $l];
+    }
+
+    /**
+     * Convert HSL values to RGB.
+     * @see https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB_alternative
+     *
+     * @static
+     * @param float $hue The hue as an angle in degrees.
+     * @param float $saturation The saturation as a fraction in the range [0.0, 1.0].
+     * @param float $lightness The lightness as a fraction in the range [0.0, 1.0].
+     * @return int[] An array of red, green, and blue bytes.
+     * @throws RangeException If the provided values are not in the valid range for HSL values.
+     */
+    public static function HSLToRGB(float $hue, float $saturation, float $lightness): array
+    {
+        // Ensure all values are in the desired ranges.
+        $hue = Angle::wrapDegrees($hue, false);
+        self::validateFraction($saturation);
+        self::validateFraction($lightness);
+
+        // Conversion function.
+        $f = static function ($n) use ($hue, $saturation, $lightness): int {
+            $k = fmod($n + $hue / 30, 12);
+            $a = $saturation * min($lightness, 1 - $lightness);
+            $c = $lightness - $a * max(-1, min($k - 3, 9 - $k, 1));
+            return self::fractionToByte(self::clamp($c));
+        };
+
+        return [$f(0), $f(8), $f(4)];
     }
 
     // endregion
@@ -516,300 +626,7 @@ class Color implements Stringable, Equatable
 
     // endregion
 
-    // region Private instance helper methods
-
-    /**
-     * Set the red, green, blue, and alpha components all at the same time.
-     *
-     * NB: This is an internal function, and arguments are assumed to be in range for bytes.
-     *
-     * @param int $red The red component as a byte.
-     * @param int $green The green component as a byte.
-     * @param int $blue The blue component as a byte.
-     * @param int $alpha The alpha value as a byte.
-     */
-    private function setBytes(int $red, int $green, int $blue, int $alpha): void
-    {
-        $this->RGBA = chr($red) . chr($green) . chr($blue) . chr($alpha);
-    }
-
-    /**
-     * Get a byte value from the internal RGBA string.
-     *
-     * NB: This is an internal function, and the offset is assumed to be in range [0, 3].
-     *
-     * @param int $offset The offset, which will be 0 for red, 1 for green, 2 for blue, and 3 for alpha.
-     * @return int The byte value at the given position.
-     */
-    private function getByte(int $offset): int
-    {
-        return ord($this->RGBA[$offset]);
-    }
-
-    /**
-     * If the HSL values haven't yet been computed, do it now and cache the result.
-     *
-     * @return void
-     */
-    private function computeHSL(): void
-    {
-        if ($this->HSL === null) {
-            $this->HSL = self::RGBToHSL($this->red, $this->green, $this->blue);
-        }
-    }
-
-    // endregion
-
-    // region Methods for converting a Color to an array.
-
-    /**
-     * Gets all RGBA values as an array.
-     *
-     * @return array{red:int, green:int, blue:int, alpha:int} Array of color components as bytes.
-     */
-    public function toRGBArray(): array
-    {
-        return [
-            'red'   => $this->red,
-            'green' => $this->green,
-            'blue'  => $this->blue,
-            'alpha' => $this->alpha
-        ];
-    }
-
-    /**
-     * Returns the Color as an array of numbers representing HSLA values.
-     *
-     * Hue is represented as an angle in degrees [0, 360).
-     * Saturation and lightness are represented as fractions [0.0, 1.0].
-     * Alpha is represented as a byte [0, 255].
-     *
-     * @return array{hue:float, saturation:float, lightness:float, alpha:int} Array of color components as numbers.
-     */
-    public function toHSLArray(): array
-    {
-        return [
-            'hue'        => $this->hue,
-            'saturation' => $this->saturation,
-            'lightness'  => $this->lightness,
-            'alpha'      => $this->alpha
-        ];
-    }
-
-    /**
-     * Get the color as an array with RGBA and HSL properties.
-     *
-     * @return array<string, int|float> An array of color properties.
-     */
-    public function toArray(): array
-    {
-        return array_merge(
-            $this->toRGBArray(),
-            $this->toHSLArray()
-        );
-    }
-
-    // endregion
-
-    // region Methods for converting a Color to a string
-
-    /**
-     * Convert an angle to a string suitable for CSS.
-     *
-     * @param float $angle The angle to format.
-     * @return string The formatted angle string.
-     */
-    private static function formatAngle(float $angle): string
-    {
-        return round($angle, 6) . 'deg';
-    }
-
-    /**
-     * Format a percentage.
-     *
-     * @param float $frac The fraction to format as a percentage.
-     * @return string The formatted percentage string.
-     */
-    private static function formatPercent(float $frac): string
-    {
-        return round($frac * 100, 6) . '%';
-    }
-
-    /**
-     * Format a byte value as a fraction.
-     *
-     * @param int $byte The byte value to format.
-     * @return string The byte formatted as a fraction.
-     */
-    private static function formatByteAsFraction(int $byte): string
-    {
-        return (string)round(self::byteToFraction($byte), 6);
-    }
-
-    /**
-     * Outputs the color as a 6-digit hexadecimal string, or 8-digit if alpha is included.
-     *
-     * @param bool $includeAlpha If the 2 characters for the alpha byte should be included.
-     * @param bool $includeHash If the result should have a leading '#'.
-     * @param bool $upperCase If letter digits should be upper-case.
-     * @return string The color formatted as a CSS hexadecimal color string.
-     */
-    public function toHex(bool $includeAlpha = true, bool $includeHash = true, bool $upperCase = false): string
-    {
-        // Convert the 4-byte binary string to an 8-character hexadecimal string.
-        $hex = bin2hex($this->RGBA);
-
-        // Remove the last 2 characters if alpha isn't required.
-        if (!$includeAlpha) {
-            $hex = substr($hex, 0, 6);
-        }
-
-        // Convert to upper-case if required.
-        if ($upperCase) {
-            $hex = strtoupper($hex);
-        }
-
-        // Add a leading '#' if required.
-        return $includeHash ? "#$hex" : $hex;
-    }
-
-    /**
-     * Outputs the color as an rgb() CSS string.
-     *
-     * @return string The Color as a CSS-compatible "rgb" color string, e.g. "rgb(120 50 50 / 0.67)".
-     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/rgb
-     */
-    public function toRGBString(): string
-    {
-        $a = self::formatByteAsFraction($this->alpha);
-        return "rgb($this->red $this->green $this->blue / $a)";
-    }
-
-    /**
-     * Outputs the color as an HSL CSS string.
-     *
-     * @return string The Color as a CSS-compatible "hsl" color string, e.g. "hsl(120deg 50% 50% / 0.75)".
-     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/hsl
-     */
-    public function toHSLString(): string
-    {
-        $h = self::formatAngle($this->hue);
-        $s = self::formatPercent($this->saturation);
-        $l = self::formatPercent($this->lightness);
-        $a = self::formatByteAsFraction($this->alpha);
-        return "hsl($h $s $l / $a)";
-    }
-
-    /**
-     * Stringable implementation.
-     *
-     * The default string representation of a Color is an 8-digit RGBA lower-case hex string with leading '#'.
-     * Suitable for use in CSS.
-     *
-     * @return string The Color as a CSS hexadecimal color string (RGBA, 8 digits).
-     */
-    public function __toString(): string
-    {
-        return $this->toHex();
-    }
-
-    // endregion
-
-    // region Static methods for converting between RGB and HSL.
-
-    /**
-     * Convert RGB values to HSL.
-     *
-     * The returned array will have the following keys and values in the ranges below:
-     *    hue        => [0, 360)
-     *    saturation => [0.0, 1.0]
-     *    lightness  => [0.0, 1.0]
-     *
-     * Algorithm:
-     * @see https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
-     *
-     * @static
-     * @param int $red The red byte value.
-     * @param int $green The green byte value.
-     * @param int $blue The blue byte value.
-     * @return float[] Array of floats with HSL values.
-     * @throws RangeException If the provided values are not in the valid range for RGB bytes.
-     */
-    public static function RGBToHSL(int $red, int $green, int $blue): array
-    {
-        // Check the red, green and blue bytes are in range:
-        self::validateByte($red);
-        self::validateByte($green);
-        self::validateByte($blue);
-
-        // Convert to fractions.
-        $r = self::byteToFraction($red);
-        $g = self::byteToFraction($green);
-        $b = self::byteToFraction($blue);
-
-        // Get the min and max values.
-        $min = min($r, $g, $b);
-        $max = max($r, $g, $b);
-        $c = $max - $min;
-        $l = ($min + $max) / 2;
-
-        // Check for gray.
-        if (Floats::approxEqual($c, 0)) {
-            $h = 0.0;
-            $s = 0.0;
-        } else {
-            // Calculate hue.
-            if ($max === $r) {
-                $h = fmod(($g - $b) / $c, 6);
-            } elseif ($max === $g) {
-                $h = ($b - $r) / $c + 2;
-            } else { // $max === $b
-                $h = ($r - $g) / $c + 4;
-            }
-            // Calculate hue and wrap to [0, 360).
-            $h = Angle::wrapDegrees($h * 60, false);
-
-            // Calculate saturation.
-            // Note: $l cannot be 0 or 1 here because that would require $c == 0,
-            // which is handled by the if branch above.
-            $s = $c / (1 - abs(2 * $l - 1));
-        }
-
-        return [$h, $s, $l];
-    }
-
-    /**
-     * Convert HSL values to RGB.
-     * @see https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB_alternative
-     *
-     * @static
-     * @param float $hue The hue as an angle in degrees.
-     * @param float $saturation The saturation as a fraction in the range [0.0, 1.0].
-     * @param float $lightness The lightness as a fraction in the range [0.0, 1.0].
-     * @return int[] An array of red, green, and blue bytes.
-     * @throws RangeException If the provided values are not in the valid range for HSL values.
-     */
-    public static function HSLToRGB(float $hue, float $saturation, float $lightness): array
-    {
-        // Ensure all values are in the desired ranges.
-        $hue = Angle::wrapDegrees($hue, false);
-        self::validateFraction($saturation);
-        self::validateFraction($lightness);
-
-        // Conversion function.
-        $f = static function ($n) use ($hue, $saturation, $lightness): int {
-            $k = fmod($n + $hue / 30, 12);
-            $a = $saturation * min($lightness, 1 - $lightness);
-            $c = $lightness - $a * max(-1, min($k - 3, 9 - $k, 1));
-            return self::fractionToByte($c);
-        };
-
-        return [$f(0), $f(8), $f(4)];
-    }
-
-    // endregion
-
-    // region Static members for working with hex strings and named colors.
+    // region Static methods for working with hex strings and named colors
 
     /**
      * Returns true if the string is a valid hex color string.
@@ -851,10 +668,10 @@ class Color implements Stringable, Equatable
 
     /**
      * Convert a CSS color hex string, being 3, 4, 6, or 8 hexadecimal digits, lower- or upper-case, with or without
-     * leading '#', into a canonical form, which is defined as 8 lower-case hexadecimal digits with no leading '#'.
+     * leading '#', into 8 lower-case hexadecimal digits.
      *
      * @param string $hex A CSS hex color string.
-     * @return string The canonical hex string.
+     * @return string The 8-digit hex string.
      * @throws ValueError if the provided string is not a valid CSS hex color string.
      */
     public static function normalizeHex(string $hex): string
@@ -970,7 +787,171 @@ class Color implements Stringable, Equatable
 
     // endregion
 
-    // region Validation and conversion methods (private static)
+    // region Methods for converting to string
+
+    /**
+     * Outputs the color as a 6-digit hexadecimal string, or 8-digit if alpha is included.
+     *
+     * @param bool $includeAlpha If the 2 characters for the alpha byte should be included.
+     * @param bool $includeHash If the result should have a leading '#'.
+     * @param bool $upperCase If letter digits should be upper-case.
+     * @return string The color formatted as a CSS hexadecimal color string.
+     */
+    public function toHex(bool $includeAlpha = true, bool $includeHash = true, bool $upperCase = false): string
+    {
+        // Convert the 4-byte binary string to an 8-character hexadecimal string.
+        $hex = bin2hex($this->RGBA);
+
+        // Remove the last 2 characters if alpha isn't required.
+        if (!$includeAlpha) {
+            $hex = substr($hex, 0, 6);
+        }
+
+        // Convert to upper-case if required.
+        if ($upperCase) {
+            $hex = strtoupper($hex);
+        }
+
+        // Add a leading '#' if required.
+        return $includeHash ? "#$hex" : $hex;
+    }
+
+    /**
+     * Outputs the color as an rgb() CSS string.
+     *
+     * @return string The Color as a CSS-compatible "rgb" color string, e.g. "rgb(120 50 50 / 0.67)".
+     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/rgb
+     */
+    public function toRGBString(): string
+    {
+        $a = self::formatByteAsFraction($this->alpha);
+        return "rgb($this->red $this->green $this->blue / $a)";
+    }
+
+    /**
+     * Outputs the color as an HSL CSS string.
+     *
+     * @return string The Color as a CSS-compatible "hsl" color string, e.g. "hsl(120deg 50% 50% / 0.75)".
+     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/hsl
+     */
+    public function toHSLString(): string
+    {
+        $h = self::formatAngle($this->hue);
+        $s = self::formatPercent($this->saturation);
+        $l = self::formatPercent($this->lightness);
+        $a = self::formatByteAsFraction($this->alpha);
+        return "hsl($h $s $l / $a)";
+    }
+
+    /**
+     * Stringable implementation.
+     *
+     * The default string representation of a Color is an 8-digit RGBA lower-case hex string with leading '#'.
+     * Suitable for use in CSS.
+     *
+     * @return string The Color as a CSS hexadecimal color string (RGBA, 8 digits).
+     */
+    public function __toString(): string
+    {
+        return $this->toHex();
+    }
+
+    // endregion
+
+    // region Methods for converting to array
+
+    /**
+     * Gets all RGBA values as an array.
+     *
+     * @return array{red:int, green:int, blue:int, alpha:int} Array of color components as bytes.
+     */
+    public function toRGBArray(): array
+    {
+        return [
+            'red'   => $this->red,
+            'green' => $this->green,
+            'blue'  => $this->blue,
+            'alpha' => $this->alpha
+        ];
+    }
+
+    /**
+     * Returns the Color as an array of numbers representing HSL values.
+     *
+     * Hue is represented as an angle in degrees [0, 360).
+     * Saturation and lightness are represented as fractions [0.0, 1.0].
+     *
+     * @return array{hue:float, saturation:float, lightness:float} Array of color components as numbers.
+     */
+    public function toHSLArray(): array
+    {
+        return [
+            'hue'        => $this->hue,
+            'saturation' => $this->saturation,
+            'lightness'  => $this->lightness
+        ];
+    }
+
+    /**
+     * Get the color as an array with RGBA and HSL properties.
+     *
+     * @return array<string, int|float> An array of color properties.
+     */
+    public function toArray(): array
+    {
+        return array_merge(
+            $this->toRGBArray(),
+            $this->toHSLArray()
+        );
+    }
+
+    // endregion
+
+    // region Helper methods (private instance)
+
+    /**
+     * Set the red, green, blue, and alpha components all at the same time.
+     *
+     * NB: This is an internal function, and arguments are assumed to be in range for bytes.
+     *
+     * @param int $red The red component as a byte.
+     * @param int $green The green component as a byte.
+     * @param int $blue The blue component as a byte.
+     * @param int $alpha The alpha value as a byte.
+     */
+    private function setBytes(int $red, int $green, int $blue, int $alpha): void
+    {
+        $this->RGBA = chr($red) . chr($green) . chr($blue) . chr($alpha);
+    }
+
+    /**
+     * Get a byte value from the internal RGBA string.
+     *
+     * NB: This is an internal function, and the offset is assumed to be in range [0, 3].
+     *
+     * @param int $offset The offset, which will be 0 for red, 1 for green, 2 for blue, and 3 for alpha.
+     * @return int The byte value at the given position.
+     */
+    private function getByte(int $offset): int
+    {
+        return ord($this->RGBA[$offset]);
+    }
+
+    /**
+     * If the HSL values haven't yet been computed, do it now and cache the result.
+     *
+     * @return void
+     */
+    private function computeHSL(): void
+    {
+        if ($this->HSL === null) {
+            $this->HSL = self::RGBToHSL($this->red, $this->green, $this->blue);
+        }
+    }
+
+    // endregion
+
+    // region Helper methods (private static)
 
     /**
      * Convert a float to a value within the range [0.0, 1.0].
@@ -1032,19 +1013,63 @@ class Color implements Stringable, Equatable
      */
     private static function fractionToByte(float $frac): int
     {
-        return (int)round(self::clamp($frac) * 255.0);
+        return (int)round($frac * 255.0);
+    }
+
+    /**
+     * Format a fraction.
+     *
+     * @param float $value The float to format.
+     * @return string The formatted float.
+     */
+    private static function formatFloat(float $value): string
+    {
+        return (string)round($value, 6);
+    }
+
+    /**
+     * Format an angle in canonical CSS style.
+     *
+     * @param float $angle The angle to format.
+     * @return string The formatted angle string.
+     */
+    private static function formatAngle(float $angle): string
+    {
+        return self::formatFloat($angle) . 'deg';
+    }
+
+    /**
+     * Format a percentage.
+     *
+     * @param float $frac The fraction to format as a percentage.
+     * @return string The formatted percentage string.
+     */
+    private static function formatPercent(float $frac): string
+    {
+        return self::formatFloat($frac * 100) . '%';
+    }
+
+    /**
+     * Format a byte value as a fraction.
+     *
+     * @param int $byte The byte value to format.
+     * @return string The byte formatted as a fraction.
+     */
+    private static function formatByteAsFraction(int $byte): string
+    {
+        return self::formatFloat(self::byteToFraction($byte));
     }
 
     // endregion
 
-    // region CSS color names
+    // region CSS color names (public)
 
     /**
      * Array of CSS color names and corresponding hex values.
      *
      * @var array<string,string>
      */
-    private const array CSS_COLOR_NAMES = [
+    public const array CSS_COLOR_NAMES = [
         'transparent'          => '00000000',
         'aliceblue'            => 'f0f8ffff',
         'amethyst'             => '9966ccff',

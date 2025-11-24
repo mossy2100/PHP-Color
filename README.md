@@ -49,13 +49,20 @@ $orange = new Color('#ff8000');
 $cyan = new Color('0ff');
 $semiTransparent = new Color('#ff000080');
 
-// From RGB values (0-255) with optional alpha channel (0-255)
+// From RGB values with optional alpha channel.
+// All channels can be specified as integers in the range [0, 255] or floats in the range [0.0, 1.0].
 $purple = Color::fromRGB(128, 0, 255);
-$withAlpha = Color::fromRGB(255, 0, 0, 128);
+$transparentRed = Color::fromRGB(255, 0, 0, 128);
+$royalBlue = Color::fromRGB(0.255, 0.412, 0.882);
+$transparentGreen = Color::fromRGB(0.133, 0.545, 0.133, 0.75);
 
-// From HSLA values (hue in degrees, saturation/lightness as fractions) with optional alpha channel (0-255)
+// From HSLA values with optional alpha channel.
+// Hue is specified in degrees.
+// Saturation and lightness are specified as floats in the range [0.0, 1.0].
+// Alpha can be specified as an integer in the range [0, 255] or a float in the range [0.0, 1.0].
 $green = Color::fromHSL(120, 1.0, 0.5);
 $pastel = Color::fromHSL(200, 0.5, 0.8, 200);
+$transparentPink = Color::fromHSL(350, 1.0, 0.876, 0.66);
 ```
 
 ### Accessing Color Properties
@@ -191,27 +198,20 @@ $rgb = Color::HSLToRGB(120, 1.0, 0.5);  // [0, 255, 0]
 $linear = Color::gamma(128);  // ~0.215
 ```
 
-### Constants
-
-```php
-// Small value for float comparisons (used internally, available for external use)
-Color::DELTA  // 1e-9
-```
-
 ### CSS Color Names
 
-The class supports all 147 standard CSS color names plus 'transparent':
+The class supports all 147 standard CSS color names plus 'transparent'. Names are case-insensitive.
 
 ```php
-new Color('aliceblue');
+new Color('AliceBlue');
 new Color('coral');
 new Color('darkslategray');
-new Color('papayawhip');
+new Color('PapayaWhip');
 new Color('transparent');  // RGBA: 0, 0, 0, 0
 // ... and many more
 ```
 
-## Memory Efficiency
+## Efficiency
 
 The Color class stores RGBA values as a 4-byte binary string internally, making it extremely memory-efficient:
 
