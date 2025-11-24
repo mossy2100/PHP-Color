@@ -16,18 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Memory-efficient storage** - RGBA stored as 4-byte binary string
 - **RGB color model support**
   - Constructor accepts CSS hex strings (3, 4, 6, or 8 digits) and color names
-  - `fromRgb()` factory method for creating colors from byte values
+  - `fromRGB()` factory method for creating colors from byte values
   - Properties: `red`, `green`, `blue`, `alpha` (read-only)
   - Immutable setters: `withRed()`, `withGreen()`, `withBlue()`, `withAlpha()`
 - **HSL color model support**
-  - `fromHsl()` factory method for creating colors from HSL values
+  - `fromHSL()` factory method for creating colors from HSL values
   - Properties: `hue`, `saturation`, `lightness` (read-only, lazily computed and cached)
   - Immutable setters: `withHue()`, `withSaturation()`, `withLightness()`
   - Static conversion methods: `RGBToHSL()`, `HSLToRGB()`
 - **CSS output formats** (using modern CSS color syntax)
   - `toHex()` - Configurable hex output (alpha, hash prefix, case)
-  - `toRgbString()` - Modern CSS `rgb(r g b / a)` format
-  - `toHslString()` - Modern CSS `hsl(Xdeg Y% Z% / a)` format
+  - `toRGBString()` - Modern CSS `rgb(r g b / a)` format
+  - `toHSLString()` - Modern CSS `hsl(Xdeg Y% Z% / a)` format
   - `__toString()` - Returns 8-digit hex with hash prefix
 - **Color operations**
   - `mix()` - Blend two colors with configurable ratio

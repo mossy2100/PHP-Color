@@ -168,9 +168,9 @@ final class ColorTest extends TestCase
     // region Factory method tests
 
     /**
-     * Test fromRgba() creates color with specified RGBA values.
+     * Test fromRGB() creates color with specified RGBA values.
      */
-    public function testFromRgba(): void
+    public function testFromRGB(): void
     {
         $color = Color::fromRGB(10, 20, 30, 127);
         $this->assertSame(10, $color->red);
@@ -180,9 +180,9 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test fromRgba() defaults alpha to 255 (fully opaque).
+     * Test fromRGB() defaults alpha to 255 (fully opaque).
      */
-    public function testFromRgbaDefaultAlpha(): void
+    public function testFromRGBDefaultAlpha(): void
     {
         $color = Color::fromRGB(100, 150, 200);
         $this->assertSame(100, $color->red);
@@ -192,36 +192,36 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test fromRgba() throws RangeException for invalid red value.
+     * Test fromRGB() throws RangeException for invalid red value.
      */
-    public function testFromRgbaInvalidRed(): void
+    public function testFromRGBInvalidRed(): void
     {
         $this->expectException(RangeException::class);
         Color::fromRGB(256, 0, 0);
     }
 
     /**
-     * Test fromRgba() throws RangeException for invalid green value.
+     * Test fromRGB() throws RangeException for invalid green value.
      */
-    public function testFromRgbaInvalidGreen(): void
+    public function testFromRGBInvalidGreen(): void
     {
         $this->expectException(RangeException::class);
         Color::fromRGB(0, -1, 0);
     }
 
     /**
-     * Test fromRgba() throws RangeException for invalid blue value.
+     * Test fromRGB() throws RangeException for invalid blue value.
      */
-    public function testFromRgbaInvalidBlue(): void
+    public function testFromRGBInvalidBlue(): void
     {
         $this->expectException(RangeException::class);
         Color::fromRGB(0, 0, 300);
     }
 
     /**
-     * Test fromRgba() throws RangeException for invalid alpha value.
+     * Test fromRGB() throws RangeException for invalid alpha value.
      */
-    public function testFromRgbaInvalidAlpha(): void
+    public function testFromRGBInvalidAlpha(): void
     {
         $this->expectException(RangeException::class);
         Color::fromRGB(0, 0, 0, 256);
@@ -230,7 +230,7 @@ final class ColorTest extends TestCase
     /**
      * Test fromRGB() with float arguments (0.0 to 1.0 range).
      */
-    public function testFromRgbWithFloats(): void
+    public function testFromRGBWithFloats(): void
     {
         $color = Color::fromRGB(1.0, 0.5, 0.0);
         $this->assertSame(255, $color->red);
@@ -242,7 +242,7 @@ final class ColorTest extends TestCase
     /**
      * Test fromRGB() with float alpha.
      */
-    public function testFromRgbWithFloatAlpha(): void
+    public function testFromRGBWithFloatAlpha(): void
     {
         $color = Color::fromRGB(255, 128, 0, 0.5);
         $this->assertSame(255, $color->red);
@@ -254,7 +254,7 @@ final class ColorTest extends TestCase
     /**
      * Test fromRGB() with mixed int and float arguments.
      */
-    public function testFromRgbMixedIntAndFloat(): void
+    public function testFromRGBMixedIntAndFloat(): void
     {
         $color = Color::fromRGB(255, 0.5, 0, 1.0);
         $this->assertSame(255, $color->red);
@@ -266,7 +266,7 @@ final class ColorTest extends TestCase
     /**
      * Test fromRGB() with float 0.0 produces byte 0.
      */
-    public function testFromRgbFloatZero(): void
+    public function testFromRGBFloatZero(): void
     {
         $color = Color::fromRGB(0.0, 0.0, 0.0, 0.0);
         $this->assertSame(0, $color->red);
@@ -278,7 +278,7 @@ final class ColorTest extends TestCase
     /**
      * Test fromRGB() with float 1.0 produces byte 255.
      */
-    public function testFromRgbFloatOne(): void
+    public function testFromRGBFloatOne(): void
     {
         $color = Color::fromRGB(1.0, 1.0, 1.0, 1.0);
         $this->assertSame(255, $color->red);
@@ -288,44 +288,44 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test fromHsla() creates pure red (hue=0).
+     * Test fromHSLa() creates pure red (hue=0).
      */
-    public function testFromHslaPureRed(): void
+    public function testFromHSLPureRed(): void
     {
-        $color = Color::fromHsl(0, 1, 0.5);
+        $color = Color::fromHSL(0, 1, 0.5);
         $this->assertSame(255, $color->red);
         $this->assertSame(0, $color->green);
         $this->assertSame(0, $color->blue);
     }
 
     /**
-     * Test fromHsla() creates pure green (hue=120).
+     * Test fromHSL() creates pure green (hue=120).
      */
-    public function testFromHslaPureGreen(): void
+    public function testFromHSLPureGreen(): void
     {
-        $color = Color::fromHsl(120, 1, 0.5);
+        $color = Color::fromHSL(120, 1, 0.5);
         $this->assertSame(0, $color->red);
         $this->assertSame(255, $color->green);
         $this->assertSame(0, $color->blue);
     }
 
     /**
-     * Test fromHsla() creates pure blue (hue=240).
+     * Test fromHSL() creates pure blue (hue=240).
      */
-    public function testFromHslaPureBlue(): void
+    public function testFromHSLPureBlue(): void
     {
-        $color = Color::fromHsl(240, 1, 0.5);
+        $color = Color::fromHSL(240, 1, 0.5);
         $this->assertSame(0, $color->red);
         $this->assertSame(0, $color->green);
         $this->assertSame(255, $color->blue);
     }
 
     /**
-     * Test fromHsla() with alpha value.
+     * Test fromHSL() with alpha value.
      */
-    public function testFromHslaWithAlpha(): void
+    public function testFromHSLWithAlpha(): void
     {
-        $color = Color::fromHsl(120, 1, 0.5, 64);
+        $color = Color::fromHSL(120, 1, 0.5, 64);
         $this->assertSame(0, $color->red);
         $this->assertSame(255, $color->green);
         $this->assertSame(0, $color->blue);
@@ -333,74 +333,74 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test fromHsla() creates gray when saturation is zero.
+     * Test fromHSL() creates gray when saturation is zero.
      */
-    public function testFromHslaGray(): void
+    public function testFromHSLGray(): void
     {
-        $color = Color::fromHsl(0, 0, 0.5);
+        $color = Color::fromHSL(0, 0, 0.5);
         $this->assertSame(128, $color->red);
         $this->assertSame(128, $color->green);
         $this->assertSame(128, $color->blue);
     }
 
     /**
-     * Test fromHsla() creates black when lightness is zero.
+     * Test fromHSL() creates black when lightness is zero.
      */
-    public function testFromHslaBlack(): void
+    public function testFromHSLBlack(): void
     {
-        $color = Color::fromHsl(0, 0, 0);
+        $color = Color::fromHSL(0, 0, 0);
         $this->assertSame(0, $color->red);
         $this->assertSame(0, $color->green);
         $this->assertSame(0, $color->blue);
     }
 
     /**
-     * Test fromHsla() creates white when lightness is one.
+     * Test fromHSL() creates white when lightness is one.
      */
-    public function testFromHslaWhite(): void
+    public function testFromHSLWhite(): void
     {
-        $color = Color::fromHsl(0, 0, 1);
+        $color = Color::fromHSL(0, 0, 1);
         $this->assertSame(255, $color->red);
         $this->assertSame(255, $color->green);
         $this->assertSame(255, $color->blue);
     }
 
     /**
-     * Test fromHsla() correctly wraps hue values outside [0, 360).
+     * Test fromHSL() correctly wraps hue values outside [0, 360).
      */
-    public function testFromHslaHueWrapping(): void
+    public function testFromHSLHueWrapping(): void
     {
-        $color1 = Color::fromHsl(0, 1, 0.5);
-        $color2 = Color::fromHsl(360, 1, 0.5);
-        $color3 = Color::fromHsl(-360, 1, 0.5);
+        $color1 = Color::fromHSL(0, 1, 0.5);
+        $color2 = Color::fromHSL(360, 1, 0.5);
+        $color3 = Color::fromHSL(-360, 1, 0.5);
         $this->assertTrue($color1->equals($color2));
         $this->assertTrue($color1->equals($color3));
     }
 
     /**
-     * Test fromHsla() throws RangeException for invalid saturation.
+     * Test fromHSL() throws RangeException for invalid saturation.
      */
-    public function testFromHslaInvalidSaturation(): void
+    public function testFromHSLInvalidSaturation(): void
     {
         $this->expectException(RangeException::class);
-        Color::fromHsl(0, 1.5, 0.5);
+        Color::fromHSL(0, 1.5, 0.5);
     }
 
     /**
-     * Test fromHsla() throws RangeException for invalid lightness.
+     * Test fromHSL() throws RangeException for invalid lightness.
      */
-    public function testFromHslaInvalidLightness(): void
+    public function testFromHSLInvalidLightness(): void
     {
         $this->expectException(RangeException::class);
-        Color::fromHsl(0, 0.5, -0.1);
+        Color::fromHSL(0, 0.5, -0.1);
     }
 
     /**
      * Test fromHSL() with float alpha (0.0 to 1.0 range).
      */
-    public function testFromHslWithFloatAlpha(): void
+    public function testFromHSLWithFloatAlpha(): void
     {
-        $color = Color::fromHsl(120, 1.0, 0.5, 0.5);
+        $color = Color::fromHSL(120, 1.0, 0.5, 0.5);
         $this->assertSame(0, $color->red);
         $this->assertSame(255, $color->green);
         $this->assertSame(0, $color->blue);
@@ -410,18 +410,18 @@ final class ColorTest extends TestCase
     /**
      * Test fromHSL() with float alpha 0.0 produces byte 0.
      */
-    public function testFromHslFloatAlphaZero(): void
+    public function testFromHSLFloatAlphaZero(): void
     {
-        $color = Color::fromHsl(0, 1.0, 0.5, 0.0);
+        $color = Color::fromHSL(0, 1.0, 0.5, 0.0);
         $this->assertSame(0, $color->alpha);
     }
 
     /**
      * Test fromHSL() with float alpha 1.0 produces byte 255.
      */
-    public function testFromHslFloatAlphaOne(): void
+    public function testFromHSLFloatAlphaOne(): void
     {
-        $color = Color::fromHsl(0, 1.0, 0.5, 1.0);
+        $color = Color::fromHSL(0, 1.0, 0.5, 1.0);
         $this->assertSame(255, $color->alpha);
     }
 
@@ -502,7 +502,7 @@ final class ColorTest extends TestCase
      */
     public function testWithSaturation(): void
     {
-        $color = Color::fromHsl(0, 1, 0.5);
+        $color = Color::fromHSL(0, 1, 0.5);
         $newColor = $color->withSaturation(0.5);
         $this->assertEqualsWithDelta(1.0, $color->saturation, 0.01);
         $this->assertEqualsWithDelta(0.5, $newColor->saturation, 0.01);
@@ -513,7 +513,7 @@ final class ColorTest extends TestCase
      */
     public function testWithLightness(): void
     {
-        $color = Color::fromHsl(0, 1, 0.5);
+        $color = Color::fromHSL(0, 1, 0.5);
         $newColor = $color->withLightness(0.25);
         $this->assertEqualsWithDelta(0.5, $color->lightness, 0.01);
         $this->assertEqualsWithDelta(0.25, $newColor->lightness, 0.01);
@@ -559,9 +559,9 @@ final class ColorTest extends TestCase
     // region Conversion method tests
 
     /**
-     * Test toRgba() returns correct RGBA array.
+     * Test toRGB() returns correct RGBA array.
      */
-    public function testToRgba(): void
+    public function testToRGB(): void
     {
         $color = Color::fromRGB(10, 20, 30, 40);
         $rgba = $color->toRGBArray();
@@ -572,11 +572,11 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test toHsla() returns correct HSLA array.
+     * Test toHSL() returns correct HSLA array.
      */
-    public function testToHsla(): void
+    public function testToHSL(): void
     {
-        $color = Color::fromHsl(120, 0.5, 0.75, 128);
+        $color = Color::fromHSL(120, 0.5, 0.75, 128);
         $hsla = $color->toHSLArray();
         $this->assertEqualsWithDelta(120, $hsla['hue'], 0.1);
         $this->assertEqualsWithDelta(0.5, $hsla['saturation'], 0.01);
@@ -625,7 +625,7 @@ final class ColorTest extends TestCase
      * Test RGBToHSL() converts RGB values to HSL correctly.
      */
     #[DataProvider('RGBToHSLProvider')]
-    public function testRgbToHsl(int $r, int $g, int $b, float $h, float $s, float $l): void
+    public function testRGBToHSL(int $r, int $g, int $b, float $h, float $s, float $l): void
     {
         $hsl = Color::RGBToHSL($r, $g, $b);
         $this->assertEqualsWithDelta($h, $hsl[0], 0.1);
@@ -658,7 +658,7 @@ final class ColorTest extends TestCase
      * Test HSLToRGB() converts HSL values to RGB correctly.
      */
     #[DataProvider('HSLToRGBProvider')]
-    public function testHslToRgb(float $h, float $s, float $l, int $r, int $g, int $b): void
+    public function testHSLToRGB(float $h, float $s, float $l, int $r, int $g, int $b): void
     {
         $rgb = Color::HSLToRGB($h, $s, $l);
         $this->assertSame($r, $rgb[0]);
@@ -673,11 +673,11 @@ final class ColorTest extends TestCase
     /**
      * Test RGB -> HSL -> RGB round-trip preserves values.
      */
-    public function testRgbToHslToRgbRoundTrip(): void
+    public function testRGBToHSLToRGBRoundTrip(): void
     {
         $original = Color::fromRGB(123, 234, 45);
         $hsl = $original->toHSLArray();
-        $roundTrip = Color::fromHsl($hsl['hue'], $hsl['saturation'], $hsl['lightness']);
+        $roundTrip = Color::fromHSL($hsl['hue'], $hsl['saturation'], $hsl['lightness']);
         $this->assertSame($original->red, $roundTrip->red);
         $this->assertSame($original->green, $roundTrip->green);
         $this->assertSame($original->blue, $roundTrip->blue);
@@ -686,9 +686,9 @@ final class ColorTest extends TestCase
     /**
      * Test HSL -> RGB -> HSL round-trip preserves values.
      */
-    public function testHslToRgbToHslRoundTrip(): void
+    public function testHSLToRGBToHSLRoundTrip(): void
     {
-        $original = Color::fromHsl(75, 0.6, 0.4);
+        $original = Color::fromHSL(75, 0.6, 0.4);
         $rgb = $original->toRGBArray();
         $roundTrip = Color::fromRGB($rgb['red'], $rgb['green'], $rgb['blue']);
         $this->assertEqualsWithDelta($original->hue, $roundTrip->hue, 0.25);
@@ -746,29 +746,29 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test toRgbString() returns modern CSS rgb() format with alpha.
+     * Test toRGBString() returns modern CSS rgb() format with alpha.
      */
-    public function testToRgbString(): void
+    public function testToRGBString(): void
     {
         $color = Color::fromRGB(120, 50, 50);
         $this->assertSame('rgb(120 50 50 / 1)', $color->toRGBString());
     }
 
     /**
-     * Test toRgbString() returns modern CSS rgb() format with partial alpha.
+     * Test toRGBString() returns modern CSS rgb() format with partial alpha.
      */
-    public function testToRgbStringWithAlpha(): void
+    public function testToRGBStringWithAlpha(): void
     {
         $color = Color::fromRGB(120, 50, 50, 128);
         $this->assertSame('rgb(120 50 50 / 0.501961)', $color->toRGBString());
     }
 
     /**
-     * Test toHslString() returns modern CSS hsl() format.
+     * Test toHSLString() returns modern CSS hsl() format.
      */
-    public function testToHslString(): void
+    public function testToHSLString(): void
     {
-        $color = Color::fromHsl(120, 0.5, 0.5);
+        $color = Color::fromHSL(120, 0.5, 0.5);
         $result = $color->toHSLString();
         $this->assertStringContainsString('hsl(', $result);
         $this->assertStringContainsString('deg', $result);
@@ -777,11 +777,11 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test toHslString() returns modern CSS hsl() format with partial alpha.
+     * Test toHSLString() returns modern CSS hsl() format with partial alpha.
      */
-    public function testToHslStringWithAlpha(): void
+    public function testToHSLStringWithAlpha(): void
     {
-        $color = Color::fromHsl(120, 0.5, 0.5, 128);
+        $color = Color::fromHSL(120, 0.5, 0.5, 128);
         $result = $color->toHSLString();
         $this->assertStringContainsString('hsl(', $result);
         $this->assertStringContainsString('/ 0.501961', $result);
@@ -1191,7 +1191,7 @@ final class ColorTest extends TestCase
      */
     public function testComplementPreservesAlpha(): void
     {
-        $color = Color::fromHsl(60, 0.5, 0.5, 128);
+        $color = Color::fromHSL(60, 0.5, 0.5, 128);
         $complement = $color->complement();
         $this->assertSame(128, $complement->alpha);
     }
@@ -1201,7 +1201,7 @@ final class ColorTest extends TestCase
      */
     public function testComplementPreservesSaturation(): void
     {
-        $color = Color::fromHsl(60, 0.7, 0.5);
+        $color = Color::fromHSL(60, 0.7, 0.5);
         $complement = $color->complement();
         $this->assertEqualsWithDelta(0.7, $complement->saturation, 0.01);
     }
@@ -1211,7 +1211,7 @@ final class ColorTest extends TestCase
      */
     public function testComplementPreservesLightness(): void
     {
-        $color = Color::fromHsl(60, 0.5, 0.3);
+        $color = Color::fromHSL(60, 0.5, 0.3);
         $complement = $color->complement();
         $this->assertEqualsWithDelta(0.3, $complement->lightness, 0.01);
     }
@@ -1389,7 +1389,7 @@ final class ColorTest extends TestCase
      */
     public function testEdgeCaseZeroSaturation(): void
     {
-        $color = Color::fromHsl(120, 0, 0.5);
+        $color = Color::fromHSL(120, 0, 0.5);
         $this->assertSame(128, $color->red);
         $this->assertSame(128, $color->green);
         $this->assertSame(128, $color->blue);
@@ -1400,7 +1400,7 @@ final class ColorTest extends TestCase
      */
     public function testEdgeCaseMaxSaturation(): void
     {
-        $color = Color::fromHsl(120, 1, 0.5);
+        $color = Color::fromHSL(120, 1, 0.5);
         $this->assertSame(0, $color->red);
         $this->assertSame(255, $color->green);
         $this->assertSame(0, $color->blue);
@@ -1411,7 +1411,7 @@ final class ColorTest extends TestCase
      */
     public function testEdgeCaseZeroLightness(): void
     {
-        $color = Color::fromHsl(120, 1, 0);
+        $color = Color::fromHSL(120, 1, 0);
         $this->assertSame(0, $color->red);
         $this->assertSame(0, $color->green);
         $this->assertSame(0, $color->blue);
@@ -1422,7 +1422,7 @@ final class ColorTest extends TestCase
      */
     public function testEdgeCaseMaxLightness(): void
     {
-        $color = Color::fromHsl(120, 1, 1);
+        $color = Color::fromHSL(120, 1, 1);
         $this->assertSame(255, $color->red);
         $this->assertSame(255, $color->green);
         $this->assertSame(255, $color->blue);
@@ -1433,8 +1433,8 @@ final class ColorTest extends TestCase
      */
     public function testEdgeCaseHue360(): void
     {
-        $color1 = Color::fromHsl(0, 1, 0.5);
-        $color2 = Color::fromHsl(360, 1, 0.5);
+        $color1 = Color::fromHSL(0, 1, 0.5);
+        $color2 = Color::fromHSL(360, 1, 0.5);
         $this->assertTrue($color1->equals($color2));
     }
 
@@ -1443,8 +1443,8 @@ final class ColorTest extends TestCase
      */
     public function testEdgeCaseNegativeHue(): void
     {
-        $color1 = Color::fromHsl(120, 1, 0.5);
-        $color2 = Color::fromHsl(-240, 1, 0.5);
+        $color1 = Color::fromHSL(120, 1, 0.5);
+        $color2 = Color::fromHSL(-240, 1, 0.5);
         $this->assertTrue($color1->equals($color2));
     }
 

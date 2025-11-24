@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1763958262">
-  <project timestamp="1763958262" name="Clover Coverage">
+<coverage generated="1763959735">
+  <project timestamp="1763959735" name="Clover Coverage">
     <package name="Galaxon\Color">
       <file name="C:\Users\shaun\Projects\PHP\Galaxon\Color\src\Color.php">
         <class name="Galaxon\Color\Color" namespace="Galaxon\Color">
