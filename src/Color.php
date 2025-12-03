@@ -60,8 +60,10 @@ class Color implements Stringable, Equatable
 
     // region Virtual properties
 
-    // PHP_Codesniffer doesn't know property hooks yet.
-    // phpcs:disable
+    // PHP_CodeSniffer doesn't know about property hooks yet.
+    // phpcs:disable PSR2.Classes.PropertyDeclaration
+    // phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
+
     /**
      * Get the red component of the color.
      *
@@ -171,7 +173,9 @@ class Color implements Stringable, Equatable
             return self::clamp($lStar / 100.0);
         }
     }
-    // phpcs:enable
+
+    // phpcs:enable PSR2.Classes.PropertyDeclaration
+    // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 
     // endregion
 

@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Core",
-                "reference": "065885eb26671c467cc46b1c0e4db1006a884266"
+                "reference": "9768aaf2d8bbcf7f8d8f87353860f9d81c297d6e"
             },
             "require": {
                 "php": "^8.4"
@@ -43,7 +43,7 @@
                     "vendor/bin/phpcbf"
                 ],
                 "check": [
-                    "vendor/bin/phpcs"
+                    "vendor/bin/phpcs -s"
                 ],
                 "analyse": [
                     "vendor/bin/phpstan analyse -l 9"
@@ -108,7 +108,7 @@
                     "vendor/bin/phpcbf"
                 ],
                 "check": [
-                    "vendor/bin/phpcs"
+                    "vendor/bin/phpcs -s"
                 ],
                 "analyse": [
                     "vendor/bin/phpstan analyse -l 9"
@@ -239,7 +239,7 @@
             "dist": {
                 "type": "path",
                 "url": "../CodingStandard",
-                "reference": "f02913c0211fa47a842ecda4b04fd527a229feb4"
+                "reference": "7f02ec5e5ece2dcd21afc8108982d1c80c39ceaf"
             },
             "require": {
                 "php": "^8.4"
@@ -258,7 +258,7 @@
                     "vendor/bin/phpcbf"
                 ],
                 "check": [
-                    "vendor/bin/phpcs"
+                    "vendor/bin/phpcs -s"
                 ],
                 "analyse": [
                     "vendor/bin/phpstan analyse -l 9"
