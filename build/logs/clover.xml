@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1763959735">
-  <project timestamp="1763959735" name="Clover Coverage">
+<coverage generated="1764721078">
+  <project timestamp="1764721078" name="Clover Coverage">
     <package name="Galaxon\Color">
       <file name="C:\Users\shaun\Projects\PHP\Galaxon\Color\src\Color.php">
         <class name="Galaxon\Color\Color" namespace="Galaxon\Color">
-          <metrics complexity="79" methods="45" coveredmethods="45" conditionals="0" coveredconditionals="0" statements="191" coveredstatements="191" elements="236" coveredelements="236"/>
+          <metrics complexity="80" methods="46" coveredmethods="46" conditionals="0" coveredconditionals="0" statements="191" coveredstatements="191" elements="237" coveredelements="237"/>
         </class>
         <line num="189" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="98"/>
         <line num="191" type="stmt" count="98"/>
@@ -27,96 +27,93 @@
         <line num="235" type="stmt" count="61"/>
         <line num="251" type="method" name="fromHSL" visibility="public" complexity="2" crap="2" count="32"/>
         <line num="254" type="stmt" count="32"/>
-        <line num="255" type="stmt" count="3"/>
-        <line num="259" type="stmt" count="32"/>
-        <line num="260" type="stmt" count="32"/>
-        <line num="261" type="stmt" count="31"/>
-        <line num="262" type="stmt" count="30"/>
-        <line num="265" type="stmt" count="30"/>
-        <line num="268" type="stmt" count="30"/>
-        <line num="271" type="stmt" count="30"/>
+        <line num="257" type="stmt" count="32"/>
+        <line num="258" type="stmt" count="3"/>
+        <line num="262" type="stmt" count="32"/>
+        <line num="263" type="stmt" count="31"/>
+        <line num="264" type="stmt" count="30"/>
+        <line num="267" type="stmt" count="30"/>
+        <line num="270" type="stmt" count="30"/>
         <line num="273" type="stmt" count="30"/>
-        <line num="298" type="method" name="RGBToHSL" visibility="public" complexity="4" crap="4" count="12"/>
-        <line num="301" type="stmt" count="12"/>
-        <line num="302" type="stmt" count="12"/>
+        <line num="275" type="stmt" count="30"/>
+        <line num="300" type="method" name="RGBToHSL" visibility="public" complexity="4" crap="4" count="12"/>
         <line num="303" type="stmt" count="12"/>
-        <line num="306" type="stmt" count="12"/>
-        <line num="307" type="stmt" count="12"/>
+        <line num="304" type="stmt" count="12"/>
+        <line num="305" type="stmt" count="12"/>
         <line num="308" type="stmt" count="12"/>
-        <line num="311" type="stmt" count="12"/>
-        <line num="312" type="stmt" count="12"/>
+        <line num="309" type="stmt" count="12"/>
+        <line num="310" type="stmt" count="12"/>
         <line num="313" type="stmt" count="12"/>
         <line num="314" type="stmt" count="12"/>
-        <line num="317" type="stmt" count="12"/>
-        <line num="318" type="stmt" count="3"/>
-        <line num="319" type="stmt" count="3"/>
-        <line num="322" type="stmt" count="9"/>
-        <line num="323" type="stmt" count="3"/>
-        <line num="324" type="stmt" count="6"/>
-        <line num="325" type="stmt" count="4"/>
-        <line num="327" type="stmt" count="2"/>
-        <line num="330" type="stmt" count="9"/>
-        <line num="335" type="stmt" count="9"/>
-        <line num="338" type="stmt" count="12"/>
-        <line num="352" type="method" name="HSLToRGB" visibility="public" complexity="1" crap="1" count="36"/>
-        <line num="355" type="stmt" count="36"/>
+        <line num="315" type="stmt" count="12"/>
+        <line num="316" type="stmt" count="12"/>
+        <line num="319" type="stmt" count="12"/>
+        <line num="320" type="stmt" count="3"/>
+        <line num="321" type="stmt" count="3"/>
+        <line num="324" type="stmt" count="9"/>
+        <line num="325" type="stmt" count="3"/>
+        <line num="326" type="stmt" count="6"/>
+        <line num="327" type="stmt" count="4"/>
+        <line num="329" type="stmt" count="2"/>
+        <line num="331" type="stmt" count="9"/>
+        <line num="336" type="stmt" count="9"/>
+        <line num="339" type="stmt" count="12"/>
+        <line num="353" type="method" name="HSLToRGB" visibility="public" complexity="1" crap="1" count="36"/>
         <line num="356" type="stmt" count="36"/>
-        <line num="357" type="stmt" count="36"/>
+        <line num="359" type="stmt" count="36"/>
         <line num="360" type="stmt" count="36"/>
-        <line num="361" type="stmt" count="36"/>
-        <line num="362" type="stmt" count="36"/>
         <line num="363" type="stmt" count="36"/>
         <line num="364" type="stmt" count="36"/>
         <line num="365" type="stmt" count="36"/>
+        <line num="366" type="stmt" count="36"/>
         <line num="367" type="stmt" count="36"/>
-        <line num="381" type="method" name="withRed" visibility="public" complexity="1" crap="1" count="3"/>
-        <line num="383" type="stmt" count="3"/>
-        <line num="384" type="stmt" count="2"/>
-        <line num="394" type="method" name="withGreen" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="396" type="stmt" count="2"/>
-        <line num="397" type="stmt" count="2"/>
-        <line num="407" type="method" name="withBlue" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="409" type="stmt" count="1"/>
-        <line num="410" type="stmt" count="1"/>
-        <line num="420" type="method" name="withAlpha" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="422" type="stmt" count="2"/>
-        <line num="423" type="stmt" count="2"/>
-        <line num="432" type="method" name="withHue" visibility="public" complexity="1" crap="1" count="6"/>
-        <line num="434" type="stmt" count="6"/>
-        <line num="435" type="stmt" count="6"/>
-        <line num="445" type="method" name="withSaturation" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="447" type="stmt" count="2"/>
-        <line num="448" type="stmt" count="1"/>
-        <line num="458" type="method" name="withLightness" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="460" type="stmt" count="2"/>
-        <line num="461" type="stmt" count="1"/>
-        <line num="474" type="method" name="equals" visibility="public" complexity="2" crap="2" count="10"/>
-        <line num="477" type="stmt" count="10"/>
-        <line num="492" type="method" name="mix" visibility="public" complexity="3" crap="3" count="5"/>
-        <line num="495" type="stmt" count="5"/>
-        <line num="498" type="stmt" count="4"/>
-        <line num="499" type="stmt" count="1"/>
-        <line num="502" type="stmt" count="3"/>
-        <line num="503" type="stmt" count="1"/>
-        <line num="507" type="stmt" count="2"/>
-        <line num="508" type="stmt" count="2"/>
+        <line num="368" type="stmt" count="36"/>
+        <line num="370" type="stmt" count="36"/>
+        <line num="384" type="method" name="withRed" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="386" type="stmt" count="3"/>
+        <line num="387" type="stmt" count="2"/>
+        <line num="397" type="method" name="withGreen" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="399" type="stmt" count="2"/>
+        <line num="400" type="stmt" count="2"/>
+        <line num="410" type="method" name="withBlue" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="412" type="stmt" count="1"/>
+        <line num="413" type="stmt" count="1"/>
+        <line num="423" type="method" name="withAlpha" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="425" type="stmt" count="2"/>
+        <line num="426" type="stmt" count="2"/>
+        <line num="435" type="method" name="withHue" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="437" type="stmt" count="6"/>
+        <line num="447" type="method" name="withSaturation" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="449" type="stmt" count="2"/>
+        <line num="450" type="stmt" count="1"/>
+        <line num="460" type="method" name="withLightness" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="462" type="stmt" count="2"/>
+        <line num="463" type="stmt" count="1"/>
+        <line num="476" type="method" name="equals" visibility="public" complexity="2" crap="2" count="10"/>
+        <line num="479" type="stmt" count="10"/>
+        <line num="494" type="method" name="mix" visibility="public" complexity="3" crap="3" count="5"/>
+        <line num="497" type="stmt" count="5"/>
+        <line num="500" type="stmt" count="4"/>
+        <line num="501" type="stmt" count="1"/>
+        <line num="504" type="stmt" count="3"/>
+        <line num="505" type="stmt" count="1"/>
         <line num="509" type="stmt" count="2"/>
         <line num="510" type="stmt" count="2"/>
         <line num="511" type="stmt" count="2"/>
-        <line num="514" type="stmt" count="2"/>
-        <line num="522" type="method" name="complement" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="524" type="stmt" count="5"/>
-        <line num="539" type="method" name="gamma" visibility="public" complexity="2" crap="2" count="17"/>
-        <line num="542" type="stmt" count="17"/>
-        <line num="545" type="stmt" count="17"/>
-        <line num="557" type="method" name="average" visibility="public" complexity="4" crap="4" count="5"/>
-        <line num="560" type="stmt" count="5"/>
-        <line num="561" type="stmt" count="5"/>
-        <line num="562" type="stmt" count="1"/>
-        <line num="566" type="stmt" count="4"/>
-        <line num="567" type="stmt" count="1"/>
-        <line num="571" type="stmt" count="3"/>
-        <line num="572" type="stmt" count="3"/>
+        <line num="512" type="stmt" count="2"/>
+        <line num="513" type="stmt" count="2"/>
+        <line num="516" type="stmt" count="2"/>
+        <line num="524" type="method" name="complement" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="526" type="stmt" count="5"/>
+        <line num="541" type="method" name="gamma" visibility="public" complexity="2" crap="2" count="17"/>
+        <line num="544" type="stmt" count="17"/>
+        <line num="547" type="stmt" count="17"/>
+        <line num="559" type="method" name="average" visibility="public" complexity="4" crap="4" count="5"/>
+        <line num="562" type="stmt" count="5"/>
+        <line num="563" type="stmt" count="5"/>
+        <line num="564" type="stmt" count="1"/>
+        <line num="568" type="stmt" count="4"/>
+        <line num="569" type="stmt" count="1"/>
         <line num="573" type="stmt" count="3"/>
         <line num="574" type="stmt" count="3"/>
         <line num="575" type="stmt" count="3"/>
@@ -124,127 +121,131 @@
         <line num="577" type="stmt" count="3"/>
         <line num="578" type="stmt" count="3"/>
         <line num="579" type="stmt" count="3"/>
-        <line num="583" type="stmt" count="3"/>
-        <line num="584" type="stmt" count="3"/>
+        <line num="580" type="stmt" count="3"/>
+        <line num="581" type="stmt" count="3"/>
         <line num="585" type="stmt" count="3"/>
         <line num="586" type="stmt" count="3"/>
         <line num="587" type="stmt" count="3"/>
-        <line num="590" type="stmt" count="3"/>
-        <line num="603" type="method" name="contrastRatio" visibility="public" complexity="1" crap="1" count="7"/>
-        <line num="605" type="stmt" count="7"/>
-        <line num="606" type="stmt" count="7"/>
+        <line num="588" type="stmt" count="3"/>
+        <line num="589" type="stmt" count="3"/>
+        <line num="592" type="stmt" count="3"/>
+        <line num="605" type="method" name="contrastRatio" visibility="public" complexity="1" crap="1" count="7"/>
         <line num="607" type="stmt" count="7"/>
-        <line num="620" type="method" name="bestTextColor" visibility="public" complexity="2" crap="2" count="4"/>
-        <line num="622" type="stmt" count="4"/>
-        <line num="623" type="stmt" count="4"/>
+        <line num="608" type="stmt" count="7"/>
+        <line num="609" type="stmt" count="7"/>
+        <line num="622" type="method" name="bestTextColor" visibility="public" complexity="2" crap="2" count="4"/>
         <line num="624" type="stmt" count="4"/>
-        <line num="639" type="method" name="isValidHex" visibility="public" complexity="4" crap="4" count="119"/>
-        <line num="641" type="stmt" count="119"/>
-        <line num="644" type="stmt" count="119"/>
-        <line num="645" type="stmt" count="1"/>
-        <line num="649" type="stmt" count="118"/>
-        <line num="650" type="stmt" count="20"/>
-        <line num="654" type="stmt" count="118"/>
-        <line num="664" type="method" name="isValidName" visibility="public" complexity="1" crap="1" count="109"/>
-        <line num="666" type="stmt" count="109"/>
-        <line num="677" type="method" name="normalizeHex" visibility="public" complexity="5" crap="5" count="103"/>
-        <line num="680" type="stmt" count="103"/>
-        <line num="681" type="stmt" count="1"/>
-        <line num="685" type="stmt" count="102"/>
-        <line num="688" type="stmt" count="102"/>
-        <line num="689" type="stmt" count="102"/>
-        <line num="690" type="stmt" count="95"/>
-        <line num="694" type="stmt" count="8"/>
-        <line num="695" type="stmt" count="8"/>
+        <line num="625" type="stmt" count="4"/>
+        <line num="626" type="stmt" count="4"/>
+        <line num="641" type="method" name="isValidHex" visibility="public" complexity="4" crap="4" count="119"/>
+        <line num="643" type="stmt" count="119"/>
+        <line num="646" type="stmt" count="119"/>
+        <line num="647" type="stmt" count="1"/>
+        <line num="651" type="stmt" count="118"/>
+        <line num="652" type="stmt" count="20"/>
+        <line num="656" type="stmt" count="118"/>
+        <line num="666" type="method" name="isValidName" visibility="public" complexity="1" crap="1" count="109"/>
+        <line num="668" type="stmt" count="109"/>
+        <line num="679" type="method" name="normalizeHex" visibility="public" complexity="5" crap="5" count="103"/>
+        <line num="682" type="stmt" count="103"/>
+        <line num="683" type="stmt" count="1"/>
+        <line num="687" type="stmt" count="102"/>
+        <line num="690" type="stmt" count="102"/>
+        <line num="691" type="stmt" count="102"/>
+        <line num="692" type="stmt" count="95"/>
         <line num="696" type="stmt" count="8"/>
-        <line num="709" type="method" name="hexToBytes" visibility="public" complexity="2" crap="2" count="103"/>
-        <line num="712" type="stmt" count="103"/>
-        <line num="713" type="stmt" count="2"/>
-        <line num="717" type="stmt" count="101"/>
-        <line num="721" type="stmt" count="101"/>
+        <line num="697" type="stmt" count="8"/>
+        <line num="698" type="stmt" count="8"/>
+        <line num="711" type="method" name="hexToBytes" visibility="public" complexity="2" crap="2" count="103"/>
+        <line num="714" type="stmt" count="103"/>
+        <line num="715" type="stmt" count="2"/>
+        <line num="719" type="stmt" count="101"/>
         <line num="723" type="stmt" count="101"/>
         <line num="725" type="stmt" count="101"/>
         <line num="727" type="stmt" count="101"/>
         <line num="729" type="stmt" count="101"/>
-        <line num="740" type="method" name="nameToHex" visibility="public" complexity="2" crap="2" count="94"/>
-        <line num="742" type="stmt" count="94"/>
-        <line num="745" type="stmt" count="94"/>
-        <line num="746" type="stmt" count="1"/>
-        <line num="750" type="stmt" count="93"/>
-        <line num="761" type="method" name="nameToBytes" visibility="public" complexity="1" crap="1" count="92"/>
-        <line num="763" type="stmt" count="92"/>
-        <line num="764" type="stmt" count="92"/>
-        <line num="775" type="method" name="parseToBytes" visibility="public" complexity="2" crap="2" count="100"/>
-        <line num="777" type="stmt" count="100"/>
-        <line num="780" type="stmt" count="100"/>
-        <line num="781" type="stmt" count="91"/>
-        <line num="785" type="stmt" count="9"/>
-        <line num="800" type="method" name="toHex" visibility="public" complexity="4" crap="4" count="5"/>
-        <line num="803" type="stmt" count="5"/>
-        <line num="806" type="stmt" count="5"/>
-        <line num="807" type="stmt" count="1"/>
-        <line num="811" type="stmt" count="5"/>
-        <line num="812" type="stmt" count="1"/>
-        <line num="816" type="stmt" count="5"/>
-        <line num="825" type="method" name="toRGBString" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="827" type="stmt" count="2"/>
-        <line num="828" type="stmt" count="2"/>
-        <line num="837" type="method" name="toHSLString" visibility="public" complexity="1" crap="1" count="2"/>
-        <line num="839" type="stmt" count="2"/>
-        <line num="840" type="stmt" count="2"/>
+        <line num="731" type="stmt" count="101"/>
+        <line num="742" type="method" name="nameToHex" visibility="public" complexity="2" crap="2" count="94"/>
+        <line num="744" type="stmt" count="94"/>
+        <line num="747" type="stmt" count="94"/>
+        <line num="748" type="stmt" count="1"/>
+        <line num="752" type="stmt" count="93"/>
+        <line num="763" type="method" name="nameToBytes" visibility="public" complexity="1" crap="1" count="92"/>
+        <line num="765" type="stmt" count="92"/>
+        <line num="766" type="stmt" count="92"/>
+        <line num="777" type="method" name="parseToBytes" visibility="public" complexity="2" crap="2" count="100"/>
+        <line num="779" type="stmt" count="100"/>
+        <line num="782" type="stmt" count="100"/>
+        <line num="783" type="stmt" count="91"/>
+        <line num="787" type="stmt" count="9"/>
+        <line num="802" type="method" name="toHex" visibility="public" complexity="4" crap="4" count="5"/>
+        <line num="805" type="stmt" count="5"/>
+        <line num="808" type="stmt" count="5"/>
+        <line num="809" type="stmt" count="1"/>
+        <line num="813" type="stmt" count="5"/>
+        <line num="814" type="stmt" count="1"/>
+        <line num="818" type="stmt" count="5"/>
+        <line num="827" type="method" name="toRGBString" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="829" type="stmt" count="2"/>
+        <line num="830" type="stmt" count="2"/>
+        <line num="839" type="method" name="toHSLString" visibility="public" complexity="1" crap="1" count="2"/>
         <line num="841" type="stmt" count="2"/>
         <line num="842" type="stmt" count="2"/>
         <line num="843" type="stmt" count="2"/>
-        <line num="854" type="method" name="__toString" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="856" type="stmt" count="1"/>
-        <line num="868" type="method" name="toRGBArray" visibility="public" complexity="1" crap="1" count="3"/>
-        <line num="870" type="stmt" count="3"/>
-        <line num="871" type="stmt" count="3"/>
+        <line num="844" type="stmt" count="2"/>
+        <line num="845" type="stmt" count="2"/>
+        <line num="856" type="method" name="__toString" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="858" type="stmt" count="1"/>
+        <line num="870" type="method" name="toRGBArray" visibility="public" complexity="1" crap="1" count="3"/>
         <line num="872" type="stmt" count="3"/>
         <line num="873" type="stmt" count="3"/>
         <line num="874" type="stmt" count="3"/>
         <line num="875" type="stmt" count="3"/>
-        <line num="886" type="method" name="toHSLArray" visibility="public" complexity="1" crap="1" count="3"/>
-        <line num="888" type="stmt" count="3"/>
-        <line num="889" type="stmt" count="3"/>
+        <line num="876" type="stmt" count="3"/>
+        <line num="877" type="stmt" count="3"/>
+        <line num="888" type="method" name="toHSLArray" visibility="public" complexity="1" crap="1" count="3"/>
         <line num="890" type="stmt" count="3"/>
         <line num="891" type="stmt" count="3"/>
         <line num="892" type="stmt" count="3"/>
-        <line num="900" type="method" name="toArray" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="902" type="stmt" count="1"/>
-        <line num="903" type="stmt" count="1"/>
+        <line num="893" type="stmt" count="3"/>
+        <line num="894" type="stmt" count="3"/>
+        <line num="902" type="method" name="toArray" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="904" type="stmt" count="1"/>
         <line num="905" type="stmt" count="1"/>
-        <line num="922" type="method" name="setBytes" visibility="private" complexity="1" crap="1" count="96"/>
-        <line num="924" type="stmt" count="96"/>
-        <line num="935" type="method" name="getByte" visibility="private" complexity="1" crap="1" count="73"/>
-        <line num="937" type="stmt" count="73"/>
-        <line num="945" type="method" name="computeHSL" visibility="private" complexity="2" crap="2" count="14"/>
-        <line num="947" type="stmt" count="14"/>
-        <line num="948" type="stmt" count="6"/>
-        <line num="962" type="method" name="clamp" visibility="private" complexity="1" crap="1" count="47"/>
-        <line num="964" type="stmt" count="47"/>
-        <line num="974" type="method" name="validateByte" visibility="private" complexity="3" crap="3" count="72"/>
-        <line num="976" type="stmt" count="72"/>
-        <line num="977" type="stmt" count="5"/>
-        <line num="988" type="method" name="validateFraction" visibility="private" complexity="3" crap="3" count="45"/>
-        <line num="990" type="stmt" count="45"/>
-        <line num="991" type="stmt" count="5"/>
-        <line num="1002" type="method" name="byteToFraction" visibility="private" complexity="1" crap="1" count="16"/>
-        <line num="1004" type="stmt" count="16"/>
-        <line num="1014" type="method" name="fractionToByte" visibility="private" complexity="1" crap="1" count="41"/>
-        <line num="1016" type="stmt" count="41"/>
-        <line num="1025" type="method" name="formatFloat" visibility="private" complexity="1" crap="1" count="4"/>
-        <line num="1027" type="stmt" count="4"/>
-        <line num="1036" type="method" name="formatAngle" visibility="private" complexity="1" crap="1" count="2"/>
-        <line num="1038" type="stmt" count="2"/>
-        <line num="1047" type="method" name="formatPercent" visibility="private" complexity="1" crap="1" count="2"/>
-        <line num="1049" type="stmt" count="2"/>
-        <line num="1058" type="method" name="formatByteAsFraction" visibility="private" complexity="1" crap="1" count="4"/>
-        <line num="1060" type="stmt" count="4"/>
-        <metrics loc="1226" ncloc="694" classes="1" methods="45" coveredmethods="45" conditionals="0" coveredconditionals="0" statements="191" coveredstatements="191" elements="236" coveredelements="236"/>
+        <line num="906" type="stmt" count="1"/>
+        <line num="907" type="stmt" count="1"/>
+        <line num="924" type="method" name="setBytes" visibility="private" complexity="1" crap="1" count="96"/>
+        <line num="926" type="stmt" count="96"/>
+        <line num="937" type="method" name="getByte" visibility="private" complexity="1" crap="1" count="73"/>
+        <line num="939" type="stmt" count="73"/>
+        <line num="947" type="method" name="computeHSL" visibility="private" complexity="2" crap="2" count="14"/>
+        <line num="949" type="stmt" count="14"/>
+        <line num="950" type="stmt" count="6"/>
+        <line num="964" type="method" name="clamp" visibility="private" complexity="1" crap="1" count="47"/>
+        <line num="966" type="stmt" count="47"/>
+        <line num="976" type="method" name="validateByte" visibility="private" complexity="3" crap="3" count="72"/>
+        <line num="978" type="stmt" count="72"/>
+        <line num="979" type="stmt" count="5"/>
+        <line num="990" type="method" name="validateFraction" visibility="private" complexity="3" crap="3" count="45"/>
+        <line num="992" type="stmt" count="45"/>
+        <line num="993" type="stmt" count="5"/>
+        <line num="1004" type="method" name="byteToFraction" visibility="private" complexity="1" crap="1" count="16"/>
+        <line num="1006" type="stmt" count="16"/>
+        <line num="1016" type="method" name="fractionToByte" visibility="private" complexity="1" crap="1" count="41"/>
+        <line num="1018" type="stmt" count="41"/>
+        <line num="1027" type="method" name="normalizeHue" visibility="private" complexity="1" crap="1" count="42"/>
+        <line num="1029" type="stmt" count="42"/>
+        <line num="1038" type="method" name="formatFloat" visibility="private" complexity="1" crap="1" count="4"/>
+        <line num="1040" type="stmt" count="4"/>
+        <line num="1049" type="method" name="formatAngle" visibility="private" complexity="1" crap="1" count="2"/>
+        <line num="1051" type="stmt" count="2"/>
+        <line num="1060" type="method" name="formatPercent" visibility="private" complexity="1" crap="1" count="2"/>
+        <line num="1062" type="stmt" count="2"/>
+        <line num="1071" type="method" name="formatByteAsFraction" visibility="private" complexity="1" crap="1" count="4"/>
+        <line num="1073" type="stmt" count="4"/>
+        <metrics loc="1239" ncloc="700" classes="1" methods="46" coveredmethods="46" conditionals="0" coveredconditionals="0" statements="191" coveredstatements="191" elements="237" coveredelements="237"/>
       </file>
     </package>
-    <metrics files="1" loc="1226" ncloc="694" classes="1" methods="45" coveredmethods="45" conditionals="0" coveredconditionals="0" statements="191" coveredstatements="191" elements="236" coveredelements="236"/>
+    <metrics files="1" loc="1239" ncloc="700" classes="1" methods="46" coveredmethods="46" conditionals="0" coveredconditionals="0" statements="191" coveredstatements="191" elements="237" coveredelements="237"/>
   </project>
 </coverage>

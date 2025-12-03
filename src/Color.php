@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Galaxon\Color;
 
 use ArgumentCountError;
-use Galaxon\Core\Angle;
 use Galaxon\Core\Equatable;
 use Galaxon\Core\Floats;
+use Galaxon\Units\MeasurementTypes\Angle;
 use Override;
 use RangeException;
 use Stringable;
@@ -250,13 +250,15 @@ class Color implements Stringable, Equatable
      */
     public static function fromHSL(float $hue, float $saturation, float $lightness, int|float $alpha = 255): self
     {
+        // Normalize the hue angle.
+        $hue = self::normalizeHue($hue);
+
         // If alpha was provided as a float, convert it to a byte.
         if (is_float($alpha)) {
             $alpha = self::fractionToByte($alpha);
         }
 
         // Validate the arguments.
-        $hue = Angle::wrapDegrees($hue, false);
         self::validateFraction($saturation);
         self::validateFraction($lightness);
         self::validateByte($alpha);
@@ -318,7 +320,7 @@ class Color implements Stringable, Equatable
             $h = 0.0;
             $s = 0.0;
         } else {
-            // Calculate hue.
+            // Calculate hue and wrap to [0, 360).
             if ($max === $r) {
                 $h = fmod(($g - $b) / $c, 6);
             } elseif ($max === $g) {
@@ -326,12 +328,11 @@ class Color implements Stringable, Equatable
             } else { // $max === $b
                 $h = ($r - $g) / $c + 4;
             }
-            // Calculate hue and wrap to [0, 360).
-            $h = Angle::wrapDegrees($h * 60, false);
+            $h = self::normalizeHue($h * 60);
 
             // Calculate saturation.
             // Note: $l cannot be 0 or 1 here because that would require $c == 0,
-            // which is handled by the if branch above.
+            // which is handled by the `if` branch above.
             $s = $c / (1 - abs(2 * $l - 1));
         }
 
@@ -351,8 +352,10 @@ class Color implements Stringable, Equatable
      */
     public static function HSLToRGB(float $hue, float $saturation, float $lightness): array
     {
-        // Ensure all values are in the desired ranges.
-        $hue = Angle::wrapDegrees($hue, false);
+        // Normalize the hue angle.
+        $hue = self::normalizeHue($hue);
+
+        // Validate saturation and lightness.
         self::validateFraction($saturation);
         self::validateFraction($lightness);
 
@@ -431,7 +434,6 @@ class Color implements Stringable, Equatable
      */
     public function withHue(float $hue): self
     {
-        $hue = Angle::wrapDegrees($hue, false);
         return self::fromHSL($hue, $this->saturation, $this->lightness, $this->alpha);
     }
 
@@ -1017,6 +1019,17 @@ class Color implements Stringable, Equatable
     }
 
     /**
+     * Wrap the hue angle to the range [0, 360)
+     *
+     * @param float $hue The hue angle to wrap.
+     * @return float The wrapped hue angle.
+     */
+    private static function normalizeHue(float $hue): float
+    {
+        return new Angle($hue, 'deg')->wrap(false)->value;
+    }
+
+    /**
      * Format a fraction.
      *
      * @param float $value The float to format.
@@ -1028,14 +1041,14 @@ class Color implements Stringable, Equatable
     }
 
     /**
-     * Format an angle in canonical CSS style.
+     * Format an angle in canonical CSS style, e.g. '123deg' or '12.345deg'
      *
      * @param float $angle The angle to format.
      * @return string The formatted angle string.
      */
     private static function formatAngle(float $angle): string
     {
-        return self::formatFloat($angle) . 'deg';
+        return new Angle($angle, 'deg')->format('f', 6, true, false);
     }
 
     /**

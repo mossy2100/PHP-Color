@@ -10,13 +10,18 @@
         },
         {
             "type": "path",
+            "url": "../Units"
+        },
+        {
+            "type": "path",
             "url": "../CodingStandard"
         }
     ],
     "require": {
         "php": "^8.4",
         "ext-ctype": "*",
-        "galaxon/core": "@dev"
+        "galaxon/core": "@dev",
+        "galaxon/units": "@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0",
