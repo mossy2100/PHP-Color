@@ -24,7 +24,9 @@ This package provides a comprehensive Color class for working with colors in PHP
 ## Requirements
 
 - PHP ^8.4
-- galaxon/core ^0.3
+- ext-ctype
+- galaxon/core
+- galaxon/units
 
 ## Installation
 
