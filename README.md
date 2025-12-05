@@ -2,7 +2,7 @@
 
 An immutable, memory-efficient Color class for PHP with support for RGB and HSL color spaces, CSS color names, and WCAG accessibility features.
 
-**[License](LICENSE)** | **[Changelog](CHANGELOG.md)** | **[Coverage Report](https://html-preview.github.io/?url=https://github.com/mossy2100/PHP-Color/blob/main/build/coverage/index.html)**
+**[License](LICENSE)** | **[Changelog](CHANGELOG.md)**
 
 ![PHP 8.4](docs/logo_php8_4.png)
 
@@ -53,18 +53,18 @@ $semiTransparent = new Color('#ff000080');
 
 // From RGB values with optional alpha channel.
 // All channels can be specified as integers in the range [0, 255] or floats in the range [0.0, 1.0].
-$purple = Color::fromRGB(128, 0, 255);
-$transparentRed = Color::fromRGB(255, 0, 0, 128);
-$royalBlue = Color::fromRGB(0.255, 0.412, 0.882);
-$transparentGreen = Color::fromRGB(0.133, 0.545, 0.133, 0.75);
+$purple = Color::fromRgb(128, 0, 255);
+$transparentRed = Color::fromRgb(255, 0, 0, 128);
+$royalBlue = Color::fromRgb(0.255, 0.412, 0.882);
+$transparentGreen = Color::fromRgb(0.133, 0.545, 0.133, 0.75);
 
 // From HSLA values with optional alpha channel.
 // Hue is specified in degrees.
 // Saturation and lightness are specified as floats in the range [0.0, 1.0].
 // Alpha can be specified as an integer in the range [0, 255] or a float in the range [0.0, 1.0].
-$green = Color::fromHSL(120, 1.0, 0.5);
-$pastel = Color::fromHSL(200, 0.5, 0.8, 200);
-$transparentPink = Color::fromHSL(350, 1.0, 0.876, 0.66);
+$green = Color::fromHsl(120, 1.0, 0.5);
+$pastel = Color::fromHsl(200, 0.5, 0.8, 200);
+$transparentPink = Color::fromHsl(350, 1.0, 0.876, 0.66);
 ```
 
 ### Accessing Color Properties
@@ -117,7 +117,7 @@ $red->hue;  // Still 0
 ### String Output
 
 ```php
-$color = Color::fromRGB(255, 128, 0, 200);
+$color = Color::fromRgb(255, 128, 0, 200);
 
 // Hex strings
 (string)$color;                  // '#ff8000c8'
@@ -127,8 +127,8 @@ $color->toHex(true, false);      // 'ff8000c8' (no hash)
 $color->toHex(true, true, true); // '#FF8000C8' (upper-case)
 
 // CSS functional notation (modern syntax)
-$color->toRGBString();  // 'rgb(255 128 0 / 0.784314)'
-$color->toHSLString();   // 'hsl(30.117647deg 100% 50% / 0.784314)'
+$color->toRgbString();  // 'rgb(255 128 0 / 0.784314)'
+$color->toHslString();   // 'hsl(30.117647deg 100% 50% / 0.784314)'
 ```
 
 ### Color Operations
@@ -191,10 +191,10 @@ $bytes = Color::parseToBytes('#ff8000');
 
 ```php
 // RGB to HSL (returns list: [hue, saturation, lightness])
-$hsl = Color::RGBToHSL(255, 0, 0);  // [0.0, 1.0, 0.5]
+$hsl = Color::rgbToHsl(255, 0, 0);  // [0.0, 1.0, 0.5]
 
 // HSL to RGB (returns list: [red, green, blue])
-$rgb = Color::HSLToRGB(120, 1.0, 0.5);  // [0, 255, 0]
+$rgb = Color::hslToRgb(120, 1.0, 0.5);  // [0, 255, 0]
 
 // Gamma correction (sRGB transfer function)
 $linear = Color::gamma(128);  // ~0.215
