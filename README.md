@@ -1,4 +1,4 @@
-# Galaxon PHP Color
+# OceanMoon PHP Color
 
 An immutable, memory-efficient Color class for PHP with support for RGB and HSL color spaces, CSS color names, and WCAG accessibility features.
 
@@ -31,14 +31,14 @@ This package provides a comprehensive Color class for working with colors in PHP
 
 - PHP ^8.4
 - ext-ctype
-- galaxon/core
+- oceanmoon/core
 
 ---
 
 ## Installation
 
 ```bash
-composer require galaxon/color
+composer require oceanmoon/color
 ```
 
 ---
@@ -46,7 +46,7 @@ composer require galaxon/color
 ## Quick Start
 
 ```php
-use Galaxon\Color\Color;
+use OceanMoon\Color\Color;
 
 // Create colors from various formats
 $red = new Color('red');
@@ -117,11 +117,11 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ## Support
 
-- **Issues**: https://github.com/mossy2100/Galaxon-PHP-Color/issues
+- **Issues**: https://github.com/mossy2100/OceanMoon-PHP-Color/issues
 - **Documentation**: See [docs/](docs/) directory for detailed class documentation
 - **Examples**: See test files for comprehensive usage examples
 
-For questions or suggestions, please [open an issue](https://github.com/mossy2100/Galaxon-PHP-Color/issues).
+For questions or suggestions, please [open an issue](https://github.com/mossy2100/PHP-Color/issues).
 
 ---
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Galaxon\Color;
+namespace OceanMoon\Color;
 
 use ArgumentCountError;
 use DomainException;
-use Galaxon\Core\Exceptions\FormatException;
-use Galaxon\Core\Floats;
-use Galaxon\Core\Traits\Comparison\Equatable;
+use OceanMoon\Core\Exceptions\FormatException;
+use OceanMoon\Core\Floats;
+use OceanMoon\Core\Traits\Comparison\Equatable;
 use Override;
 use Stringable;
 

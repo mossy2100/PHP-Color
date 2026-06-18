@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Galaxon\Color\Tests;
+namespace OceanMoon\Color\Tests;
 
 use ArgumentCountError;
 use DomainException;
-use Galaxon\Color\Color;
-use Galaxon\Core\Exceptions\FormatException;
+use OceanMoon\Color\Color;
+use OceanMoon\Core\Exceptions\FormatException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

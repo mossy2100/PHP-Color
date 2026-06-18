@@ -165,7 +165,7 @@ $cyan = new Color('0ff');
 $semiTransparent = new Color('#ff000080');
 ```
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/Galaxon-PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if the string is not a valid CSS color.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if the string is not a valid CSS color.
 
 ---
 
@@ -465,7 +465,7 @@ By default, chooses between white and black, but custom light/dark text colors c
 
 **Returns:** The text color with the best contrast ratio.
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/Galaxon-PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if either text color string is invalid.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if either text color string is invalid.
 
 **Examples:**
 ```php
@@ -668,7 +668,7 @@ Color::normalizeHex('#FF00');     // 'ffff0000'
 Color::normalizeHex('abc');       // 'aabbccff'
 ```
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/Galaxon-PHP-Core/blob/main/docs/Exceptions/FormatException.md) if the string is not a valid hex color.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if the string is not a valid hex color.
 
 ### hexToBytes()
 
@@ -678,7 +678,7 @@ public static function hexToBytes(string $hex): array
 
 Convert a hex string to RGBA bytes.
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/Galaxon-PHP-Core/blob/main/docs/Exceptions/FormatException.md) if the string is not a valid hex color.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if the string is not a valid hex color.
 
 ### nameToHex()
 
@@ -716,10 +716,10 @@ $bytes = Color::parseToBytes('#ff8000');
 // [255, 128, 0, 255]
 ```
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/Galaxon-PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if the string is not a valid color.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if the string is not a valid color.
 
 ---
 
 ## See Also
 
-- **[Equatable](https://github.com/mossy2100/Galaxon-PHP-Core/blob/main/docs/Traits/Comparison/Equatable.md)** - Trait for implementing `equal()`
+- **[Equatable](https://github.com/mossy2100/PHP-Core/blob/main/docs/Traits/Comparison/Equatable.md)** - Trait for implementing `equal()`
