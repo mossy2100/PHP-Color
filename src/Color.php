@@ -22,7 +22,7 @@ class Color implements Stringable
 {
     use Equatable;
 
-    // region Internal representation
+    #region Internal representation
 
     /**
      * Internal field to store color value.
@@ -45,9 +45,9 @@ class Color implements Stringable
      */
     private ?array $hsl = null;
 
-    // endregion
+    #endregion
 
-    // region Constants
+    #region Constants
 
     /**
      * Constants for computing perceived lightness.
@@ -56,9 +56,9 @@ class Color implements Stringable
 
     private const float KAPPA = 24389 / 27;  // 903.296296...
 
-    // endregion
+    #endregion
 
-    // region Property hooks
+    #region Property hooks
 
     /**
      * Get the red component of the color.
@@ -170,9 +170,9 @@ class Color implements Stringable
         }
     }
 
-    // endregion
+    #endregion
 
-    // region Constructor
+    #region Constructor
 
     /**
      * Construct a new color from a string.
@@ -189,9 +189,9 @@ class Color implements Stringable
         $this->setBytes($bytes[0], $bytes[1], $bytes[2], $bytes[3]);
     }
 
-    // endregion
+    #endregion
 
-    // region Factory methods
+    #region Factory methods
 
     /**
      * Create a color from RGBA values.
@@ -282,9 +282,9 @@ class Color implements Stringable
         return $color;
     }
 
-    // endregion
+    #endregion
 
-    // region Validation methods
+    #region Validation methods
 
     /**
      * Returns true if the string is a valid hex color string.
@@ -324,9 +324,9 @@ class Color implements Stringable
         return isset(self::CSS_COLOR_NAMES[strtolower($name)]);
     }
 
-    // endregion
+    #endregion
 
-    // region Comparison methods
+    #region Comparison methods
 
     /**
      * Checks if two colors are equal.
@@ -340,9 +340,9 @@ class Color implements Stringable
         return $other instanceof self && $this->rgba === $other->rgba;
     }
 
-    // endregion
+    #endregion
 
-    // region Transformation methods
+    #region Transformation methods
 
     /**
      * Create a new Color with the specified red component.
@@ -484,9 +484,9 @@ class Color implements Stringable
         return $this->withHue($this->hue + 180);
     }
 
-    // endregion
+    #endregion
 
-    // region Accessibility methods
+    #region Accessibility methods
 
     /**
      * Determine the contrast ratio (as per WCAG 2.x).
@@ -527,9 +527,9 @@ class Color implements Stringable
             : $lightTextColor;
     }
 
-    // endregion
+    #endregion
 
-    // region Conversion methods
+    #region Conversion methods
 
     /**
      * Outputs the color as a 6-digit hexadecimal string, or 8-digit if alpha is included.
@@ -645,9 +645,9 @@ class Color implements Stringable
         );
     }
 
-    // endregion
+    #endregion
 
-    // region Static utility methods
+    #region Static utility methods
 
     /**
      * Transfer function for gamma correction.
@@ -931,9 +931,9 @@ class Color implements Stringable
         return self::hexToBytes($str);
     }
 
-    // endregion
+    #endregion
 
-    // region Instance helper methods
+    #region Instance helper methods
 
     /**
      * Set the red, green, blue, and alpha components all at the same time.
@@ -975,9 +975,9 @@ class Color implements Stringable
         }
     }
 
-    // endregion
+    #endregion
 
-    // region Static helper methods
+    #region Static helper methods
 
     /**
      * Convert a float to a value within the range [0.0, 1.0].
@@ -1097,9 +1097,9 @@ class Color implements Stringable
         return self::formatFloat(self::byteToFraction($byte));
     }
 
-    // endregion
+    #endregion
 
-    // region CSS color names (public)
+    #region CSS color names (public)
 
     /**
      * Array of CSS color names and corresponding hex values.
@@ -1258,5 +1258,5 @@ class Color implements Stringable
         'yellowgreen'          => '9acd32ff',
     ];
 
-    // endregion
+    #endregion
 }

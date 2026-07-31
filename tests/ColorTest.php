@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Color::class)]
 final class ColorTest extends TestCase
 {
-    // region Constructor tests
+    #region Constructor tests
 
     /**
      * Test default constructor creates black with full opacity.
@@ -163,9 +163,9 @@ final class ColorTest extends TestCase
         new Color('#gg0000');
     }
 
-    // endregion
+    #endregion
 
-    // region Factory method tests
+    #region Factory method tests
 
     /**
      * Test fromRgba() creates color with specified RGBA values.
@@ -425,9 +425,9 @@ final class ColorTest extends TestCase
         $this->assertSame(255, $color->alpha);
     }
 
-    // endregion
+    #endregion
 
-    // region Immutable setter tests
+    #region Immutable setter tests
 
     /**
      * Test withRed() returns new Color with updated red, original unchanged.
@@ -611,9 +611,9 @@ final class ColorTest extends TestCase
         $this->assertSame(200, $newColor->alpha);
     }
 
-    // endregion
+    #endregion
 
-    // region Conversion method tests
+    #region Conversion method tests
 
     /**
      * Test toRGB() returns correct RGBA array.
@@ -657,9 +657,9 @@ final class ColorTest extends TestCase
         $this->assertArrayHasKey('lightness', $array);
     }
 
-    // endregion
+    #endregion
 
-    // region RGB to HSL conversion tests
+    #region RGB to HSL conversion tests
 
     /**
      * Data provider for RGB to HSL conversion tests.
@@ -690,9 +690,9 @@ final class ColorTest extends TestCase
         $this->assertEqualsWithDelta($l, $hsl[2], 0.01);
     }
 
-    // endregion
+    #endregion
 
-    // region HSL to RGB conversion tests
+    #region HSL to RGB conversion tests
 
     /**
      * Data provider for HSL to RGB conversion tests.
@@ -723,9 +723,9 @@ final class ColorTest extends TestCase
         $this->assertSame($b, $rgb[2]);
     }
 
-    // endregion
+    #endregion
 
-    // region Round-trip conversion tests
+    #region Round-trip conversion tests
 
     /**
      * Test RGB -> HSL -> RGB round-trip preserves values.
@@ -753,9 +753,9 @@ final class ColorTest extends TestCase
         $this->assertEqualsWithDelta($original->lightness, $roundTrip->lightness, 0.01);
     }
 
-    // endregion
+    #endregion
 
-    // region String output tests
+    #region String output tests
 
     /**
      * Test toHexString() with default options (includes alpha and hash).
@@ -844,9 +844,9 @@ final class ColorTest extends TestCase
         $this->assertStringContainsString('/ 0.501961', $result);
     }
 
-    // endregion
+    #endregion
 
-    // region Validation tests
+    #region Validation tests
 
     /**
      * Data provider for valid hex string tests.
@@ -965,9 +965,9 @@ final class ColorTest extends TestCase
         Color::nameToHex('notacolor');
     }
 
-    // endregion
+    #endregion
 
-    // region Equals tests
+    #region Equals tests
 
     /**
      * Test equal() returns true for identical colors.
@@ -1008,9 +1008,9 @@ final class ColorTest extends TestCase
         $this->assertFalse($color->equal('red'));
     }
 
-    // endregion
+    #endregion
 
-    // region Relative luminance tests
+    #region Relative luminance tests
 
     /**
      * Test relativeLuminance is 0 for black.
@@ -1057,9 +1057,9 @@ final class ColorTest extends TestCase
         $this->assertEqualsWithDelta(0.0722, $color->relativeLuminance, 0.001);
     }
 
-    // endregion
+    #endregion
 
-    // region Perceived lightness tests
+    #region Perceived lightness tests
 
     /**
      * Test perceivedLightness is 0 for black.
@@ -1079,9 +1079,9 @@ final class ColorTest extends TestCase
         $this->assertEqualsWithDelta(1.0, $color->perceivedLightness, 0.001);
     }
 
-    // endregion
+    #endregion
 
-    // region Contrast ratio tests
+    #region Contrast ratio tests
 
     /**
      * Test contrastRatio() returns 21:1 for black and white.
@@ -1116,9 +1116,9 @@ final class ColorTest extends TestCase
         );
     }
 
-    // endregion
+    #endregion
 
-    // region Best text color tests
+    #region Best text color tests
 
     /**
      * Test bestTextColor() returns white for black background.
@@ -1195,9 +1195,9 @@ final class ColorTest extends TestCase
         $this->assertTrue($result->equal(new Color('black')));
     }
 
-    // endregion
+    #endregion
 
-    // region Mix tests
+    #region Mix tests
 
     /**
      * Test mix() at 50% blends colors equally.
@@ -1256,9 +1256,9 @@ final class ColorTest extends TestCase
         $color1->mix($color2, 1.5);
     }
 
-    // endregion
+    #endregion
 
-    // region Complement tests
+    #region Complement tests
 
     /**
      * Test complement() shifts hue by 180 degrees.
@@ -1312,9 +1312,9 @@ final class ColorTest extends TestCase
         $this->assertEqualsWithDelta(0.3, $complement->lightness, 0.01);
     }
 
-    // endregion
+    #endregion
 
-    // region Average tests
+    #region Average tests
 
     /**
      * Test average() of single color returns that color.
@@ -1373,9 +1373,9 @@ final class ColorTest extends TestCase
         Color::average();
     }
 
-    // endregion
+    #endregion
 
-    // region Gamma tests
+    #region Gamma tests
 
     /**
      * Test gamma() returns 0 for byte value 0 (black).
@@ -1403,9 +1403,9 @@ final class ColorTest extends TestCase
         $this->assertLessThan(1.0, $result);
     }
 
-    // endregion
+    #endregion
 
-    // region Hex string conversion tests
+    #region Hex string conversion tests
 
     /**
      * Test hexStringToBytes() parses 6-digit hex string.
@@ -1476,9 +1476,9 @@ final class ColorTest extends TestCase
         $this->assertSame(255, $bytes[3]);
     }
 
-    // endregion
+    #endregion
 
-    // region Edge case tests
+    #region Edge case tests
 
     /**
      * Test zero saturation produces gray regardless of hue.
@@ -1544,5 +1544,5 @@ final class ColorTest extends TestCase
         $this->assertTrue($color1->equal($color2));
     }
 
-    // endregion
+    #endregion
 }
