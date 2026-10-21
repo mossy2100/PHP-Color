@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- **Renamed the package from `oceanmoon/color` to `mossy2100/color`, and the namespace from `OceanMoon\Color` to
+  `Mossy2100\Color` (breaking),** matching the author's GitHub and Packagist name. Update `composer.json` and any
+  `use` statements. It depends on `mossy2100/core`.
+
+---
+
 ## [2.0.0] - 2026-06-18
 
 ### Changed

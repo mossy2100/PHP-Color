@@ -1,4 +1,4 @@
-# OceanMoon PHP Color
+# Mossy2100 PHP Color
 
 An immutable, memory-efficient Color class for PHP with support for RGB and HSL color spaces, CSS color names, and WCAG accessibility features.
 
@@ -31,14 +31,14 @@ This package provides a comprehensive Color class for working with colors in PHP
 
 - PHP ^8.4
 - ext-ctype
-- oceanmoon/core
+- mossy2100/core
 
 ---
 
 ## Installation
 
 ```bash
-composer require oceanmoon/color
+composer require mossy2100/color
 ```
 
 ---
@@ -46,7 +46,7 @@ composer require oceanmoon/color
 ## Quick Start
 
 ```php
-use OceanMoon\Color\Color;
+use Mossy2100\Color\Color;
 
 // Create colors from various formats
 $red = new Color('red');
@@ -117,7 +117,7 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ## Support
 
-- **Issues**: https://github.com/mossy2100/OceanMoon-PHP-Color/issues
+- **Issues**: https://github.com/mossy2100/PHP-Color/issues
 - **Documentation**: See [docs/](docs/) directory for detailed class documentation
 - **Examples**: See test files for comprehensive usage examples
 

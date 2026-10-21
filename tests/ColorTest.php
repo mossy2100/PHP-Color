@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OceanMoon\Color\Tests;
+namespace Mossy2100\Color\Tests;
 
 use ArgumentCountError;
 use DomainException;
-use OceanMoon\Color\Color;
-use OceanMoon\Core\Exceptions\FormatException;
+use Mossy2100\Color\Color;
+use Mossy2100\Core\Exceptions\FormatException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

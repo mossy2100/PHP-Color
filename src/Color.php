@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace OceanMoon\Color;
+namespace Mossy2100\Color;
 
 use ArgumentCountError;
 use DomainException;
-use OceanMoon\Core\Exceptions\FormatException;
-use OceanMoon\Core\Floats;
-use OceanMoon\Core\Traits\Comparison\Equatable;
+use Mossy2100\Core\Exceptions\FormatException;
+use Mossy2100\Core\Floats;
+use Mossy2100\Core\Traits\Comparison\Equatable;
 use Override;
 use Stringable;
 
