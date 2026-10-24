@@ -476,6 +476,9 @@ public function contrastRatio(self $other): float
 
 Calculate the contrast ratio between two colors (1:1 to 21:1).
 
+Alpha is ignored, since WCAG defines contrast for opaque colors. To check a translucent color, blend it with its
+background first, e.g. using `mix()`.
+
 **Example:**
 
 ```php
@@ -497,6 +500,9 @@ Determine the best text color for readability on this background color.
 
 By default, chooses between white and black, but custom light/dark text colors can be provided. When contrast ratios
 are equal, prefers the dark color.
+
+Alpha is ignored, since WCAG defines contrast for opaque colors. To check a translucent color, blend it with its
+background first, e.g. using `mix()`.
 
 **Parameters:**
 - `$lightTextColor` (string|Color) - The light text color option (default: 'white')

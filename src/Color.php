@@ -487,6 +487,9 @@ final class Color implements Stringable
     /**
      * Determine the contrast ratio (as per WCAG 2.x).
      *
+     * Alpha is ignored, since WCAG defines contrast for opaque colors. To check a translucent color, blend it with its
+     * background first, e.g. using mix().
+     *
      * @param Color $other The other color to compare to.
      * @return float The contrast ratio.
      */
@@ -499,6 +502,9 @@ final class Color implements Stringable
 
     /**
      * Determine the best text color for accessibility/readability, suitable for this background color.
+     *
+     * Alpha is ignored, since WCAG defines contrast for opaque colors. To check a translucent color, blend it with its
+     * background first, e.g. using mix().
      *
      * @param string|Color $lightTextColor The light text color (default white).
      * @param string|Color $darkTextColor The dark text color (default black).
