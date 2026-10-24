@@ -49,33 +49,34 @@ composer require mossy2100/color
 use Mossy2100\Color\Color;
 
 // Create colors from various formats
-$red = new Color('red');
-$orange = new Color('#ff8000');
-$purple = Color::fromRgba(128, 0, 255);
-$green = Color::fromHsla(120, 1.0, 0.5);
+$red = Color::fromString('red');
+$blue = Color::fromString('#0000ff');
+$purple = new Color(128, 0, 255);           // Bytes [0, 255]
+$orange = Color::fromRgba(100, 50, 0);      // Percentages [0, 100], as in CSS rgb()
+$green = Color::fromHsla(120, 100, 50);     // Degrees and percentages, as in CSS hsl()
 
 // Access color properties
-$color = new Color('#ff8040');
+$color = Color::fromString('#ff6600');
 $color->red;         // 255
-$color->hue;         // 20.0
-$color->lightness;   // 0.625
+$color->hue;         // 24.0
+$color->lightness;   // 50.0
 
 // Modify colors (returns new instance)
-$darkRed = $red->withLightness(0.3);
-$transparent = $red->withAlpha(128);
+$darkRed = $red->withLightness(30);
+$transparent = $red->withAlpha(50, percent: true);
 
 // Color operations
-$mixed = $red->mix($blue, 0.5);
+$mixed = $red->mix($blue, 50);
 $complement = $red->complement();
 
 // Accessibility
-$textColor = $background->bestTextColor();  // 'black' or 'white'
-$ratio = $color1->contrastRatio($color2);
+$textColor = $color->bestTextColor();       // Color for black or white
+$ratio = $red->contrastRatio($blue);
 
 // Output formats
-echo $color->toHex();        // '#ff8040ff'
-echo $color->toRgbString();  // 'rgb(255 128 64 / 1)'
-echo $color->toHslString();  // 'hsl(20deg 100% 62.5% / 1)'
+echo $color->toHex();        // '#ff6600ff'
+echo $color->toRgbString();  // 'rgb(255 102 0 / 100%)'
+echo $color->toHslString();  // 'hsl(24deg 100% 50% / 100%)'
 ```
 
 ---

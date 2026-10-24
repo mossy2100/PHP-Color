@@ -8,11 +8,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **`Color::fromString()`** creates a color from a CSS color name or hex string, and is the inverse of `__toString()`.
+
 ### Changed
 
 - **Renamed the package from `oceanmoon/color` to `mossy2100/color`, and the namespace from `OceanMoon\Color` to
   `Mossy2100\Color` (breaking),** matching the author's GitHub and Packagist name. Update `composer.json` and any
   `use` statements. It depends on `mossy2100/core`.
+- **Requires `mossy2100/core` `^4.0`.**
+- **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
+  255)`. Replace `new Color('red')` with `Color::fromString('red')`.
+- **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()` and `nameToBytes()`.
+- **Percentages replace fractions throughout (breaking),** as in CSS:
+  - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.
+  - `fromHsla()` takes the saturation, lightness and alpha as percentages.
+  - `saturation`, `lightness`, `perceivedLightness`, `toHslArray()`, `rgbToHsl()`, `hslToRgb()`, `withSaturation()`
+    and `withLightness()` use percentages in [0, 100].
+  - `mix()` takes the percentage of the other color, defaulting to 50.
+  - `toRgbString()` and `toHslString()` give the alpha as a percentage, e.g. `rgb(255 0 0 / 50.196078%)`.
+- **`withRed()`, `withGreen()`, `withBlue()` and `withAlpha()` take a byte, or a percentage with `$percent = true`
+  (breaking).** A float is no longer read as a fraction, so `withRed(1.0)` is byte 1, not 255. A non-integer byte is
+  rounded.
+
+### Fixed
+
+- **`withHue()`, `withLightness()` and `complement()` threw `DomainException` for some colors,** e.g. `#7878ff` and
+  `#000001`, whose computed saturation was just over the maximum due to rounding.
+- **`NAN` and `INF` are rejected** by the factories, `with*()` methods and `mix()`, instead of giving black, white or a
+  warning.
 
 ---
 

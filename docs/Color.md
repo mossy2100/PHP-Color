@@ -20,7 +20,23 @@ Colors are stored internally in a memory-efficient way:
 - HSL values computed on-demand and cached
 - Immutability eliminates cache invalidation complexity
 
-This makes the class suitable for applications working with large numbers of colors, such as image processing or color palette generation.
+This makes the class suitable for applications working with large numbers of colors, such as image processing or color
+palette generation.
+
+### Units
+
+| Value                                  | Unit                                         |
+| -------------------------------------- | -------------------------------------------- |
+| Red, green, blue and alpha properties  | Bytes in the range [0, 255]                  |
+| Constructor arguments                  | Bytes in the range [0, 255]                  |
+| `fromRgba()` and `fromHsla()` channels | Percentages in the range [0, 100]            |
+| Hue                                    | Degrees, wrapped to the range [0, 360)       |
+| Saturation, lightness                  | Percentages in the range [0, 100]            |
+| Perceived lightness                    | CIE L*, in the range [0, 100]                |
+| Relative luminance                     | A fraction in the range [0.0, 1.0], per WCAG |
+
+The `withRed()`, `withGreen()`, `withBlue()` and `withAlpha()` methods take a byte by default, or a percentage when
+`$percent` is `true`.
 
 ---
 
@@ -56,7 +72,8 @@ The blue component of the color as a byte value in the range [0, 255].
 public int $alpha { get; }
 ```
 
-The alpha (opacity) component of the color as a byte value in the range [0, 255]. A value of 255 is fully opaque, 0 is fully transparent.
+The alpha (opacity) component of the color as a byte value in the range [0, 255]. A value of 255 is fully opaque, 0 is
+fully transparent.
 
 ### hue
 
@@ -72,7 +89,7 @@ The hue of the color as an angle in degrees in the range [0, 360). Computed on f
 public float $saturation { get; }
 ```
 
-The saturation of the color as a fraction in the range [0.0, 1.0]. Computed on first access and cached.
+The saturation of the color as a percentage in the range [0, 100]. Computed on first access and cached.
 
 ### lightness
 
@@ -80,7 +97,7 @@ The saturation of the color as a fraction in the range [0.0, 1.0]. Computed on f
 public float $lightness { get; }
 ```
 
-The lightness of the color as a fraction in the range [0.0, 1.0]. Computed on first access and cached.
+The lightness of the color as a percentage in the range [0, 100]. Computed on first access and cached.
 
 ### relativeLuminance
 
@@ -96,26 +113,27 @@ The relative luminance of the color in the range [0.0, 1.0], calculated accordin
 public float $perceivedLightness { get; }
 ```
 
-The perceived lightness (CIE L*) of the color in the range [0.0, 1.0].
+The perceived lightness (CIE L*) of the color in the range [0, 100].
 
 **Example:**
+
 ```php
-$color = new Color('#ff8040');
+$color = Color::fromString('#ff6600');
 
 // RGBA components (0-255)
 $color->red;    // 255
-$color->green;  // 128
-$color->blue;   // 64
+$color->green;  // 102
+$color->blue;   // 0
 $color->alpha;  // 255
 
-// HSL components (floats)
-$color->hue;         // 20.0 (degrees)
-$color->saturation;  // 1.0 (fraction)
-$color->lightness;   // 0.625 (fraction)
+// HSL components
+$color->hue;         // 24.0 (degrees)
+$color->saturation;  // 100.0 (percent)
+$color->lightness;   // 50.0 (percent)
 
 // Luminance (for accessibility)
 $color->relativeLuminance;   // 0.0-1.0
-$color->perceivedLightness;  // 0.0-1.0
+$color->perceivedLightness;  // 0-100
 ```
 
 ---
@@ -128,15 +146,17 @@ $color->perceivedLightness;  // 0.0-1.0
 public const array CSS_COLOR_NAMES
 ```
 
-Array of CSS color names (lowercase) mapped to 8-digit hex values. Includes all 147 standard CSS color names plus 'transparent'.
+Array of CSS color names (lowercase) mapped to 8-digit hex values. Includes all 147 standard CSS color names plus
+'transparent'.
 
 **Example:**
+
 ```php
-new Color('AliceBlue');
-new Color('coral');
-new Color('darkslategray');
-new Color('PapayaWhip');
-new Color('transparent');  // RGBA: 0, 0, 0, 0
+Color::fromString('AliceBlue');
+Color::fromString('coral');
+Color::fromString('darkslategray');
+Color::fromString('PapayaWhip');
+Color::fromString('transparent');  // RGBA: 0, 0, 0, 0
 ```
 
 ---
@@ -144,91 +164,104 @@ new Color('transparent');  // RGBA: 0, 0, 0, 0
 ## Constructor
 
 ```php
-public function __construct(string $color = 'black')
+public function __construct(int $red = 0, int $green = 0, int $blue = 0, int $alpha = 255)
 ```
 
-Create a new color from a string.
+Create a new color from RGBA bytes. Defaults to opaque black.
 
 **Parameters:**
-- `$color` (string) - A CSS color name (e.g. 'Navy') or hex string (3, 4, 6, or 8 hex digits, with or without '#')
+- `$red` (int) - The red component, in the range [0, 255]
+- `$green` (int) - The green component, in the range [0, 255]
+- `$blue` (int) - The blue component, in the range [0, 255]
+- `$alpha` (int) - The alpha component, in the range [0, 255] (default: 255 = fully opaque)
 
 **Examples:**
-```php
-// From CSS color names (case-insensitive)
-$red = new Color('red');
-$blue = new Color('Blue');
-$transparent = new Color('transparent');
 
-// From hex strings
-$orange = new Color('#ff8000');
-$cyan = new Color('0ff');
-$semiTransparent = new Color('#ff000080');
+```php
+$black = new Color();
+$purple = new Color(128, 0, 255);
+$transparentRed = new Color(255, 0, 0, 128);
 ```
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if the string is not a valid CSS color.
+**Throws:** `DomainException` if any byte is out of range.
 
 ---
 
 ## Factory Methods
 
+### fromString()
+
+```php
+public static function fromString(string $colorString): self
+```
+
+Create a color from a CSS color name (e.g. 'Navy') or hex string (3, 4, 6, or 8 hex digits, with or without '#'). Names
+are case-insensitive, and surrounding whitespace is ignored. It's the inverse of `__toString()`.
+
+**Examples:**
+
+```php
+// From CSS color names (case-insensitive)
+$red = Color::fromString('red');
+$blue = Color::fromString('Blue');
+$transparent = Color::fromString('transparent');
+
+// From hex strings
+$orange = Color::fromString('#ff8000');
+$cyan = Color::fromString('0ff');
+$semiTransparent = Color::fromString('#ff000080');
+```
+
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
+the string is not a CSS color name or hex color string.
+
 ### fromRgba()
 
 ```php
-public static function fromRgba(
-    int|float $red,
-    int|float $green,
-    int|float $blue,
-    int|float $alpha = 255
-): self
+public static function fromRgba(float $red, float $green, float $blue, float $alpha = 100): self
 ```
 
-Create a color from RGBA values.
-
-Each channel can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
+Create a color from RGBA percentages, as in the CSS `rgb()` function. To create a color from bytes, use the
+constructor.
 
 **Parameters:**
-- `$red` (int|float) - The red component
-- `$green` (int|float) - The green component
-- `$blue` (int|float) - The blue component
-- `$alpha` (int|float) - The alpha component (default: 255 = fully opaque)
+- `$red` (float) - The red component, in the range [0, 100]
+- `$green` (float) - The green component, in the range [0, 100]
+- `$blue` (float) - The blue component, in the range [0, 100]
+- `$alpha` (float) - The alpha component, in the range [0, 100] (default: 100 = fully opaque)
 
 **Examples:**
+
 ```php
-$purple = Color::fromRgba(128, 0, 255);
-$transparentRed = Color::fromRgba(255, 0, 0, 128);
-$royalBlue = Color::fromRgba(0.255, 0.412, 0.882);
-$transparentGreen = Color::fromRgba(0.133, 0.545, 0.133, 0.75);
+$orange = Color::fromRgba(100, 50, 0);              // #ff8000ff
+$transparentGreen = Color::fromRgba(13.3, 54.5, 13.3, 75);
 ```
 
-**Throws:** `DomainException` if any inputs are invalid.
+**Throws:** `DomainException` if any percentage is out of range.
 
 ### fromHsla()
 
 ```php
-public static function fromHsla(
-    float $hue,
-    float $saturation,
-    float $lightness,
-    int|float $alpha = 255
-): self
+public static function fromHsla(float $hue, float $saturation, float $lightness, float $alpha = 100): self
 ```
 
-Create a color from HSLA values.
+Create a color from HSLA values, as in the CSS `hsl()` function.
 
 **Parameters:**
-- `$hue` (float) - The hue in degrees
-- `$saturation` (float) - The saturation as a fraction in [0.0, 1.0]
-- `$lightness` (float) - The lightness as a fraction in [0.0, 1.0]
-- `$alpha` (int|float) - The alpha as int [0, 255] or float [0.0, 1.0] (default: 255)
+- `$hue` (float) - The hue in degrees (wrapped to [0, 360))
+- `$saturation` (float) - The saturation, in the range [0, 100]
+- `$lightness` (float) - The lightness, in the range [0, 100]
+- `$alpha` (float) - The alpha, in the range [0, 100] (default: 100 = fully opaque)
 
 **Examples:**
+
 ```php
-$green = Color::fromHsla(120, 1.0, 0.5);
-$pastel = Color::fromHsla(200, 0.5, 0.8, 200);
-$transparentPink = Color::fromHsla(350, 1.0, 0.876, 0.66);
+$green = Color::fromHsla(120, 100, 50);
+$pastel = Color::fromHsla(200, 50, 80, 80);
+$transparentPink = Color::fromHsla(350, 100, 87.6, 66);
 ```
 
-**Throws:** `DomainException` if any inputs are invalid.
+**Throws:** `DomainException` if any percentage is out of range.
 
 ---
 
@@ -243,6 +276,7 @@ public static function validHex(string $str): bool
 Check if a string is a valid hex color string.
 
 **Examples:**
+
 ```php
 Color::validHex('#ff0000');   // true
 Color::validHex('ff0');       // true
@@ -258,6 +292,7 @@ public static function validName(string $name): bool
 Check if a string is a valid CSS color name.
 
 **Examples:**
+
 ```php
 Color::validName('red');       // true
 Color::validName('notacolor'); // false
@@ -276,9 +311,10 @@ public function equal(mixed $other): bool
 Check if two colors are equal (all RGBA values match).
 
 **Example:**
+
 ```php
-$color1 = new Color('#ff0000');
-$color2 = new Color('red');
+$color1 = Color::fromString('#ff0000');
+$color2 = Color::fromString('red');
 $color1->equal($color2);  // true
 ```
 
@@ -291,50 +327,45 @@ Since Color is immutable, transformation methods return new Color instances.
 ### withRed()
 
 ```php
-public function withRed(int|float $red): self
+public function withRed(float $red, bool $percent = false): self
 ```
 
 Create a new Color with the specified red component.
 
-The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
+By default, the value is a byte in the range [0, 255], rounded to the nearest integer. If `$percent` is `true`, it's a
+percentage in the range [0, 100].
 
-**Throws:** `DomainException` if the value is invalid.
+**Throws:** `DomainException` if the value is out of range.
 
 ### withGreen()
 
 ```php
-public function withGreen(int|float $green): self
+public function withGreen(float $green, bool $percent = false): self
 ```
 
-Create a new Color with the specified green component.
+Create a new Color with the specified green component. The value is interpreted as for `withRed()`.
 
-The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-
-**Throws:** `DomainException` if the value is invalid.
+**Throws:** `DomainException` if the value is out of range.
 
 ### withBlue()
 
 ```php
-public function withBlue(int|float $blue): self
+public function withBlue(float $blue, bool $percent = false): self
 ```
 
-Create a new Color with the specified blue component.
+Create a new Color with the specified blue component. The value is interpreted as for `withRed()`.
 
-The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-
-**Throws:** `DomainException` if the value is invalid.
+**Throws:** `DomainException` if the value is out of range.
 
 ### withAlpha()
 
 ```php
-public function withAlpha(int|float $alpha): self
+public function withAlpha(float $alpha, bool $percent = false): self
 ```
 
-Create a new Color with the specified alpha component.
+Create a new Color with the specified alpha component. The value is interpreted as for `withRed()`.
 
-The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-
-**Throws:** `DomainException` if the value is invalid.
+**Throws:** `DomainException` if the value is out of range.
 
 ### withHue()
 
@@ -350,9 +381,9 @@ Create a new Color with the specified hue, provided in degrees (will be normaliz
 public function withSaturation(float $saturation): self
 ```
 
-Create a new Color with the specified saturation.
+Create a new Color with the specified saturation, as a percentage.
 
-**Throws:** `DomainException` if the value is not in [0.0, 1.0].
+**Throws:** `DomainException` if the value is not in [0, 100].
 
 ### withLightness()
 
@@ -360,28 +391,29 @@ Create a new Color with the specified saturation.
 public function withLightness(float $lightness): self
 ```
 
-Create a new Color with the specified lightness.
+Create a new Color with the specified lightness, as a percentage.
 
-**Throws:** `DomainException` if the value is not in [0.0, 1.0].
+**Throws:** `DomainException` if the value is not in [0, 100].
 
 ### Examples of `with` methods
+
 ```php
-// Modify RGBA components (ints)
-$red = new Color('red');
-$darkRed = $red->withRed(128);  // 50% red
+// Modify RGBA components (bytes)
+$red = Color::fromString('red');
+$darkRed = $red->withRed(128);
 $transparentRed = $red->withAlpha(128);
 
-// Modify RGBA components (floats)
-$blue = new Color('blue');
-$darkBlue = $blue->withBlue(0.5);  // 50% blue
-$transparentBlue = $blue->withAlpha(0.5);
+// Modify RGBA components (percentages)
+$blue = Color::fromString('blue');
+$darkBlue = $blue->withBlue(50, true);
+$transparentBlue = $blue->withAlpha(50, percent: true);
 
 // Modify HSL components
 $orange = $red->withHue(30);
-$desaturated = $red->withSaturation(0.5);
+$desaturated = $red->withSaturation(50);
 
 // Chain modifications
-$custom = $red->withHue(45)->withSaturation(0.8)->withAlpha(0.75);
+$custom = $red->withHue(45)->withSaturation(80)->withAlpha(75, true);
 
 // Original color is unchanged
 $red->hue;  // Still 0
@@ -390,26 +422,27 @@ $red->hue;  // Still 0
 ### mix()
 
 ```php
-public function mix(self $other, float $frac = 0.5): self
+public function mix(self $other, float $percent = 50): self
 ```
 
 Mix two colors.
 
 **Parameters:**
 - `$other` (Color) - The color to mix with
-- `$frac` (float) - The fraction of the other color [0.0, 1.0] (default: 0.5)
+- `$percent` (float) - The percentage of the other color, in the range [0, 100] (default: 50)
 
-If the fraction is 0, returns this color. If 1, returns the other color.
+If the percentage is 0, returns this color. If 100, returns the other color.
 
 **Examples:**
+
 ```php
-$red = new Color('red');
-$blue = new Color('blue');
-$purple = $red->mix($blue);           // 50% each
-$mostlyBlue = $red->mix($blue, 0.8);  // 20% red, 80% blue
+$red = Color::fromString('red');
+$blue = Color::fromString('blue');
+$purple = $red->mix($blue);         // 50% each
+$mostlyBlue = $red->mix($blue, 80); // 20% red, 80% blue
 ```
 
-**Throws:** `DomainException` if the fraction is invalid.
+**Throws:** `DomainException` if the percentage is out of range.
 
 ### complement()
 
@@ -420,8 +453,9 @@ public function complement(): self
 Get the complementary color (hue + 180 degrees).
 
 **Example:**
+
 ```php
-$red = new Color('red');
+$red = Color::fromString('red');
 $cyan = $red->complement();  // Hue shifts from 0 to 180
 ```
 
@@ -440,10 +474,11 @@ public function contrastRatio(self $other): float
 Calculate the contrast ratio between two colors (1:1 to 21:1).
 
 **Example:**
+
 ```php
-$background = new Color('#336699');
-$white = new Color('white');
-$ratio = $background->contrastRatio($white);  // e.g., 5.5
+$background = Color::fromString('#336699');
+$white = Color::fromString('white');
+$ratio = $background->contrastRatio($white);  // about 6.0
 ```
 
 ### bestTextColor()
@@ -457,19 +492,22 @@ public function bestTextColor(
 
 Determine the best text color for readability on this background color.
 
-By default, chooses between white and black, but custom light/dark text colors can be provided. When contrast ratios are equal, prefers the dark color.
+By default, chooses between white and black, but custom light/dark text colors can be provided. When contrast ratios
+are equal, prefers the dark color.
 
 **Parameters:**
 - `$lightTextColor` (string|Color) - The light text color option (default: 'white')
 - `$darkTextColor` (string|Color) - The dark text color option (default: 'black')
 
-**Returns:** The text color with the best contrast ratio.
+**Returns:** `Color` - The text color with the best contrast ratio.
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if either text color string is invalid.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
+either text color string is invalid.
 
 **Examples:**
+
 ```php
-$background = new Color('#336699');
+$background = Color::fromString('#336699');
 
 // Default: choose between white and black
 $textColor = $background->bestTextColor();  // Returns white Color
@@ -478,8 +516,8 @@ $textColor = $background->bestTextColor();  // Returns white Color
 $textColor = $background->bestTextColor('ivory', 'navy');
 
 // Custom text colors as Color objects
-$cream = new Color('cornsilk');
-$dark = new Color('#1a1a1a');
+$cream = Color::fromString('cornsilk');
+$dark = Color::fromString('#1a1a1a');
 $textColor = $background->bestTextColor($cream, $dark);
 ```
 
@@ -500,8 +538,9 @@ public function toHex(
 Output the color as a hexadecimal string.
 
 **Examples:**
+
 ```php
-$color = Color::fromRgba(255, 128, 0, 200);
+$color = new Color(255, 128, 0, 200);
 
 (string)$color;                  // '#ff8000c8'
 $color->toHex();                 // '#ff8000c8'
@@ -516,12 +555,14 @@ $color->toHex(true, true, true); // '#FF8000C8' (upper-case)
 public function toRgbString(): string
 ```
 
-Output the color as a CSS rgb() string (modern syntax).
+Output the color as a CSS rgb() string (modern syntax). The red, green and blue components are bytes, and the alpha is
+a percentage.
 
 **Example:**
+
 ```php
-$color = Color::fromRgba(255, 128, 0, 200);
-$color->toRgbString();  // 'rgb(255 128 0 / 0.784314)'
+$color = new Color(255, 128, 0, 200);
+$color->toRgbString();  // 'rgb(255 128 0 / 78.431373%)'
 ```
 
 ### toHslString()
@@ -533,9 +574,10 @@ public function toHslString(): string
 Output the color as a CSS hsl() string (modern syntax).
 
 **Example:**
+
 ```php
-$color = Color::fromRgba(255, 128, 0, 200);
-$color->toHslString();  // 'hsl(30.117647deg 100% 50% / 0.784314)'
+$color = new Color(255, 128, 0, 200);
+$color->toHslString();  // 'hsl(30.117647deg 100% 50% / 78.431373%)'
 ```
 
 ### \_\_toString()
@@ -544,13 +586,14 @@ $color->toHslString();  // 'hsl(30.117647deg 100% 50% / 0.784314)'
 public function __toString(): string
 ```
 
-Convert to string (8-digit RGBA hex with leading '#').
+Convert to string (8-digit RGBA hex with leading '#'). `fromString()` is the inverse.
 
 Called implicitly when casting to string or interpolating in a string context.
 
 **Example:**
+
 ```php
-$color = new Color('red');
+$color = Color::fromString('red');
 echo "background-color: $color;";  // "background-color: #ff0000ff;"
 ```
 
@@ -570,7 +613,7 @@ Get RGBA values as an associative array of bytes.
 public function toHslArray(): array
 ```
 
-Get HSL values as an associative array of floats.
+Get HSL values as an associative array of floats: the hue in degrees, and the saturation and lightness as percentages.
 
 **Returns:** `array{hue: float, saturation: float, lightness: float}`
 
@@ -597,8 +640,9 @@ Apply the sRGB gamma correction transfer function.
 Used by the relative luminance calculation, but made public for other purposes.
 
 **Example:**
+
 ```php
-$linear = Color::gamma(128);  // ~0.215
+$linear = Color::gamma(128);  // ~0.216
 ```
 
 ### average()
@@ -610,6 +654,7 @@ public static function average(self ...$colors): self
 Find the average of several colors.
 
 **Example:**
+
 ```php
 $avg = Color::average($color1, $color2, $color3);
 ```
@@ -626,12 +671,13 @@ Convert RGB values to HSL.
 
 **Returns:** `float[]` - Array of [hue, saturation, lightness] where:
 - hue is in degrees [0, 360)
-- saturation is a fraction [0.0, 1.0]
-- lightness is a fraction [0.0, 1.0]
+- saturation is a percentage [0, 100]
+- lightness is a percentage [0, 100]
 
 **Example:**
+
 ```php
-$hsl = Color::rgbToHsl(255, 0, 0);  // [0.0, 1.0, 0.5]
+$hsl = Color::rgbToHsl(255, 0, 0);  // [0.0, 100.0, 50.0]
 ```
 
 **Throws:** `DomainException` if values are not valid bytes.
@@ -642,13 +688,14 @@ $hsl = Color::rgbToHsl(255, 0, 0);  // [0.0, 1.0, 0.5]
 public static function hslToRgb(float $hue, float $saturation, float $lightness): array
 ```
 
-Convert HSL values to RGB.
+Convert HSL values to RGB. The saturation and lightness are percentages.
 
 **Returns:** `int[]` - Array of [red, green, blue] as bytes.
 
 **Example:**
+
 ```php
-$rgb = Color::hslToRgb(120, 1.0, 0.5);  // [0, 255, 0]
+$rgb = Color::hslToRgb(120, 100, 50);  // [0, 255, 0]
 ```
 
 **Throws:** `DomainException` if values are not valid.
@@ -662,13 +709,15 @@ public static function normalizeHex(string $hex): string
 Convert a CSS hex color string to an 8-digit lowercase hex string (no leading '#').
 
 **Examples:**
+
 ```php
 Color::normalizeHex('#f00');      // 'ff0000ff'
 Color::normalizeHex('#FF00');     // 'ffff0000'
 Color::normalizeHex('abc');       // 'aabbccff'
 ```
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if the string is not a valid hex color.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
+the string is not a valid hex color.
 
 ### hexToBytes()
 
@@ -678,7 +727,8 @@ public static function hexToBytes(string $hex): array
 
 Convert a hex string to RGBA bytes.
 
-**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if the string is not a valid hex color.
+**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
+the string is not a valid hex color.
 
 ### nameToHex()
 
@@ -700,26 +750,9 @@ Convert a color name to RGBA bytes.
 
 **Throws:** `DomainException` if the name is not valid.
 
-### parseToBytes()
-
-```php
-public static function parseToBytes(string $str): array
-```
-
-Parse a CSS hex or named color to RGBA bytes.
-
-**Returns:** `int[]` - Array of [red, green, blue, alpha] as bytes.
-
-**Example:**
-```php
-$bytes = Color::parseToBytes('#ff8000');
-// [255, 128, 0, 255]
-```
-
-**Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) or `DomainException` if the string is not a valid color.
-
 ---
 
 ## See Also
 
-- **[Equatable](https://github.com/mossy2100/PHP-Core/blob/main/docs/Traits/Comparison/Equatable.md)** - Trait for implementing `equal()`
+- **[Equatable](https://github.com/mossy2100/PHP-Core/blob/main/docs/Traits/Comparison/Equatable.md)** - Trait for
+  implementing `equal()`

@@ -6,8 +6,10 @@ namespace Mossy2100\Color;
 
 use ArgumentCountError;
 use DomainException;
+use Mossy2100\Core\Enums\FloatFormat;
 use Mossy2100\Core\Exceptions\FormatException;
 use Mossy2100\Core\Floats;
+use Mossy2100\Core\Stringify;
 use Mossy2100\Core\Traits\Comparison\Equatable;
 use Override;
 use Stringable;
@@ -39,7 +41,7 @@ class Color implements Stringable
     private string $rgba;
 
     /**
-     * Cache for HSL properties.
+     * Cache for HSL properties: the hue in degrees, and the saturation and lightness as percentages.
      *
      * @var ?list<float>
      */
@@ -109,7 +111,7 @@ class Color implements Stringable
     }
 
     /**
-     * Get the saturation of the color as a fraction in the range [0.0, 1.0].
+     * Get the saturation of the color as a percentage in the range [0, 100].
      *
      * @var float
      */
@@ -121,7 +123,7 @@ class Color implements Stringable
     }
 
     /**
-     * Get the lightness of the color as a fraction in the range [0.0, 1.0].
+     * Get the lightness of the color as a percentage in the range [0, 100].
      *
      * @var float
      */
@@ -153,7 +155,7 @@ class Color implements Stringable
     }
 
     /**
-     * Get the perceived lightness of the color in the range [0.0, 1.0].
+     * Get the perceived lightness (CIE L*) of the color in the range [0, 100].
      *
      * @var float
      */
@@ -165,8 +167,7 @@ class Color implements Stringable
             // Compute CIE L* (perceived lightness) as a value in the range [0, 100].
             $lStar = ($y <= self::EPSILON) ? (self::KAPPA * $y) : (116.0 * ($y ** (1.0 / 3.0)) - 16.0);
 
-            // Normalize to [0.0, 1.0].
-            return self::clamp($lStar / 100.0);
+            return self::clampPercent($lStar);
         }
     }
 
@@ -175,18 +176,23 @@ class Color implements Stringable
     #region Constructor
 
     /**
-     * Construct a new color from a string.
+     * Construct a new color from RGBA bytes.
      *
-     * Accepts a CSS color name or a hex string (3, 4, 6, or 8 hex digits, with or without a leading '#').
-     * Defaults to black.
+     * Defaults to opaque black.
      *
-     * @param string $color The color as a CSS hexadecimal color string or named color.
-     * @throws DomainException If the provided string is not a valid CSS color.
+     * @param int $red The red component as a byte in the range [0, 255].
+     * @param int $green The green component as a byte in the range [0, 255].
+     * @param int $blue The blue component as a byte in the range [0, 255].
+     * @param int $alpha The alpha component as a byte in the range [0, 255]. Defaults to 255 (opaque).
+     * @throws DomainException If any byte is out of range.
      */
-    public function __construct(string $color = 'black')
+    public function __construct(int $red = 0, int $green = 0, int $blue = 0, int $alpha = 255)
     {
-        $bytes = self::parseToBytes($color);
-        $this->setBytes($bytes[0], $bytes[1], $bytes[2], $bytes[3]);
+        self::validateByte($red);
+        self::validateByte($green);
+        self::validateByte($blue);
+        self::validateByte($alpha);
+        $this->setBytes($red, $green, $blue, $alpha);
     }
 
     #endregion
@@ -194,92 +200,70 @@ class Color implements Stringable
     #region Factory methods
 
     /**
-     * Create a color from RGBA values.
-     *
-     * Each RGBA channel can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
+     * Create a color from RGBA percentages, as in the CSS rgb() function.
      *
      * @static
-     * @param int|float $red The red component value.
-     * @param int|float $green The green component value.
-     * @param int|float $blue The blue component value.
-     * @param int|float $alpha Optional alpha value. Defaults to 255, equivalent to 1.0 (100% opacity).
+     * @param float $red The red component as a percentage in the range [0, 100].
+     * @param float $green The green component as a percentage in the range [0, 100].
+     * @param float $blue The blue component as a percentage in the range [0, 100].
+     * @param float $alpha The alpha component as a percentage in the range [0, 100]. Defaults to 100 (opaque).
      * @return self
-     * @throws DomainException If any inputs are invalid.
+     * @throws DomainException If any percentage is out of range.
      */
-    public static function fromRgba(int|float $red, int|float $green, int|float $blue, int|float $alpha = 255): self
+    public static function fromRgba(float $red, float $green, float $blue, float $alpha = 100): self
     {
-        $color = new self();
-
-        // Convert float arguments to bytes.
-        if (is_float($red)) {
-            $red = self::fractionToByte($red);
-        }
-        if (is_float($green)) {
-            $green = self::fractionToByte($green);
-        }
-        if (is_float($blue)) {
-            $blue = self::fractionToByte($blue);
-        }
-        if (is_float($alpha)) {
-            $alpha = self::fractionToByte($alpha);
-        }
-
-        // Check the arguments.
-        self::validateByte($red);
-        self::validateByte($green);
-        self::validateByte($blue);
-        self::validateByte($alpha);
-
-        // Assertions to satisfy phpstan.
-        assert($red >= 0 && $red <= 255);
-        assert($green >= 0 && $green <= 255);
-        assert($blue >= 0 && $blue <= 255);
-        assert($alpha >= 0 && $alpha <= 255);
-
-        // Set the byte values.
-        $color->setBytes($red, $green, $blue, $alpha);
-
-        return $color;
+        return new self(
+            self::toByte($red, true),
+            self::toByte($green, true),
+            self::toByte($blue, true),
+            self::toByte($alpha, true)
+        );
     }
 
     /**
-     * Create a color from HSLA values.
-     *
-     * The alpha can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
+     * Create a color from HSLA values, as in the CSS hsl() function.
      *
      * @static
-     * @param float $hue The hue in degrees.
-     * @param float $saturation The saturation as a fraction in the range [0.0, 1.0].
-     * @param float $lightness The lightness as a fraction in the range [0.0, 1.0].
-     * @param int|float $alpha Optional alpha value. Defaults to 255, equivalent to 1.0 (100% opacity).
+     * @param float $hue The hue in degrees. Any value is accepted, and wrapped to the range [0, 360).
+     * @param float $saturation The saturation as a percentage in the range [0, 100].
+     * @param float $lightness The lightness as a percentage in the range [0, 100].
+     * @param float $alpha The alpha component as a percentage in the range [0, 100]. Defaults to 100 (opaque).
      * @return self
-     * @throws DomainException If any inputs are invalid.
+     * @throws DomainException If the hue is not finite, or any percentage is out of range.
      */
-    public static function fromHsla(float $hue, float $saturation, float $lightness, int|float $alpha = 255): self
+    public static function fromHsla(float $hue, float $saturation, float $lightness, float $alpha = 100): self
     {
-        // Normalize the hue angle.
-        $hue = self::wrapHue($hue);
+        self::validatePercent($saturation);
+        self::validatePercent($lightness);
+        return self::createFromHsl($hue, $saturation, $lightness, self::toByte($alpha, true));
+    }
 
-        // If alpha was provided as a float, convert it to a byte.
-        if (is_float($alpha)) {
-            $alpha = self::fractionToByte($alpha);
+    /**
+     * Create a color from a CSS color name or hex color string.
+     *
+     * A hex string has 3, 4, 6, or 8 hex digits, with or without a leading '#'. Names are case-insensitive.
+     * Surrounding whitespace is ignored.
+     *
+     * @static
+     * @param string $colorString A CSS color name or hex color string.
+     * @return self
+     * @throws FormatException If the string is not a CSS color name or hex color string.
+     */
+    public static function fromString(string $colorString): self
+    {
+        $str = trim($colorString);
+
+        if (self::validName($str)) {
+            $bytes = self::nameToBytes($str);
+        } elseif (self::validHex($str)) {
+            $bytes = self::hexToBytes($str);
+        } else {
+            throw new FormatException(
+                "Invalid color string: '$colorString'. Must be a CSS color name or hex color string."
+            );
         }
 
-        // Validate the arguments.
-        self::validateFraction($saturation);
-        self::validateFraction($lightness);
-        self::validateByte($alpha);
-
-        // Convert the HSL components to RGB components.
-        [$red, $green, $blue] = self::hslToRgb($hue, $saturation, $lightness);
-
-        // Construct a new Color.
-        $color = self::fromRgba($red, $green, $blue, $alpha);
-
-        // Cache the HSL properties.
-        $color->hsl = [$hue, $saturation, $lightness];
-
-        return $color;
+        return new self($bytes[0], $bytes[1], $bytes[2], $bytes[3]);
     }
 
     #endregion
@@ -347,131 +331,133 @@ class Color implements Stringable
     /**
      * Create a new Color with the specified red component.
      *
-     * The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-     *
-     * @param int|float $red The red component value.
+     * @param float $red The red component, as a byte in the range [0, 255] (rounded to the nearest integer), or as a
+     * percentage in the range [0, 100] if $percent is true.
+     * @param bool $percent If the value is a percentage rather than a byte.
      * @return self A new Color with the updated red value.
-     * @throws DomainException If the value is invalid.
+     * @throws DomainException If the value is out of range.
      */
-    public function withRed(int|float $red): self
+    public function withRed(float $red, bool $percent = false): self
     {
-        return self::fromRgba($red, $this->green, $this->blue, $this->alpha);
+        return new self(self::toByte($red, $percent), $this->green, $this->blue, $this->alpha);
     }
 
     /**
      * Create a new Color with the specified green component.
      *
-     * The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-     *
-     * @param int|float $green The green component value.
+     * @param float $green The green component, as a byte in the range [0, 255] (rounded to the nearest integer), or
+     * as a percentage in the range [0, 100] if $percent is true.
+     * @param bool $percent If the value is a percentage rather than a byte.
      * @return self A new Color with the updated green value.
-     * @throws DomainException If the value is invalid.
+     * @throws DomainException If the value is out of range.
      */
-    public function withGreen(int|float $green): self
+    public function withGreen(float $green, bool $percent = false): self
     {
-        return self::fromRgba($this->red, $green, $this->blue, $this->alpha);
+        return new self($this->red, self::toByte($green, $percent), $this->blue, $this->alpha);
     }
 
     /**
      * Create a new Color with the specified blue component.
      *
-     * The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-     *
-     * @param int|float $blue The blue component value.
+     * @param float $blue The blue component, as a byte in the range [0, 255] (rounded to the nearest integer), or as
+     * a percentage in the range [0, 100] if $percent is true.
+     * @param bool $percent If the value is a percentage rather than a byte.
      * @return self A new Color with the updated blue value.
-     * @throws DomainException If the value is invalid.
+     * @throws DomainException If the value is out of range.
      */
-    public function withBlue(int|float $blue): self
+    public function withBlue(float $blue, bool $percent = false): self
     {
-        return self::fromRgba($this->red, $this->green, $blue, $this->alpha);
+        return new self($this->red, $this->green, self::toByte($blue, $percent), $this->alpha);
     }
 
     /**
      * Create a new Color with the specified alpha component.
      *
-     * The value can be provided as either an int in the range [0, 255] or a float in the range [0.0, 1.0].
-     *
-     * @param int|float $alpha The alpha component value.
+     * @param float $alpha The alpha component, as a byte in the range [0, 255] (rounded to the nearest integer), or
+     * as a percentage in the range [0, 100] if $percent is true.
+     * @param bool $percent If the value is a percentage rather than a byte.
      * @return self A new Color with the updated alpha value.
-     * @throws DomainException If the value is invalid.
+     * @throws DomainException If the value is out of range.
      */
-    public function withAlpha(int|float $alpha): self
+    public function withAlpha(float $alpha, bool $percent = false): self
     {
-        return self::fromRgba($this->red, $this->green, $this->blue, $alpha);
+        return new self($this->red, $this->green, $this->blue, self::toByte($alpha, $percent));
     }
 
     /**
      * Create a new Color with the specified hue.
      *
-     * @param float $hue The hue in degrees.
+     * @param float $hue The hue in degrees. Any value is accepted, and wrapped to the range [0, 360).
      * @return self A new Color with the updated hue.
+     * @throws DomainException If the hue is not finite.
      */
     public function withHue(float $hue): self
     {
-        return self::fromHsla($hue, $this->saturation, $this->lightness, $this->alpha);
+        return self::createFromHsl($hue, $this->saturation, $this->lightness, $this->alpha);
     }
 
     /**
      * Create a new Color with the specified saturation.
      *
-     * @param float $saturation The saturation as a fraction in the range [0.0, 1.0].
+     * @param float $saturation The saturation as a percentage in the range [0, 100].
      * @return self A new Color with the updated saturation.
-     * @throws DomainException If the value is invalid.
+     * @throws DomainException If the value is out of range.
      */
     public function withSaturation(float $saturation): self
     {
-        self::validateFraction($saturation);
-        return self::fromHsla($this->hue, $saturation, $this->lightness, $this->alpha);
+        self::validatePercent($saturation);
+        return self::createFromHsl($this->hue, $saturation, $this->lightness, $this->alpha);
     }
 
     /**
      * Create a new Color with the specified lightness.
      *
-     * @param float $lightness The lightness as a fraction in the range [0.0, 1.0].
+     * @param float $lightness The lightness as a percentage in the range [0, 100].
      * @return self A new Color with the updated lightness.
-     * @throws DomainException If the value is invalid.
+     * @throws DomainException If the value is out of range.
      */
     public function withLightness(float $lightness): self
     {
-        self::validateFraction($lightness);
-        return self::fromHsla($this->hue, $this->saturation, $lightness, $this->alpha);
+        self::validatePercent($lightness);
+        return self::createFromHsl($this->hue, $this->saturation, $lightness, $this->alpha);
     }
 
     /**
      * Mix two colors.
      *
-     * If the fraction is 0, then the result will equal "this" color.
-     * If the fraction is 1, then the result will equal the "other" color.
-     * If the fraction isn't specified, then the result will have 50% of each color.
+     * If the percentage is 0, then the result will equal "this" color.
+     * If the percentage is 100, then the result will equal the "other" color.
+     * If the percentage isn't specified, then the result will have 50% of each color.
      *
      * @param self $other The color to mix with.
-     * @param float $frac The fraction of the "other" color as a float in the range [0.0, 1.0].
+     * @param float $percent The percentage of the "other" color, in the range [0, 100].
      * @return self
-     * @throws DomainException If the fraction is invalid.
+     * @throws DomainException If the percentage is out of range.
      */
-    public function mix(self $other, float $frac = 0.5): self
+    public function mix(self $other, float $percent = 50): self
     {
-        // Validate the fraction.
-        self::validateFraction($frac);
+        // Validate the percentage.
+        self::validatePercent($percent);
 
         // Check for 0% other color (100% this).
-        if ($frac === 0.0) {
+        if ($percent === 0.0) {
             return clone $this;
         }
         // Check for 100% other color.
-        if ($frac === 1.0) {
+        if ($percent === 100.0) {
             return clone $other;
         }
 
         // Compute the components of the new color.
+        $frac = $percent / 100;
         $frac2 = 1.0 - $frac;
-        $r = (int)round(($this->red * $frac2) + ($other->red * $frac));
-        $g = (int)round(($this->green * $frac2) + ($other->green * $frac));
-        $b = (int)round(($this->blue * $frac2) + ($other->blue * $frac));
-        $a = (int)round(($this->alpha * $frac2) + ($other->alpha * $frac));
+        $r = (int) round(($this->red * $frac2) + ($other->red * $frac));
+        $g = (int) round(($this->green * $frac2) + ($other->green * $frac));
+        $b = (int) round(($this->blue * $frac2) + ($other->blue * $frac));
+        $a = (int) round(($this->alpha * $frac2) + ($other->alpha * $frac));
 
         // Create and return the mixed color.
-        return self::fromRgba($r, $g, $b, $a);
+        return new self($r, $g, $b, $a);
     }
 
     /**
@@ -507,7 +493,7 @@ class Color implements Stringable
      * @param string|Color $lightTextColor The light text color (default white).
      * @param string|Color $darkTextColor The dark text color (default black).
      * @return self The most accessible text color.
-     * @throws DomainException If either of the provided text colors are invalid strings.
+     * @throws FormatException If either of the provided text colors are invalid strings.
      * @see https://www.w3.org/TR/WCAG20/#contrast-ratiodef
      * @see https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast.
      */
@@ -515,10 +501,10 @@ class Color implements Stringable
     {
         // Get the text colors as Color objects.
         if (is_string($lightTextColor)) {
-            $lightTextColor = new self($lightTextColor);
+            $lightTextColor = self::fromString($lightTextColor);
         }
         if (is_string($darkTextColor)) {
-            $darkTextColor = new self($darkTextColor);
+            $darkTextColor = self::fromString($darkTextColor);
         }
 
         // Calculate what text color will produce the most contrast. If equal, choose dark.
@@ -561,19 +547,21 @@ class Color implements Stringable
     /**
      * Outputs the color as an rgb() CSS string.
      *
-     * @return string The Color as a CSS-compatible "rgb" color string, e.g. "rgb(120 50 50 / 0.67)".
+     * The red, green and blue components are bytes, and the alpha is a percentage.
+     *
+     * @return string The Color as a CSS-compatible "rgb" color string, e.g. "rgb(120 50 50 / 50.196078%)".
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/rgb
      */
     public function toRgbString(): string
     {
-        $a = self::formatByteAsFraction($this->alpha);
+        $a = self::formatPercent(self::byteToPercent($this->alpha));
         return "rgb($this->red $this->green $this->blue / $a)";
     }
 
     /**
      * Outputs the color as an HSL CSS string.
      *
-     * @return string The Color as a CSS-compatible "hsl" color string, e.g. "hsl(120deg 50% 50% / 0.75)".
+     * @return string The Color as a CSS-compatible "hsl" color string, e.g. "hsl(120deg 50% 50% / 100%)".
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/hsl
      */
     public function toHslString(): string
@@ -581,7 +569,7 @@ class Color implements Stringable
         $h = self::formatAngle($this->hue);
         $s = self::formatPercent($this->saturation);
         $l = self::formatPercent($this->lightness);
-        $a = self::formatByteAsFraction($this->alpha);
+        $a = self::formatPercent(self::byteToPercent($this->alpha));
         return "hsl($h $s $l / $a)";
     }
 
@@ -618,7 +606,7 @@ class Color implements Stringable
      * Returns the Color as an array of numbers representing HSL values.
      *
      * Hue is represented as an angle in degrees [0, 360).
-     * Saturation and lightness are represented as fractions [0.0, 1.0].
+     * Saturation and lightness are represented as percentages [0, 100].
      *
      * @return array{hue:float, saturation:float, lightness:float} Array of color components as numbers.
      */
@@ -677,7 +665,6 @@ class Color implements Stringable
      * @param Color ...$colors The colors to average.
      * @return self The average color.
      * @throws ArgumentCountError If no colors are provided.
-     * @throws DomainException If any of the colors are invalid.
      */
     public static function average(self ...$colors): self
     {
@@ -705,23 +692,23 @@ class Color implements Stringable
         }
 
         // Calculate the averages.
-        $avg = static fn ($sum) => (int)round($sum / $n);
+        $avg = static fn ($sum) => (int) round($sum / $n);
         $r = $avg($sumR);
         $g = $avg($sumG);
         $b = $avg($sumB);
         $a = $avg($sumA);
 
         // Create and return the average color.
-        return self::fromRgba($r, $g, $b, $a);
+        return new self($r, $g, $b, $a);
     }
 
     /**
      * Convert RGB values to HSL.
      *
-     * The returned array will have the following keys and values in the ranges below:
+     * The returned list contains the following values, in the ranges below:
      *    hue        => [0, 360)
-     *    saturation => [0.0, 1.0]
-     *    lightness  => [0.0, 1.0]
+     *    saturation => [0, 100]
+     *    lightness  => [0, 100]
      *
      * Algorithm:
      * @see https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
@@ -730,7 +717,7 @@ class Color implements Stringable
      * @param int $red The red byte value.
      * @param int $green The green byte value.
      * @param int $blue The blue byte value.
-     * @return list<float> Array of floats with HSL values.
+     * @return list<float> The hue in degrees, and the saturation and lightness as percentages.
      * @throws DomainException If the provided values are not in the valid range for RGB bytes.
      */
     public static function rgbToHsl(int $red, int $green, int $blue): array
@@ -741,9 +728,9 @@ class Color implements Stringable
         self::validateByte($blue);
 
         // Convert to fractions.
-        $r = self::byteToFraction($red);
-        $g = self::byteToFraction($green);
-        $b = self::byteToFraction($blue);
+        $r = $red / 255;
+        $g = $green / 255;
+        $b = $blue / 255;
 
         // Get the min and max values.
         $min = min($r, $g, $b);
@@ -766,44 +753,55 @@ class Color implements Stringable
             }
             $h = self::wrapHue($h * 60);
 
-            // Calculate saturation.
+            // Calculate saturation. Rounding error can push it just past 1, hence the clamp.
             // Note: $l cannot be 0 or 1 here because that would require $c == 0,
             // which is handled by the `if` branch above.
-            $s = $c / (1 - abs(2 * $l - 1));
+            $s = min($c / (1 - abs(2 * $l - 1)), 1.0);
         }
 
-        return [$h, $s, $l];
+        return [
+            $h,
+            $s * 100,
+            $l * 100,
+        ];
     }
 
     /**
      * Convert HSL values to RGB.
+     *
      * @see https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB_alternative
      *
      * @static
      * @param float $hue The hue as an angle in degrees.
-     * @param float $saturation The saturation as a fraction in the range [0.0, 1.0].
-     * @param float $lightness The lightness as a fraction in the range [0.0, 1.0].
+     * @param float $saturation The saturation as a percentage in the range [0, 100].
+     * @param float $lightness The lightness as a percentage in the range [0, 100].
      * @return list<int> An array of red, green, and blue bytes.
-     * @throws DomainException If the provided values are not in the valid range for HSL values.
+     * @throws DomainException If the hue is not finite, or the saturation or lightness is out of range.
      */
     public static function hslToRgb(float $hue, float $saturation, float $lightness): array
     {
         // Normalize the hue angle.
         $hue = self::wrapHue($hue);
 
-        // Validate saturation and lightness.
-        self::validateFraction($saturation);
-        self::validateFraction($lightness);
+        // Validate saturation and lightness, and convert them to fractions.
+        self::validatePercent($saturation);
+        self::validatePercent($lightness);
+        $s = $saturation / 100;
+        $l = $lightness / 100;
 
         // Conversion function.
-        $f = static function ($n) use ($hue, $saturation, $lightness): int {
+        $f = static function ($n) use ($hue, $s, $l): int {
             $k = fmod($n + $hue / 30, 12);
-            $a = $saturation * min($lightness, 1 - $lightness);
-            $c = $lightness - $a * max(-1, min($k - 3, 9 - $k, 1));
-            return self::fractionToByte(self::clamp($c));
+            $a = $s * min($l, 1 - $l);
+            $c = $l - $a * max(-1, min($k - 3, 9 - $k, 1));
+            return self::percentToByte(self::clampPercent($c * 100));
         };
 
-        return [$f(0), $f(8), $f(4)];
+        return [
+            $f(0),
+            $f(8),
+            $f(4),
+        ];
     }
 
     /**
@@ -910,27 +908,6 @@ class Color implements Stringable
         return self::hexToBytes($hex);
     }
 
-    /**
-     * Convert a CSS hex or named color to RGBA bytes.
-     *
-     * @static
-     * @param string $str The color string.
-     * @return list<int<0, 255>> RGBA color components as array of bytes.
-     * @throws DomainException If the provided string is not a valid CSS color name or hex color string.
-     */
-    public static function parseToBytes(string $str): array
-    {
-        $str = trim($str);
-
-        // Convert a color name to bytes.
-        if (self::validName($str)) {
-            return self::nameToBytes($str);
-        }
-
-        // Convert a hex string to bytes.
-        return self::hexToBytes($str);
-    }
-
     #endregion
 
     #region Instance helper methods
@@ -980,14 +957,34 @@ class Color implements Stringable
     #region Static helper methods
 
     /**
-     * Convert a float to a value within the range [0.0, 1.0].
+     * Create a color from HSL values and an alpha byte, and cache the HSL values.
+     *
+     * NB: This is an internal function, and the saturation and lightness are assumed to be valid percentages.
+     *
+     * @param float $hue The hue in degrees.
+     * @param float $saturation The saturation as a percentage.
+     * @param float $lightness The lightness as a percentage.
+     * @param int $alpha The alpha component as a byte.
+     * @return self The new color.
+     */
+    private static function createFromHsl(float $hue, float $saturation, float $lightness, int $alpha): self
+    {
+        $hue = self::wrapHue($hue);
+        [$red, $green, $blue] = self::hslToRgb($hue, $saturation, $lightness);
+        $color = new self($red, $green, $blue, $alpha);
+        $color->hsl = [$hue, $saturation, $lightness];
+        return $color;
+    }
+
+    /**
+     * Convert a float to a value within the range [0, 100].
      *
      * @param float $value The value to clamp.
      * @return float The clamped value.
      */
-    private static function clamp(float $value): float
+    private static function clampPercent(float $value): float
     {
-        return max(0.0, min($value, 1.0));
+        return max(0.0, min($value, 100.0));
     }
 
     /**
@@ -996,6 +993,7 @@ class Color implements Stringable
      * @param int $byte The value to check.
      * @return void
      * @throws DomainException If the byte is out of range.
+     * @phpstan-assert int<0, 255> $byte
      */
     private static function validateByte(int $byte): void
     {
@@ -1005,63 +1003,93 @@ class Color implements Stringable
     }
 
     /**
-     * Check if a fraction value is valid.
+     * Check if a percentage value is valid.
      *
-     * @param float $frac The fraction to check.
+     * @param float $percent The percentage to check.
      * @return void
-     * @throws DomainException If the fraction is out of range.
+     * @throws DomainException If the percentage is out of range.
      */
-    private static function validateFraction(float $frac): void
+    private static function validatePercent(float $percent): void
     {
-        if ($frac < 0 || $frac > 1) {
-            throw new DomainException("Invalid fraction value: $frac. Must be in the range [0.0, 1.0].");
+        if (!($percent >= 0 && $percent <= 100)) {
+            throw new DomainException(
+                Stringify::prepEx('Invalid percentage: ?. Must be in the range [0, 100].', $percent)
+            );
         }
     }
 
     /**
-     * Convert a byte to a fraction.
+     * Convert a color component, given as a byte or a percentage, to a byte.
+     *
+     * @param float $value The value, as a byte in the range [0, 255] (rounded to the nearest integer), or as a
+     * percentage in the range [0, 100] if $percent is true.
+     * @param bool $percent If the value is a percentage rather than a byte.
+     * @return int The byte value.
+     * @throws DomainException If the value is out of range.
+     */
+    private static function toByte(float $value, bool $percent): int
+    {
+        if ($percent) {
+            self::validatePercent($value);
+            return self::percentToByte($value);
+        }
+
+        if (!($value >= 0 && $value <= 255)) {
+            throw new DomainException(
+                Stringify::prepEx('Invalid byte value: ?. Must be in the range [0, 255].', $value)
+            );
+        }
+        return (int) round($value);
+    }
+
+    /**
+     * Convert a byte to a percentage.
      *
      * @static
      * @param int $byte The byte value.
-     * @return float The fraction.
+     * @return float The percentage.
      */
-    private static function byteToFraction(int $byte): float
+    private static function byteToPercent(int $byte): float
     {
-        return self::clamp($byte / 255.0);
+        return $byte * 100 / 255;
     }
 
     /**
-     * Convert a fraction to a byte.
+     * Convert a percentage to a byte.
      *
      * @static
-     * @param float $frac The fraction to convert.
+     * @param float $percent The percentage to convert.
      * @return int The byte value.
      */
-    private static function fractionToByte(float $frac): int
+    private static function percentToByte(float $percent): int
     {
-        return (int)round($frac * 255.0);
+        return (int) round($percent * 255 / 100);
     }
 
     /**
-     * Wrap the hue angle to the range [0, 360)
+     * Wrap the hue angle to the range [0, 360).
      *
      * @param float $hue The hue angle to wrap.
      * @return float The wrapped hue angle.
+     * @throws DomainException If the hue is not finite.
      */
     private static function wrapHue(float $hue): float
     {
+        if (!is_finite($hue)) {
+            throw new DomainException(Stringify::prepEx('Invalid hue: ?. Must be finite.', $hue));
+        }
         return Floats::wrap($hue, 360, false);
     }
 
     /**
-     * Format a fraction with up to 6 decimal places, trailing zeros stripped.
+     * Format a number with up to 6 decimal places, trailing zeros stripped.
      *
      * @param float $value The float to format.
      * @return string The formatted float.
      */
     private static function formatFloat(float $value): string
     {
-        return Floats::format($value, 'f', 6, trimZeros: true, ascii: true);
+        return Floats::format($value, 6, true, FloatFormat::FixedPoint);
     }
 
     /**
@@ -1076,25 +1104,14 @@ class Color implements Stringable
     }
 
     /**
-     * Format a percentage.
+     * Format a percentage, e.g. '50%' or '50.196078%'.
      *
-     * @param float $frac The fraction to format as a percentage.
+     * @param float $percent The percentage to format.
      * @return string The formatted percentage string.
      */
-    private static function formatPercent(float $frac): string
+    private static function formatPercent(float $percent): string
     {
-        return self::formatFloat($frac * 100) . '%';
-    }
-
-    /**
-     * Format a byte value as a fraction.
-     *
-     * @param int $byte The byte value to format.
-     * @return string The byte formatted as a fraction.
-     */
-    private static function formatByteAsFraction(int $byte): string
-    {
-        return self::formatFloat(self::byteToFraction($byte));
+        return self::formatFloat($percent) . '%';
     }
 
     #endregion
