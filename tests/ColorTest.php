@@ -184,6 +184,32 @@ final class ColorTest extends TestCase
     }
 
     /**
+     * Data provider for fromString() with CSS and extra color names in different cases.
+     *
+     * @return array<string, array{string, string}>
+     */
+    public static function colorNameCaseProvider(): array
+    {
+        return [
+            'CSS name, canonical'    => ['LightGoldenrodYellow', '#fafad2ff'],
+            'CSS name, lower case'   => ['lightgoldenrodyellow', '#fafad2ff'],
+            'CSS name, upper case'   => ['LIGHTGOLDENRODYELLOW', '#fafad2ff'],
+            'extra name, canonical'  => ['AirForceBlue', '#5d8aa8ff'],
+            'extra name, lower case' => ['airforceblue', '#5d8aa8ff'],
+            'extra name, upper case' => ['AIRFORCEBLUE', '#5d8aa8ff'],
+        ];
+    }
+
+    /**
+     * Test fromString() accepts CSS and extra color names in any case.
+     */
+    #[DataProvider('colorNameCaseProvider')]
+    public function testFromStringColorNameCase(string $name, string $hex): void
+    {
+        $this->assertSame($hex, Color::fromString($name)->toHex());
+    }
+
+    /**
      * Test fromString() with 'transparent' color name.
      */
     public function testFromStringTransparent(): void
