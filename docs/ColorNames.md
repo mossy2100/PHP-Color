@@ -99,6 +99,8 @@ public static function validName(string $name): bool
 Check if a string is a known color name: a CSS named color, an extra color name, or `'transparent'`. Names are
 case-insensitive, and surrounding whitespace is ignored.
 
+**Returns:** `bool` - `true` if the name is a known color name, `false` otherwise.
+
 **Examples:**
 
 ```php

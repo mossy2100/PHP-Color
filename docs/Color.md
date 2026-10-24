@@ -173,6 +173,8 @@ Create a color from a color name (e.g. 'Navy' or 'Amethyst') or hex string (3, 4
 
 The recognised names are listed in [`ColorNames`](ColorNames.md).
 
+**Returns:** `Color` - The new color.
+
 **Examples:**
 
 ```php
@@ -205,6 +207,8 @@ constructor.
 - `$blue` (float) - The blue component, in the range [0, 100]
 - `$alpha` (float) - The alpha component, in the range [0, 100] (default: 100 = fully opaque)
 
+**Returns:** `Color` - The new color.
+
 **Examples:**
 
 ```php
@@ -231,6 +235,8 @@ slightly from the values given. For example, `Color::fromHsla(120, 100, 0)` is b
 - `$lightness` (float) - The lightness, in the range [0, 100]
 - `$alpha` (float) - The alpha, in the range [0, 100] (default: 100 = fully opaque)
 
+**Returns:** `Color` - The new color.
+
 **Examples:**
 
 ```php
@@ -253,6 +259,8 @@ public static function validHex(string $hex): bool
 
 Check if a string is a valid hex color string.
 
+**Returns:** `bool` - `true` if the string is a valid hex color string, `false` otherwise.
+
 **Examples:**
 
 ```php
@@ -272,6 +280,8 @@ public function equal(mixed $other): bool
 ```
 
 Check if two colors are equal (all RGBA values match).
+
+**Returns:** `bool` - `true` if the value is a `Color` with the same RGBA components, `false` otherwise.
 
 **Example:**
 
@@ -298,6 +308,8 @@ Create a new Color with the specified red component.
 By default, the value is a byte in the range [0, 255], rounded to the nearest integer. If `$percent` is `true`, it's a
 percentage in the range [0, 100].
 
+**Returns:** `Color` - A new color with the given red component.
+
 **Throws:** `DomainException` if the value is out of range.
 
 ### withGreen()
@@ -307,6 +319,8 @@ public function withGreen(float $green, bool $percent = false): self
 ```
 
 Create a new Color with the specified green component. The value is interpreted as for `withRed()`.
+
+**Returns:** `Color` - A new color with the given green component.
 
 **Throws:** `DomainException` if the value is out of range.
 
@@ -318,6 +332,8 @@ public function withBlue(float $blue, bool $percent = false): self
 
 Create a new Color with the specified blue component. The value is interpreted as for `withRed()`.
 
+**Returns:** `Color` - A new color with the given blue component.
+
 **Throws:** `DomainException` if the value is out of range.
 
 ### withAlpha()
@@ -327,6 +343,8 @@ public function withAlpha(float $alpha, bool $percent = false): self
 ```
 
 Create a new Color with the specified alpha component. The value is interpreted as for `withRed()`.
+
+**Returns:** `Color` - A new color with the given alpha component.
 
 **Throws:** `DomainException` if the value is out of range.
 
@@ -338,6 +356,8 @@ public function withHue(float $hue): self
 
 Create a new Color with the specified hue, provided in degrees (will be normalized to [0, 360)).
 
+**Returns:** `Color` - A new color with the given hue.
+
 ### withSaturation()
 
 ```php
@@ -345,6 +365,8 @@ public function withSaturation(float $saturation): self
 ```
 
 Create a new Color with the specified saturation, as a percentage.
+
+**Returns:** `Color` - A new color with the given saturation.
 
 **Throws:** `DomainException` if the value is not in [0, 100].
 
@@ -355,6 +377,8 @@ public function withLightness(float $lightness): self
 ```
 
 Create a new Color with the specified lightness, as a percentage.
+
+**Returns:** `Color` - A new color with the given lightness.
 
 **Throws:** `DomainException` if the value is not in [0, 100].
 
@@ -399,6 +423,8 @@ If the percentage is 0, returns this color. If 100, returns the other color.
 The colors are premultiplied by alpha, as in CSS `color-mix()`. So a more transparent color contributes less to the
 result's RGB, and mixing with `'transparent'` fades a color without darkening it.
 
+**Returns:** `Color` - The mixed color.
+
 **Examples:**
 
 ```php
@@ -419,6 +445,8 @@ public function complement(): self
 
 Get the complementary color (hue + 180 degrees).
 
+**Returns:** `Color` - The complementary color.
+
 **Example:**
 
 ```php
@@ -437,6 +465,8 @@ public static function average(self ...$colors): self
 ```
 
 Find the average of several colors. Like `mix()`, it premultiplies by alpha.
+
+**Returns:** `Color` - The average color.
 
 **Example:**
 
@@ -462,6 +492,8 @@ Calculate the contrast ratio between two colors (1:1 to 21:1).
 
 Alpha is ignored, since WCAG defines contrast for opaque colors. To check a translucent color, blend it with its
 background first, e.g. using `mix()`.
+
+**Returns:** `float` - The contrast ratio, from 1 (no contrast) to 21 (black on white).
 
 **Example:**
 
@@ -524,6 +556,8 @@ Apply the sRGB gamma correction transfer function.
 
 Used by the relative luminance calculation, but made public for other purposes.
 
+**Returns:** `float` - The linear component value, in the range [0.0, 1.0].
+
 **Example:**
 
 ```php
@@ -548,6 +582,8 @@ public function toHex(
 
 Output the color as a hexadecimal string.
 
+**Returns:** `string` - The hex color string.
+
 **Examples:**
 
 ```php
@@ -569,6 +605,8 @@ public function toRgbString(): string
 Output the color as a CSS rgb() string (modern syntax). The red, green and blue components are bytes, and the alpha is
 a percentage.
 
+**Returns:** `string` - The CSS `rgb()` string.
+
 **Example:**
 
 ```php
@@ -583,6 +621,8 @@ public function toHslString(): string
 ```
 
 Output the color as a CSS hsl() string (modern syntax).
+
+**Returns:** `string` - The CSS `hsl()` string.
 
 **Example:**
 
@@ -601,6 +641,8 @@ Convert to string (8-digit RGBA hex with leading '#'). `fromString()` is the inv
 
 Called implicitly when casting to string or interpolating in a string context.
 
+**Returns:** `string` - The 8-digit RGBA hex string, with a leading '#'.
+
 **Example:**
 
 ```php
@@ -616,7 +658,7 @@ public function toRgbaArray(): array
 
 Get RGBA values as an associative array of bytes.
 
-**Returns:** `array{red: int, green: int, blue: int, alpha: int}`
+**Returns:** `array{red: int, green: int, blue: int, alpha: int}` - The RGBA components as bytes.
 
 ### toHslArray()
 
@@ -626,7 +668,7 @@ public function toHslArray(): array
 
 Get HSL values as an associative array of floats: the hue in degrees, and the saturation and lightness as percentages.
 
-**Returns:** `array{hue: float, saturation: float, lightness: float}`
+**Returns:** `array{hue: float, saturation: float, lightness: float}` - The HSL components.
 
 ### toArray()
 
@@ -636,6 +678,8 @@ public function toArray(): array
 
 Get all color properties (RGBA and HSL) as an associative array.
 
+**Returns:** `array<string, int|float>` - The RGBA bytes and HSL values, keyed by name.
+
 ### rgbToHsl()
 
 ```php
@@ -644,7 +688,7 @@ public static function rgbToHsl(int $red, int $green, int $blue): array
 
 Convert RGB values to HSL.
 
-**Returns:** `float[]` - Array of [hue, saturation, lightness] where:
+**Returns:** `list<float>` - The [hue, saturation, lightness], where:
 - hue is in degrees [0, 360)
 - saturation is a percentage [0, 100]
 - lightness is a percentage [0, 100]
@@ -665,7 +709,7 @@ public static function hslToRgb(float $hue, float $saturation, float $lightness)
 
 Convert HSL values to RGB. The saturation and lightness are percentages.
 
-**Returns:** `int[]` - Array of [red, green, blue] as bytes.
+**Returns:** `list<int>` - The [red, green, blue] bytes.
 
 **Example:**
 
@@ -682,6 +726,8 @@ public static function normalizeHex(string $hex): string
 ```
 
 Convert a CSS hex color string to an 8-digit lowercase hex string (no leading '#').
+
+**Returns:** `string` - The 8-digit lower-case hex string, with no leading '#'.
 
 **Examples:**
 
@@ -701,6 +747,8 @@ public static function hexToBytes(string $hex): array
 ```
 
 Convert a hex string to RGBA bytes.
+
+**Returns:** `list<int<0, 255>>` - The [red, green, blue, alpha] bytes.
 
 **Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
 the string is not a valid hex color.
