@@ -448,6 +448,36 @@ final class Color implements Stringable
 
     #endregion
 
+    #region Aggregation methods
+
+    /**
+     * Find the average of several colors.
+     *
+     * The colors are premultiplied by alpha, as in mix().
+     *
+     * @static
+     * @param Color ...$colors The colors to average.
+     * @return self The average color.
+     * @throws LengthException If no colors are provided.
+     */
+    public static function average(self ...$colors): self
+    {
+        // Get the number of colors and make sure we have at least one.
+        $n = count($colors);
+        if ($n === 0) {
+            throw new LengthException('Cannot average zero colors.');
+        }
+
+        // If there's only one, return it.
+        if ($n === 1) {
+            return $colors[0];
+        }
+
+        return self::blend(array_values($colors), array_fill(0, $n, 1.0));
+    }
+
+    #endregion
+
     #region Accessibility methods
 
     /**
@@ -493,6 +523,30 @@ final class Color implements Stringable
         return ($darkTextColor->contrastRatio($this) >= $lightTextColor->contrastRatio($this))
             ? $darkTextColor
             : $lightTextColor;
+    }
+
+    /**
+     * Transfer function for gamma correction.
+     *
+     * This is needed by the relative luminance calculation, but let's make it public and static in case people need
+     * it for other purposes.
+     *
+     * @see https://en.wikipedia.org/wiki/SRGB#Transfer_function_(%22gamma%22)
+     *
+     * @static
+     * @param int $byte The RGB byte value, in the range [0, 255].
+     * @return float The transfer function value.
+     * @throws DomainException If the byte is out of range.
+     */
+    public static function gamma(int $byte): float
+    {
+        self::validateByte($byte);
+
+        // Convert RGB byte to a float in the range [0.0, 1.0].
+        $c = $byte / 255.0;
+
+        // Compute transfer function.
+        return ($c <= 0.04045) ? ($c / 12.92) : ((($c + 0.055) / 1.055) ** 2.4);
     }
 
     #endregion
@@ -611,60 +665,6 @@ final class Color implements Stringable
             $this->toRgbaArray(),
             $this->toHslArray()
         );
-    }
-
-    #endregion
-
-    #region Static utility methods
-
-    /**
-     * Transfer function for gamma correction.
-     *
-     * This is needed by the relative luminance calculation, but let's make it public and static in case people need
-     * it for other purposes.
-     *
-     * @see https://en.wikipedia.org/wiki/SRGB#Transfer_function_(%22gamma%22)
-     *
-     * @static
-     * @param int $byte The RGB byte value, in the range [0, 255].
-     * @return float The transfer function value.
-     * @throws DomainException If the byte is out of range.
-     */
-    public static function gamma(int $byte): float
-    {
-        self::validateByte($byte);
-
-        // Convert RGB byte to a float in the range [0.0, 1.0].
-        $c = $byte / 255.0;
-
-        // Compute transfer function.
-        return ($c <= 0.04045) ? ($c / 12.92) : ((($c + 0.055) / 1.055) ** 2.4);
-    }
-
-    /**
-     * Find the average of several colors.
-     *
-     * The colors are premultiplied by alpha, as in mix().
-     *
-     * @static
-     * @param Color ...$colors The colors to average.
-     * @return self The average color.
-     * @throws LengthException If no colors are provided.
-     */
-    public static function average(self ...$colors): self
-    {
-        // Get the number of colors and make sure we have at least one.
-        $n = count($colors);
-        if ($n === 0) {
-            throw new LengthException('Cannot average zero colors.');
-        }
-
-        // If there's only one, return it.
-        if ($n === 1) {
-            return $colors[0];
-        }
-
-        return self::blend(array_values($colors), array_fill(0, $n, 1.0));
     }
 
     /**

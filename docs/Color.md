@@ -428,6 +428,26 @@ $cyan = $red->complement();  // Hue shifts from 0 to 180
 
 ---
 
+## Aggregation Methods
+
+### average()
+
+```php
+public static function average(self ...$colors): self
+```
+
+Find the average of several colors. Like `mix()`, it premultiplies by alpha.
+
+**Example:**
+
+```php
+$avg = Color::average($color1, $color2, $color3);
+```
+
+**Throws:** `LengthException` if no colors are provided.
+
+---
+
 ## Accessibility Methods
 
 Methods for evaluating color accessibility according to WCAG (Web Content Accessibility Guidelines).
@@ -493,6 +513,24 @@ $cream = Color::fromString('cornsilk');
 $dark = Color::fromString('#1a1a1a');
 $textColor = $background->bestTextColor($cream, $dark);
 ```
+
+### gamma()
+
+```php
+public static function gamma(int $byte): float
+```
+
+Apply the sRGB gamma correction transfer function.
+
+Used by the relative luminance calculation, but made public for other purposes.
+
+**Example:**
+
+```php
+$linear = Color::gamma(128);  // ~0.216
+```
+
+**Throws:** `DomainException` if the byte is out of range.
 
 ---
 
@@ -597,44 +635,6 @@ public function toArray(): array
 ```
 
 Get all color properties (RGBA and HSL) as an associative array.
-
----
-
-## Static Utility Methods
-
-### gamma()
-
-```php
-public static function gamma(int $byte): float
-```
-
-Apply the sRGB gamma correction transfer function.
-
-Used by the relative luminance calculation, but made public for other purposes.
-
-**Example:**
-
-```php
-$linear = Color::gamma(128);  // ~0.216
-```
-
-**Throws:** `DomainException` if the byte is out of range.
-
-### average()
-
-```php
-public static function average(self ...$colors): self
-```
-
-Find the average of several colors. Like `mix()`, it premultiplies by alpha.
-
-**Example:**
-
-```php
-$avg = Color::average($color1, $color2, $color3);
-```
-
-**Throws:** `LengthException` if no colors are provided.
 
 ### rgbToHsl()
 
