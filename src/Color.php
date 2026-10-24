@@ -15,10 +15,7 @@ use Override;
 use Stringable;
 
 /**
- * Color class.
- *
- * @author Shaun Moss
- * @version 2025-08-14
+ * Immutable RGBA color, with HSL access, CSS name and hex parsing, CSS output, and WCAG contrast helpers.
  */
 final class Color implements Stringable
 {
