@@ -10,11 +10,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- **`Color::fromString()`** creates a color from a color name or hex string, and is the inverse of `__toString()`.
 - **`ColorNames`,** holding the color name tables and the lookup `Color` uses. `ColorNames::EXTRA` adds 296 color
   names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every method that takes a color name accepts
   them.
 - **`rebeccapurple`** (`#663399`), the CSS named color that was missing.
-- **`Color::fromString()`** creates a color from a CSS color name or hex string, and is the inverse of `__toString()`.
 
 ### Changed
 
@@ -22,34 +22,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `Mossy2100\Color` (breaking),** matching the author's GitHub and Packagist name. Update `composer.json` and any
   `use` statements. It depends on `mossy2100/core`.
 - **Requires `mossy2100/core` `^4.0`.**
+- **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
+  255)`. Replace `new Color('red')` with `Color::fromString('red')`.
+- **Percentages replace fractions throughout (breaking),** as in CSS:
+  - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.
+  - `fromHsla()` takes the saturation, lightness and alpha as percentages.
+  - `saturation`, `lightness`, `perceivedLightness`, `toHslArray()`, `rgbToHsl()`, `hslToRgb()`, `withSaturation()`
+    and `withLightness()` use percentages in [0, 100].
+  - `mix()` takes the percentage of the other color, defaulting to 50. Its parameter is renamed from `$frac` to
+    `$percent`.
+  - `toRgbString()` and `toHslString()` give the alpha as a percentage, e.g. `rgb(255 0 0 / 50.196078%)`.
+- **`withRed()`, `withGreen()`, `withBlue()` and `withAlpha()` take a byte, or a percentage with `$percent = true`
+  (breaking).** A float is no longer read as a fraction, so `withRed(1.0)` is byte 1, not 255. A non-integer byte is
+  rounded.
+- **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()`.
+- **Removed `nameToBytes()` and `nameToHex()` (breaking).** Use `fromString($name)` for a `Color`, or
+  `ColorNames::lookupHex($name)` for the 8-digit hex value, which returns `null` for an unknown name instead of
+  throwing.
 - **`Color::CSS_COLOR_NAMES` moved to `ColorNames::CSS` (breaking for code that reads the constant directly),** with
   UpperCamelCase keys and 6-digit RGB values, e.g. `'AliceBlue' => 'f0f8ff'`, and without `transparent`. Name lookups
   are unchanged: they're case-insensitive, and accept `transparent`.
 - **`Color::validName()` moved to `ColorNames::validName()` (breaking).**
 - **`amethyst` moved from the CSS names to `ColorNames::EXTRA` (breaking),** since it isn't a CSS color. Its
   value changed from `#9966cc` to `#9a63c6`.
-- **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
-  255)`. Replace `new Color('red')` with `Color::fromString('red')`.
 - **`Color` is now `final` (breaking).**
 - **Renamed the `validHex()` parameter from `$str` to `$hex` (breaking for named arguments).**
 - **`average()` throws `LengthException` instead of `ArgumentCountError` when given no colors (breaking).**
 - **`mix()` and `average()` premultiply by alpha, as CSS `color-mix()` does (breaking).** Mixing with a transparent
   color now fades a color without darkening it: red mixed 50% with `transparent` gives `#ff000080`, not `#80000080`.
   Results only change when the colors' alphas differ.
-- **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()`.
-- **Removed `nameToBytes()` and `nameToHex()` (breaking).** Use `fromString($name)` for a `Color`, or
-  `ColorNames::lookupHex($name)` for the 8-digit hex value, which returns `null` for an unknown name instead of
-  throwing.
-- **Percentages replace fractions throughout (breaking),** as in CSS:
-  - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.
-  - `fromHsla()` takes the saturation, lightness and alpha as percentages.
-  - `saturation`, `lightness`, `perceivedLightness`, `toHslArray()`, `rgbToHsl()`, `hslToRgb()`, `withSaturation()`
-    and `withLightness()` use percentages in [0, 100].
-  - `mix()` takes the percentage of the other color, defaulting to 50.
-  - `toRgbString()` and `toHslString()` give the alpha as a percentage, e.g. `rgb(255 0 0 / 50.196078%)`.
-- **`withRed()`, `withGreen()`, `withBlue()` and `withAlpha()` take a byte, or a percentage with `$percent = true`
-  (breaking).** A float is no longer read as a fraction, so `withRed(1.0)` is byte 1, not 255. A non-integer byte is
-  rounded.
 
 ### Fixed
 
