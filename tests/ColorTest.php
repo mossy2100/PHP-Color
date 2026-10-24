@@ -1057,6 +1057,7 @@ final class ColorTest extends TestCase
             ['#abcde'],
             ['#abcdefgh'],
             ['#gggggg'],
+            ['##abc'],
             ['notahex'],
         ];
     }
@@ -1130,7 +1131,8 @@ final class ColorTest extends TestCase
     public function testNameToHexInvalid(): void
     {
         $this->expectException(DomainException::class);
-        Color::nameToHex('notacolor');
+        $this->expectExceptionMessage("Invalid color name: ' NotAColor '.");
+        Color::nameToHex(' NotAColor ');
     }
 
     #endregion

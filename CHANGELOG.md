@@ -20,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Requires `mossy2100/core` `^4.0`.**
 - **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
   255)`. Replace `new Color('red')` with `Color::fromString('red')`.
+- **`Color` is now `final` (breaking).**
+- **Renamed the `validHex()` parameter from `$str` to `$hex` (breaking for named arguments).**
 - **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()` and `nameToBytes()`.
 - **Percentages replace fractions throughout (breaking),** as in CSS:
   - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.

@@ -273,7 +273,7 @@ $transparentPink = Color::fromHsla(350, 100, 87.6, 66);
 ### validHex()
 
 ```php
-public static function validHex(string $str): bool
+public static function validHex(string $hex): bool
 ```
 
 Check if a string is a valid hex color string.

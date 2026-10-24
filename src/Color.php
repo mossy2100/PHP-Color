@@ -20,7 +20,7 @@ use Stringable;
  * @author Shaun Moss
  * @version 2025-08-14
  */
-class Color implements Stringable
+final class Color implements Stringable
 {
     use Equatable;
 
@@ -256,16 +256,19 @@ class Color implements Stringable
      */
     public static function fromString(string $colorString): self
     {
-        $str = trim($colorString);
+        $trimmed = trim($colorString);
 
-        if (self::validName($str)) {
-            $bytes = self::nameToBytes($str);
-        } elseif (self::validHex($str)) {
-            $bytes = self::hexToBytes($str);
+        if (self::validName($trimmed)) {
+            $bytes = self::nameToBytes($trimmed);
         } else {
-            throw new FormatException(
-                "Invalid color string: '$colorString'. Must be a CSS color name or hex color string."
-            );
+            try {
+                $bytes = self::hexToBytes($trimmed);
+            } catch (FormatException) {
+                throw new FormatException(Stringify::prepEx(
+                    'Invalid color string: ?. Must be a CSS color name or hex color string.',
+                    $colorString
+                ));
+            }
         }
 
         return new self($bytes[0], $bytes[1], $bytes[2], $bytes[3]);
@@ -280,23 +283,25 @@ class Color implements Stringable
      * A leading '#' is optional, and it can have 3, 4, 6, or 8 hex digits.
      *
      * @static
-     * @param string $str A string that could be a CSS hex color.
+     * @param string $hex A string that could be a CSS hex color.
      * @return bool If the provided string is a valid CSS hex color string.
      */
-    public static function validHex(string $str): bool
+    public static function validHex(string $hex): bool
     {
-        $str = trim($str);
+        $hex = trim($hex);
 
         // Reject empty strings.
-        if ($str === '') {
+        if ($hex === '') {
             return false;
         }
 
         // Trim a leading '#' if present.
-        $str = ltrim($str, '#');
+        if ($hex[0] === '#') {
+            $hex = substr($hex, 1);
+        }
 
         // Check the string is 3, 4, 6 or 8 hex digits.
-        return in_array(strlen($str), [3, 4, 6, 8], true) && ctype_xdigit($str);
+        return in_array(strlen($hex), [3, 4, 6, 8], true) && ctype_xdigit($hex);
     }
 
     /**
@@ -452,12 +457,12 @@ class Color implements Stringable
         }
 
         // Compute the components of the new color.
-        $frac = $percent / 100;
-        $frac2 = 1.0 - $frac;
-        $r = (int) round(($this->red * $frac2) + ($other->red * $frac));
-        $g = (int) round(($this->green * $frac2) + ($other->green * $frac));
-        $b = (int) round(($this->blue * $frac2) + ($other->blue * $frac));
-        $a = (int) round(($this->alpha * $frac2) + ($other->alpha * $frac));
+        $otherFraction = $percent / 100;
+        $thisFraction = 1.0 - $otherFraction;
+        $r = (int) round(($this->red * $thisFraction) + ($other->red * $otherFraction));
+        $g = (int) round(($this->green * $thisFraction) + ($other->green * $otherFraction));
+        $b = (int) round(($this->blue * $thisFraction) + ($other->blue * $otherFraction));
+        $a = (int) round(($this->alpha * $thisFraction) + ($other->alpha * $otherFraction));
 
         // Create and return the mixed color.
         return new self($r, $g, $b, $a);
@@ -819,7 +824,7 @@ class Color implements Stringable
     {
         // Check the input string is a valid format.
         if (!self::validHex($hex)) {
-            throw new FormatException("Invalid CSS hex color: '$hex'.");
+            throw new FormatException(Stringify::prepEx('Invalid CSS hex color: ?.', $hex));
         }
 
         // Remove a leading # character if present and lower-case letter digits.
@@ -849,12 +854,7 @@ class Color implements Stringable
      */
     public static function hexToBytes(string $hex): array
     {
-        // Check the input string is a valid format.
-        if (!self::validHex($hex)) {
-            throw new FormatException("Invalid CSS hex color: '$hex'.");
-        }
-
-        // Normalize to 8 hex digits.
+        // Normalize to 8 hex digits. This will throw if the hex string is invalid.
         $hex = self::normalizeHex($hex);
 
         // Convert string into bytes.
@@ -886,15 +886,15 @@ class Color implements Stringable
      */
     public static function nameToHex(string $name): string
     {
-        $name = strtolower(trim($name));
+        $key = strtolower(trim($name));
 
         // Check the provided color name is valid.
-        if (!self::validName($name)) {
-            throw new DomainException("Invalid color name '$name'.");
+        if (!self::validName($key)) {
+            throw new DomainException(Stringify::prepEx('Invalid color name: ?.', $name));
         }
 
         // Look up the hex value for the color.
-        return self::CSS_COLOR_NAMES[$name];
+        return self::CSS_COLOR_NAMES[$key];
     }
 
     /**
