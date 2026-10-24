@@ -10,8 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- **`EXTRA_COLOR_NAMES`,** 296 color names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every
-  method that takes a color name accepts them.
+- **`ColorNames`,** holding the color name tables and the lookup `Color` uses. `ColorNames::EXTRA` adds 296 color
+  names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every method that takes a color name accepts
+  them.
 - **`rebeccapurple`** (`#663399`), the CSS named color that was missing.
 - **`Color::fromString()`** creates a color from a CSS color name or hex string, and is the inverse of `__toString()`.
 
@@ -21,10 +22,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `Mossy2100\Color` (breaking),** matching the author's GitHub and Packagist name. Update `composer.json` and any
   `use` statements. It depends on `mossy2100/core`.
 - **Requires `mossy2100/core` `^4.0`.**
-- **`CSS_COLOR_NAMES` has UpperCamelCase keys and 6-digit RGB values, e.g. `'AliceBlue' => 'f0f8ff'`, and no longer
-  includes `transparent` (breaking for code that reads the constant directly).** Name lookups are unchanged: they're
-  case-insensitive, accept `transparent`, and `nameToHex()` still returns 8 digits.
-- **`amethyst` moved from `CSS_COLOR_NAMES` to `EXTRA_COLOR_NAMES` (breaking),** since it isn't a CSS color. Its
+- **`Color::CSS_COLOR_NAMES` moved to `ColorNames::CSS` (breaking for code that reads the constant directly),** with
+  UpperCamelCase keys and 6-digit RGB values, e.g. `'AliceBlue' => 'f0f8ff'`, and without `transparent`. Name lookups
+  are unchanged: they're case-insensitive, accept `transparent`, and `nameToHex()` still returns 8 digits.
+- **`Color::validName()` moved to `ColorNames::validName()` (breaking).**
+- **`amethyst` moved from the CSS names to `ColorNames::EXTRA` (breaking),** since it isn't a CSS color. Its
   value changed from `#9966cc` to `#9a63c6`.
 - **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
   255)`. Replace `new Color('red')` with `Color::fromString('red')`.
@@ -52,7 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   disagree. `Color::fromHsla(120, 100, 0)->hue` is now `0.0`, the same as black's.
 - **`withHue()`, `withLightness()` and `complement()` threw `DomainException` for some colors,** e.g. `#7878ff` and
   `#000001`, whose computed saturation was just over the maximum due to rounding.
-- **`validName()` ignores surrounding whitespace,** as `nameToHex()` and `fromString()` already did.
+- **Name validation ignores surrounding whitespace,** as `nameToHex()` and `fromString()` already did.
 - **`gamma()` throws `DomainException` for a value outside [0, 255],** instead of returning a meaningless result.
 - **`NAN` and `INF` are rejected** by the factories, `with*()` methods and `mix()`, instead of giving black, white or a
   warning.

@@ -95,6 +95,10 @@ Immutable class for color manipulation with support for:
 - WCAG accessibility calculations (contrast ratio, text color selection)
 - Multiple output formats (hex, rgb(), hsl())
 
+### [ColorNames](docs/ColorNames.md)
+
+The CSS named colors and 296 extra color names, mapped to hex values, with the case-insensitive lookup `Color` uses.
+
 ---
 
 ## Testing

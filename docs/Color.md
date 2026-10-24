@@ -8,7 +8,7 @@ Immutable class for working with colors in PHP.
 
 The `Color` class provides a comprehensive implementation of color handling with support for:
 - RGB and HSL color spaces
-- CSS color names (148 standard names plus 'transparent'), and 296 extra color names
+- CSS color names (148 standard names plus 'transparent'), and 296 extra color names (see [ColorNames](ColorNames.md))
 - Hex string parsing (3, 4, 6, or 8 digits)
 - WCAG accessibility calculations (contrast ratio, text color selection)
 - Color mixing and complementary colors
@@ -134,52 +134,6 @@ $color->perceivedLightness;  // 0-100
 
 ---
 
-## Constants
-
-### CSS_COLOR_NAMES
-
-```php
-public const array CSS_COLOR_NAMES
-```
-
-All 148 [CSS named colors](https://www.w3.org/TR/css-color-4/#named-colors), mapped to 6-digit RGB hex values. The names
-are in UpperCamelCase, e.g. `'AliceBlue'`, but lookups by name are case-insensitive.
-
-`'transparent'` isn't in the table, since CSS defines it separately from the named colors, but every method that takes
-a color name accepts it.
-
-**Example:**
-
-```php
-Color::fromString('AliceBlue');
-Color::fromString('coral');
-Color::fromString('darkslategray');
-Color::fromString('PapayaWhip');
-Color::fromString('transparent');  // RGBA: 0, 0, 0, 0
-```
-
-### EXTRA_COLOR_NAMES
-
-```php
-public const array EXTRA_COLOR_NAMES
-```
-
-296 color names in common English use that aren't CSS named colors, e.g. `'Amethyst'`, `'Aubergine'` and
-`'AirForceBlue'`, mapped to 6-digit RGB hex values. Each value is a consensus of several sources, including the
-xkcd color survey, Wikipedia, and paint and color references.
-
-The names are in UpperCamelCase, and lookups are case-insensitive, as for `CSS_COLOR_NAMES`. Every method that takes a
-color name accepts both tables.
-
-**Example:**
-
-```php
-Color::fromString('Amethyst');      // #9a63c6ff
-Color::fromString('airforceblue');  // #5d8aa8ff
-```
-
----
-
 ## Constructor
 
 ```php
@@ -214,8 +168,10 @@ $transparentRed = new Color(255, 0, 0, 128);
 public static function fromString(string $colorString): self
 ```
 
-Create a color from a color name (e.g. 'Navy' or 'Amethyst') or hex string (3, 4, 6, or 8 hex digits, with or without '#'). Names
-are case-insensitive, and surrounding whitespace is ignored. It's the inverse of `__toString()`.
+Create a color from a color name (e.g. 'Navy' or 'Amethyst') or hex string (3, 4, 6, or 8 hex digits, with or without
+'#'). Names are case-insensitive, and surrounding whitespace is ignored. It's the inverse of `__toString()`.
+
+The recognised names are listed in [`ColorNames`](ColorNames.md).
 
 **Examples:**
 
@@ -303,22 +259,6 @@ Check if a string is a valid hex color string.
 Color::validHex('#ff0000');   // true
 Color::validHex('ff0');       // true
 Color::validHex('notahex');   // false
-```
-
-### validName()
-
-```php
-public static function validName(string $name): bool
-```
-
-Check if a string is a known color name: a CSS named color, or one of `EXTRA_COLOR_NAMES`.
-
-**Examples:**
-
-```php
-Color::validName('red');       // true
-Color::validName('Amethyst');  // true
-Color::validName('notacolor'); // false
 ```
 
 ---
@@ -789,5 +729,6 @@ Convert a color name to RGBA bytes.
 
 ## See Also
 
+- **[ColorNames](ColorNames.md)** - The color names that `fromString()` and the name methods recognise
 - **[Equatable](https://github.com/mossy2100/PHP-Core/blob/main/docs/Traits/Comparison/Equatable.md)** - Trait for
   implementing `equal()`

@@ -1072,92 +1072,19 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Data provider for valid color name tests.
-     *
-     * @return array<array{string}>
-     */
-    public static function validNameProvider(): array
-    {
-        return [
-            ['red'],
-            ['RED'],
-            ['Blue'],
-            ['transparent'],
-            ['aliceblue'],
-            ['rebeccapurple'],
-            ['RebeccaPurple'],
-            [' red '],
-        ];
-    }
-
-    /**
-     * Test validName() returns true for valid CSS color names.
-     */
-    #[DataProvider('validNameProvider')]
-    public function testValidName(string $name): void
-    {
-        $this->assertTrue(Color::validName($name));
-    }
-
-    /**
-     * Test validName() returns false for invalid color names.
-     */
-    public function testValidNameInvalid(): void
-    {
-        $this->assertFalse(Color::validName('notacolor'));
-    }
-
-    /**
-     * Test validName() and fromString() accept extra color names, case-insensitively.
+     * Test fromString() and nameToHex() accept extra color names, case-insensitively.
      */
     public function testExtraColorNames(): void
     {
-        $this->assertTrue(Color::validName('Amethyst'));
-        $this->assertFalse(Color::validName('air force blue'));
-        $this->assertTrue(Color::validName('airforceblue'));
         $this->assertSame('#9a63c6ff', Color::fromString('amethyst')->toHex());
         $this->assertSame('5d8aa8ff', Color::nameToHex('AIRFORCEBLUE'));
     }
 
     /**
-     * Test EXTRA_COLOR_NAMES are UpperCamelCase, with 6-digit hex values, and don't overlap the CSS names.
-     */
-    public function testExtraColorNamesTable(): void
-    {
-        $names = array_keys(Color::EXTRA_COLOR_NAMES);
-        $lowerNames = array_map(strtolower(...), $names);
-        $this->assertCount(296, $names);
-        $this->assertCount(296, array_unique($lowerNames));
-        foreach (Color::EXTRA_COLOR_NAMES as $name => $hex) {
-            $this->assertMatchesRegularExpression('/^[A-Z][a-zA-Z]*$/', $name);
-            $this->assertMatchesRegularExpression('/^[0-9a-f]{6}$/', $hex);
-        }
-        $cssLowerNames = array_map(strtolower(...), array_keys(Color::CSS_COLOR_NAMES));
-        $this->assertSame([], array_values(array_intersect($lowerNames, $cssLowerNames)));
-    }
-
-    /**
-     * Test CSS_COLOR_NAMES has the 148 CSS named colors, in UpperCamelCase, with 6-digit hex values.
-     */
-    public function testCssColorNames(): void
-    {
-        $names = array_keys(Color::CSS_COLOR_NAMES);
-        $this->assertCount(148, $names);
-        $this->assertCount(148, array_unique(array_map(strtolower(...), $names)));
-        foreach (Color::CSS_COLOR_NAMES as $name => $hex) {
-            $this->assertMatchesRegularExpression('/^[A-Z][a-zA-Z]*$/', $name);
-            $this->assertMatchesRegularExpression('/^[0-9a-f]{6}$/', $hex);
-        }
-        $this->assertSame('663399', Color::CSS_COLOR_NAMES['RebeccaPurple']);
-    }
-
-    /**
-     * Test 'transparent' is a known name, though it isn't in either table.
+     * Test 'transparent' is a known name.
      */
     public function testTransparentName(): void
     {
-        $this->assertArrayNotHasKey('Transparent', Color::CSS_COLOR_NAMES);
-        $this->assertTrue(Color::validName('Transparent'));
         $this->assertSame('00000000', Color::nameToHex(' TRANSPARENT '));
     }
 
