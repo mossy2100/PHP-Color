@@ -7,6 +7,7 @@ namespace Mossy2100\Color\Tests;
 use Mossy2100\Color\ColorNames;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -97,7 +98,11 @@ final class ColorNamesTest extends TestCase
 
     /**
      * Test lookupHex() covers every name in both tables, with an opaque alpha appended.
+     *
+     * Runs in a separate process because lookupHex() builds its map once per process. Otherwise, whichever test class
+     * runs first builds it, and the build only counts towards ColorNames coverage if that test is in this class.
      */
+    #[RunInSeparateProcess]
     public function testLookupHexEveryName(): void
     {
         foreach (ColorNames::CSS + ColorNames::EXTRA as $name => $hex) {
