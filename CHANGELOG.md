@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- **`EXTRA_COLOR_NAMES`,** 296 color names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every
+  method that takes a color name accepts them.
 - **`rebeccapurple`** (`#663399`), the CSS named color that was missing.
 - **`Color::fromString()`** creates a color from a CSS color name or hex string, and is the inverse of `__toString()`.
 
@@ -19,9 +21,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `Mossy2100\Color` (breaking),** matching the author's GitHub and Packagist name. Update `composer.json` and any
   `use` statements. It depends on `mossy2100/core`.
 - **Requires `mossy2100/core` `^4.0`.**
-- **`CSS_COLOR_NAMES` keys are now UpperCamelCase, e.g. `'AliceBlue'` (breaking for code that reads the constant
-  directly).** Name lookups are still case-insensitive.
-- **Removed `amethyst` from the color names (breaking),** since it isn't a CSS color.
+- **`CSS_COLOR_NAMES` has UpperCamelCase keys and 6-digit RGB values, e.g. `'AliceBlue' => 'f0f8ff'`, and no longer
+  includes `transparent` (breaking for code that reads the constant directly).** Name lookups are unchanged: they're
+  case-insensitive, accept `transparent`, and `nameToHex()` still returns 8 digits.
+- **`amethyst` moved from `CSS_COLOR_NAMES` to `EXTRA_COLOR_NAMES` (breaking),** since it isn't a CSS color. Its
+  value changed from `#9966cc` to `#9a63c6`.
 - **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
   255)`. Replace `new Color('red')` with `Color::fromString('red')`.
 - **`Color` is now `final` (breaking).**

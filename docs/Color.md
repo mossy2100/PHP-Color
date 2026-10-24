@@ -8,7 +8,7 @@ Immutable, memory-efficient class for working with colors in PHP.
 
 The `Color` class provides a comprehensive implementation of color handling with support for:
 - RGB and HSL color spaces
-- CSS color names (148 standard names plus 'transparent')
+- CSS color names (148 standard names plus 'transparent'), and 296 extra color names
 - Hex string parsing (3, 4, 6, or 8 digits)
 - WCAG accessibility calculations (contrast ratio, text color selection)
 - Color mixing and complementary colors
@@ -146,8 +146,11 @@ $color->perceivedLightness;  // 0-100
 public const array CSS_COLOR_NAMES
 ```
 
-All 148 [CSS named colors](https://www.w3.org/TR/css-color-4/#named-colors), plus 'Transparent', mapped to 8-digit RGBA
-hex values. The names are in UpperCamelCase, e.g. `'AliceBlue'`, but lookups by name are case-insensitive.
+All 148 [CSS named colors](https://www.w3.org/TR/css-color-4/#named-colors), mapped to 6-digit RGB hex values. The names
+are in UpperCamelCase, e.g. `'AliceBlue'`, but lookups by name are case-insensitive.
+
+`'transparent'` isn't in the table, since CSS defines it separately from the named colors, but every method that takes
+a color name accepts it.
 
 **Example:**
 
@@ -157,6 +160,26 @@ Color::fromString('coral');
 Color::fromString('darkslategray');
 Color::fromString('PapayaWhip');
 Color::fromString('transparent');  // RGBA: 0, 0, 0, 0
+```
+
+### EXTRA_COLOR_NAMES
+
+```php
+public const array EXTRA_COLOR_NAMES
+```
+
+296 color names in common English use that aren't CSS named colors, e.g. `'Amethyst'`, `'Aubergine'` and
+`'AirForceBlue'`, mapped to 6-digit RGB hex values. Each value is a consensus of several sources, including the
+xkcd color survey, Wikipedia, and paint and color references.
+
+The names are in UpperCamelCase, and lookups are case-insensitive, as for `CSS_COLOR_NAMES`. Every method that takes a
+color name accepts both tables.
+
+**Example:**
+
+```php
+Color::fromString('Amethyst');      // #9a63c6ff
+Color::fromString('airforceblue');  // #5d8aa8ff
 ```
 
 ---
@@ -195,13 +218,13 @@ $transparentRed = new Color(255, 0, 0, 128);
 public static function fromString(string $colorString): self
 ```
 
-Create a color from a CSS color name (e.g. 'Navy') or hex string (3, 4, 6, or 8 hex digits, with or without '#'). Names
+Create a color from a color name (e.g. 'Navy' or 'Amethyst') or hex string (3, 4, 6, or 8 hex digits, with or without '#'). Names
 are case-insensitive, and surrounding whitespace is ignored. It's the inverse of `__toString()`.
 
 **Examples:**
 
 ```php
-// From CSS color names (case-insensitive)
+// From color names (case-insensitive)
 $red = Color::fromString('red');
 $blue = Color::fromString('Blue');
 $transparent = Color::fromString('transparent');
@@ -213,7 +236,7 @@ $semiTransparent = Color::fromString('#ff000080');
 ```
 
 **Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
-the string is not a CSS color name or hex color string.
+the string is not a color name or hex color string.
 
 ### fromRgba()
 
@@ -292,12 +315,13 @@ Color::validHex('notahex');   // false
 public static function validName(string $name): bool
 ```
 
-Check if a string is a valid CSS color name.
+Check if a string is a known color name: a CSS named color, or one of `EXTRA_COLOR_NAMES`.
 
 **Examples:**
 
 ```php
 Color::validName('red');       // true
+Color::validName('Amethyst');  // true
 Color::validName('notacolor'); // false
 ```
 
