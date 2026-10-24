@@ -1611,6 +1611,29 @@ final class ColorTest extends TestCase
     }
 
     /**
+     * Data provider for invalid gamma() bytes.
+     *
+     * @return array<string, array{int}>
+     */
+    public static function invalidGammaByteProvider(): array
+    {
+        return [
+            'negative' => [-5],
+            'too high' => [300],
+        ];
+    }
+
+    /**
+     * Test gamma() throws DomainException for an out-of-range byte.
+     */
+    #[DataProvider('invalidGammaByteProvider')]
+    public function testGammaInvalid(int $byte): void
+    {
+        $this->expectException(DomainException::class);
+        Color::gamma($byte);
+    }
+
+    /**
      * Test gamma() for a low input, on the linear branch.
      */
     public function testGammaLinearBranch(): void

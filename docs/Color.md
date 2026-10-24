@@ -648,6 +648,8 @@ Used by the relative luminance calculation, but made public for other purposes.
 $linear = Color::gamma(128);  // ~0.216
 ```
 
+**Throws:** `DomainException` if the byte is out of range.
+
 ### average()
 
 ```php

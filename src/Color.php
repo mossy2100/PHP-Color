@@ -654,11 +654,14 @@ final class Color implements Stringable
      * @see https://en.wikipedia.org/wiki/SRGB#Transfer_function_(%22gamma%22)
      *
      * @static
-     * @param int $byte The RGB byte value.
+     * @param int $byte The RGB byte value, in the range [0, 255].
      * @return float The transfer function value.
+     * @throws DomainException If the byte is out of range.
      */
     public static function gamma(int $byte): float
     {
+        self::validateByte($byte);
+
         // Convert RGB byte to a float in the range [0.0, 1.0].
         $c = $byte / 255.0;
 
