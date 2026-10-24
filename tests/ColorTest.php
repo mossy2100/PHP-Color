@@ -1098,12 +1098,11 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test fromString() and nameToHex() accept extra color names, case-insensitively.
+     * Test fromString() accepts extra color names.
      */
     public function testExtraColorNames(): void
     {
         $this->assertSame('#9a63c6ff', Color::fromString('amethyst')->toHex());
-        $this->assertSame('5d8aa8ff', Color::nameToHex('AIRFORCEBLUE'));
     }
 
     /**
@@ -1111,7 +1110,7 @@ final class ColorTest extends TestCase
      */
     public function testTransparentName(): void
     {
-        $this->assertSame('00000000', Color::nameToHex(' TRANSPARENT '));
+        $this->assertSame('#00000000', Color::fromString(' TRANSPARENT ')->toHex());
     }
 
     /**
@@ -1133,16 +1132,6 @@ final class ColorTest extends TestCase
     {
         $this->expectException(FormatException::class);
         Color::normalizeHex('notahex');
-    }
-
-    /**
-     * Test nameToHex() throws DomainException for invalid color name.
-     */
-    public function testNameToHexInvalid(): void
-    {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage("Invalid color name: ' NotAColor '.");
-        Color::nameToHex(' NotAColor ');
     }
 
     #endregion
@@ -1699,16 +1688,6 @@ final class ColorTest extends TestCase
     {
         $this->expectException(FormatException::class);
         Color::hexToBytes('#ff800');
-    }
-
-    /**
-     * Test nameToHex() returns correct hex for color name.
-     */
-    public function testNameToHex(): void
-    {
-        $this->assertSame('ff0000ff', Color::nameToHex('red'));
-        $this->assertSame('fafad2ff', Color::nameToHex('LIGHTGOLDENRODYELLOW'));
-        $this->assertSame('fafad2ff', Color::nameToHex(' LightGoldenrodYellow '));
     }
 
     #endregion

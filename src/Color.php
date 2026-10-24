@@ -815,26 +815,6 @@ final class Color implements Stringable
         return array_map(ord(...), str_split($binary));
     }
 
-    /**
-     * Convert a color name to an 8-digit hex value (no leading '#').
-     *
-     * @static
-     * @param string $name A CSS or extra color name.
-     * @return string The hex value for this color.
-     * @throws DomainException If the provided string is not a valid color name.
-     */
-    public static function nameToHex(string $name): string
-    {
-        $hex = ColorNames::lookupHex($name);
-
-        // Check the provided color name is valid.
-        if ($hex === null) {
-            throw new DomainException(Stringify::prepEx('Invalid color name: ?.', $name));
-        }
-
-        return $hex;
-    }
-
     #endregion
 
     #region Instance helper methods

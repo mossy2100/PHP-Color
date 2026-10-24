@@ -705,16 +705,6 @@ Convert a hex string to RGBA bytes.
 **Throws:** [`FormatException`](https://github.com/mossy2100/PHP-Core/blob/main/docs/Exceptions/FormatException.md) if
 the string is not a valid hex color.
 
-### nameToHex()
-
-```php
-public static function nameToHex(string $name): string
-```
-
-Convert a color name to an 8-digit hex value (no leading '#').
-
-**Throws:** `DomainException` if the name is not valid.
-
 ---
 
 ## See Also

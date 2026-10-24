@@ -508,8 +508,6 @@ final class ColorNames
     /**
      * Convert a CSS or extra color name to an 8-digit hex value, ignoring case and surrounding whitespace.
      *
-     * Unlike Color::nameToHex(), this returns null for an unknown name rather than throwing.
-     *
      * The map is built once. Since `+` keeps the left operand's entry for a duplicate key, CSS names take precedence if
      * a name is ever in both tables.
      *

@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Requires `mossy2100/core` `^4.0`.**
 - **`Color::CSS_COLOR_NAMES` moved to `ColorNames::CSS` (breaking for code that reads the constant directly),** with
   UpperCamelCase keys and 6-digit RGB values, e.g. `'AliceBlue' => 'f0f8ff'`, and without `transparent`. Name lookups
-  are unchanged: they're case-insensitive, accept `transparent`, and `nameToHex()` still returns 8 digits.
+  are unchanged: they're case-insensitive, and accept `transparent`.
 - **`Color::validName()` moved to `ColorNames::validName()` (breaking).**
 - **`amethyst` moved from the CSS names to `ColorNames::EXTRA` (breaking),** since it isn't a CSS color. Its
   value changed from `#9966cc` to `#9a63c6`.
@@ -37,7 +37,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   color now fades a color without darkening it: red mixed 50% with `transparent` gives `#ff000080`, not `#80000080`.
   Results only change when the colors' alphas differ.
 - **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()`.
-- **Removed `nameToBytes()` (breaking).** Use `hexToBytes(nameToHex($name))`, or `fromString($name)` for a `Color`.
+- **Removed `nameToBytes()` and `nameToHex()` (breaking).** Use `fromString($name)` for a `Color`, or
+  `ColorNames::lookupHex($name)` for the 8-digit hex value, which returns `null` for an unknown name instead of
+  throwing.
 - **Percentages replace fractions throughout (breaking),** as in CSS:
   - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.
   - `fromHsla()` takes the saturation, lightness and alpha as percentages.
@@ -55,7 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   disagree. `Color::fromHsla(120, 100, 0)->hue` is now `0.0`, the same as black's.
 - **`withHue()`, `withLightness()` and `complement()` threw `DomainException` for some colors,** e.g. `#7878ff` and
   `#000001`, whose computed saturation was just over the maximum due to rounding.
-- **Name validation ignores surrounding whitespace,** as `nameToHex()` and `fromString()` already did.
+- **Name validation ignores surrounding whitespace,** as `fromString()` already did.
 - **`gamma()` throws `DomainException` for a value outside [0, 255],** instead of returning a meaningless result.
 - **`NAN` and `INF` are rejected** by the factories, `with*()` methods and `mix()`, instead of giving black, white or a
   warning.

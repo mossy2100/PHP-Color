@@ -75,8 +75,6 @@ public static function lookupHex(string $name): ?string
 Look up a color name's hex value, ignoring case and surrounding whitespace. CSS names take precedence if a name is
 ever in both tables.
 
-Unlike `Color::nameToHex()`, which throws `DomainException`, this returns `null` for an unknown name.
-
 **Returns:** `?string` - The 8-digit RGBA hex value, with no leading '#', or `null` if the name isn't known.
 
 **Examples:**
@@ -113,4 +111,4 @@ ColorNames::validName('notacolor');   // false
 
 ## See Also
 
-- **[Color](Color.md)** - `fromString()` and `nameToHex()` use this lookup
+- **[Color](Color.md)** - `fromString()` uses this lookup
