@@ -436,6 +436,9 @@ Mix two colors.
 
 If the percentage is 0, returns this color. If 100, returns the other color.
 
+The colors are premultiplied by alpha, as in CSS `color-mix()`. So a more transparent color contributes less to the
+result's RGB, and mixing with `'transparent'` fades a color without darkening it.
+
 **Examples:**
 
 ```php
@@ -443,6 +446,7 @@ $red = Color::fromString('red');
 $blue = Color::fromString('blue');
 $purple = $red->mix($blue);         // 50% each
 $mostlyBlue = $red->mix($blue, 80); // 20% red, 80% blue
+$fadedRed = $red->mix(Color::fromString('transparent')); // #ff000080
 ```
 
 **Throws:** `DomainException` if the percentage is out of range.
@@ -662,7 +666,7 @@ $linear = Color::gamma(128);  // ~0.216
 public static function average(self ...$colors): self
 ```
 
-Find the average of several colors.
+Find the average of several colors. Like `mix()`, it premultiplies by alpha.
 
 **Example:**
 

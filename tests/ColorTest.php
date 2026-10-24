@@ -1455,6 +1455,35 @@ final class ColorTest extends TestCase
     }
 
     /**
+     * Test mix() with a transparent color fades the color without darkening it, as CSS color-mix() does.
+     */
+    public function testMixWithTransparent(): void
+    {
+        $red = Color::fromString('red');
+        $this->assertSame('#ff000080', $red->mix(Color::fromString('transparent'))->toHex());
+    }
+
+    /**
+     * Test mix() weights each color's RGB by its alpha.
+     */
+    public function testMixPremultipliesAlpha(): void
+    {
+        $opaqueRed = new Color(255, 0, 0, 255);
+        $translucentBlue = new Color(0, 0, 255, 64);
+        $this->assertSame('#cc0033a0', $opaqueRed->mix($translucentBlue)->toHex());
+    }
+
+    /**
+     * Test mix() of two fully transparent colors interpolates their RGB directly.
+     */
+    public function testMixFullyTransparent(): void
+    {
+        $color1 = new Color(0, 0, 0, 0);
+        $color2 = new Color(200, 100, 0, 0);
+        $this->assertSame('#64320000', $color1->mix($color2)->toHex());
+    }
+
+    /**
      * Test mix() throws DomainException for invalid percentage.
      */
     public function testMixInvalidPercent(): void
@@ -1571,6 +1600,17 @@ final class ColorTest extends TestCase
         $color2 = new Color(0, 0, 0, 200);
         $avg = Color::average($color1, $color2);
         $this->assertSame(150, $avg->alpha);
+    }
+
+    /**
+     * Test average() premultiplies alpha, agreeing with mix().
+     */
+    public function testAverageWithTransparent(): void
+    {
+        $red = Color::fromString('red');
+        $transparent = Color::fromString('transparent');
+        $this->assertSame('#ff000080', Color::average($red, $transparent)->toHex());
+        $this->assertSame($red->mix($transparent)->toHex(), Color::average($red, $transparent)->toHex());
     }
 
     /**

@@ -439,6 +439,9 @@ final class Color implements Stringable
      * If the percentage is 100, then the result will equal the "other" color.
      * If the percentage isn't specified, then the result will have 50% of each color.
      *
+     * The colors are premultiplied by alpha, as in CSS color-mix(), so mixing with a transparent color fades a color
+     * without darkening it.
+     *
      * @param self $other The color to mix with.
      * @param float $percent The percentage of the "other" color, in the range [0, 100].
      * @return self
@@ -458,16 +461,10 @@ final class Color implements Stringable
             return clone $other;
         }
 
-        // Compute the components of the new color.
-        $otherFraction = $percent / 100;
-        $thisFraction = 1.0 - $otherFraction;
-        $r = (int) round(($this->red * $thisFraction) + ($other->red * $otherFraction));
-        $g = (int) round(($this->green * $thisFraction) + ($other->green * $otherFraction));
-        $b = (int) round(($this->blue * $thisFraction) + ($other->blue * $otherFraction));
-        $a = (int) round(($this->alpha * $thisFraction) + ($other->alpha * $otherFraction));
-
-        // Create and return the mixed color.
-        return new self($r, $g, $b, $a);
+        return self::blend([$this, $other], [
+            100 - $percent,
+            $percent,
+        ]);
     }
 
     /**
@@ -680,6 +677,8 @@ final class Color implements Stringable
     /**
      * Find the average of several colors.
      *
+     * The colors are premultiplied by alpha, as in mix().
+     *
      * @static
      * @param Color ...$colors The colors to average.
      * @return self The average color.
@@ -698,27 +697,7 @@ final class Color implements Stringable
             return $colors[0];
         }
 
-        // Sum the color components.
-        $sumR = 0;
-        $sumG = 0;
-        $sumB = 0;
-        $sumA = 0;
-        foreach ($colors as $color) {
-            $sumR += $color->red;
-            $sumG += $color->green;
-            $sumB += $color->blue;
-            $sumA += $color->alpha;
-        }
-
-        // Calculate the averages.
-        $avg = static fn ($sum) => (int) round($sum / $n);
-        $r = $avg($sumR);
-        $g = $avg($sumG);
-        $b = $avg($sumB);
-        $a = $avg($sumA);
-
-        // Create and return the average color.
-        return new self($r, $g, $b, $a);
+        return self::blend(array_values($colors), array_fill(0, $n, 1.0));
     }
 
     /**
@@ -955,6 +934,45 @@ final class Color implements Stringable
     #endregion
 
     #region Static helper methods
+
+    /**
+     * Blend colors by weighted average, premultiplying the RGB components by alpha, as CSS color-mix() does.
+     *
+     * Premultiplying means a more transparent color contributes less to the RGB of the result. If every color with a
+     * non-zero weight is fully transparent, there's no visible color to weight by, so the RGB components are
+     * averaged directly.
+     *
+     * @param list<self> $colors The colors to blend.
+     * @param list<float> $weights The weight of each color. Must be non-negative, with a positive sum.
+     * @return self The blended color.
+     */
+    private static function blend(array $colors, array $weights): self
+    {
+        $totalWeight = array_sum($weights);
+
+        // Sum the alpha-weighted components, and the plain weighted components for the fully transparent case.
+        $alphaSum = 0.0;
+        $premultiplied = [0.0, 0.0, 0.0];
+        $plain = [0.0, 0.0, 0.0];
+        foreach ($colors as $i => $color) {
+            $weight = $weights[$i];
+            $alphaWeight = $color->alpha * $weight;
+            $alphaSum += $alphaWeight;
+            for ($offset = 0; $offset < 3; $offset++) {
+                $component = $color->getByte($offset);
+                $premultiplied[$offset] += $component * $alphaWeight;
+                $plain[$offset] += $component * $weight;
+            }
+        }
+
+        // Divide out the weights to get the blended components.
+        $rgb = $alphaSum > 0
+            ? array_map(static fn ($sum) => (int) round($sum / $alphaSum), $premultiplied)
+            : array_map(static fn ($sum) => (int) round($sum / $totalWeight), $plain);
+        $alpha = (int) round($alphaSum / $totalWeight);
+
+        return new self($rgb[0], $rgb[1], $rgb[2], $alpha);
+    }
 
     /**
      * Look up the hex value for a CSS color name, ignoring case and surrounding whitespace.
