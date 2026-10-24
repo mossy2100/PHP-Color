@@ -445,6 +445,23 @@ final class ColorTest extends TestCase
     }
 
     /**
+     * Test fromHsla() derives the HSL properties from the RGB bytes, so equal colors report equal HSL values.
+     */
+    public function testFromHslaPropertiesMatchEqualColor(): void
+    {
+        $black = Color::fromHsla(120, 100, 0);
+        $this->assertTrue($black->equal(new Color()));
+        $this->assertSame([
+            'hue'        => 0.0,
+            'saturation' => 0.0,
+            'lightness'  => 0.0,
+        ], $black->toHslArray());
+
+        $color = Color::fromHsla(10.123, 50, 50);
+        $this->assertSame(Color::fromString($color->toHex())->toHslArray(), $color->toHslArray());
+    }
+
+    /**
      * Test fromHsla() throws DomainException for a non-finite hue.
      */
     public function testFromHslaNonFiniteHue(): void
@@ -655,7 +672,8 @@ final class ColorTest extends TestCase
         $color = Color::fromHsla(0, 100, 50);
         $newColor = $color->withSaturation(50);
         $this->assertEqualsWithDelta(100, $color->saturation, 0.01);
-        $this->assertEqualsWithDelta(50, $newColor->saturation, 0.01);
+        // The saturation is derived from the rounded bytes, so it's only accurate to about 0.4%.
+        $this->assertEqualsWithDelta(50, $newColor->saturation, 0.5);
     }
 
     /**
@@ -666,7 +684,8 @@ final class ColorTest extends TestCase
         $color = Color::fromHsla(0, 100, 50);
         $newColor = $color->withLightness(25);
         $this->assertEqualsWithDelta(50, $color->lightness, 0.01);
-        $this->assertEqualsWithDelta(25, $newColor->lightness, 0.01);
+        // The lightness is derived from the rounded bytes, so it's only accurate to about 0.4%.
+        $this->assertEqualsWithDelta(25, $newColor->lightness, 0.5);
         $this->assertSame('#800000ff', $newColor->toHex());
     }
 

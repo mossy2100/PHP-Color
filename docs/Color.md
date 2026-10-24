@@ -247,6 +247,9 @@ public static function fromHsla(float $hue, float $saturation, float $lightness,
 
 Create a color from HSLA values, as in the CSS `hsl()` function.
 
+The values are converted to RGB bytes, and the color's HSL properties are derived from those bytes, so they can differ
+slightly from the values given. For example, `Color::fromHsla(120, 100, 0)` is black, with a hue of `0.0`.
+
 **Parameters:**
 - `$hue` (float) - The hue in degrees (wrapped to [0, 360))
 - `$saturation` (float) - The saturation, in the range [0, 100]

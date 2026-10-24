@@ -34,6 +34,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- **A color made by `fromHsla()` reported the given HSL values,** not those of its RGB bytes, so equal colors could
+  disagree. `Color::fromHsla(120, 100, 0)->hue` is now `0.0`, the same as black's.
 - **`withHue()`, `withLightness()` and `complement()` threw `DomainException` for some colors,** e.g. `#7878ff` and
   `#000001`, whose computed saturation was just over the maximum due to rounding.
 - **`NAN` and `INF` are rejected** by the factories, `with*()` methods and `mix()`, instead of giving black, white or a

@@ -24,6 +24,17 @@ class Color implements Stringable
 {
     use Equatable;
 
+    #region Constants
+
+    /**
+     * Constants for computing perceived lightness.
+     */
+    private const float EPSILON = 216 / 24389; // 0.008856451679...
+
+    private const float KAPPA = 24389 / 27;  // 903.296296...
+
+    #endregion
+
     #region Internal representation
 
     /**
@@ -39,24 +50,6 @@ class Color implements Stringable
      * @var string
      */
     private string $rgba;
-
-    /**
-     * Cache for HSL properties: the hue in degrees, and the saturation and lightness as percentages.
-     *
-     * @var ?list<float>
-     */
-    private ?array $hsl = null;
-
-    #endregion
-
-    #region Constants
-
-    /**
-     * Constants for computing perceived lightness.
-     */
-    private const float EPSILON = 216 / 24389; // 0.008856451679...
-
-    private const float KAPPA = 24389 / 27;  // 903.296296...
 
     #endregion
 
@@ -101,36 +94,48 @@ class Color implements Stringable
     /**
      * Get the hue of the color, as an angle in degrees in the range [0, 360).
      *
+     * Computed from the RGB bytes on first access, along with the other HSL properties, and stored.
+     *
      * @var float
      */
-    public float $hue {
+    public private(set) float $hue {
         get {
-            $this->computeHsl();
-            return $this->hsl[0]; // @phpstan-ignore offsetAccess.notFound
+            if (!isset($this->hue)) {
+                $this->computeHsl();
+            }
+            return $this->hue;
         }
     }
 
     /**
      * Get the saturation of the color as a percentage in the range [0, 100].
      *
+     * Computed from the RGB bytes on first access, along with the other HSL properties, and stored.
+     *
      * @var float
      */
-    public float $saturation {
+    public private(set) float $saturation {
         get {
-            $this->computeHsl();
-            return $this->hsl[1]; // @phpstan-ignore offsetAccess.notFound
+            if (!isset($this->saturation)) {
+                $this->computeHsl();
+            }
+            return $this->saturation;
         }
     }
 
     /**
      * Get the lightness of the color as a percentage in the range [0, 100].
      *
+     * Computed from the RGB bytes on first access, along with the other HSL properties, and stored.
+     *
      * @var float
      */
-    public float $lightness {
+    public private(set) float $lightness {
         get {
-            $this->computeHsl();
-            return $this->hsl[2]; // @phpstan-ignore offsetAccess.notFound
+            if (!isset($this->lightness)) {
+                $this->computeHsl();
+            }
+            return $this->lightness;
         }
     }
 
@@ -192,7 +197,7 @@ class Color implements Stringable
         self::validateByte($green);
         self::validateByte($blue);
         self::validateByte($alpha);
-        $this->setBytes($red, $green, $blue, $alpha);
+        $this->rgba = chr($red) . chr($green) . chr($blue) . chr($alpha);
     }
 
     #endregion
@@ -288,9 +293,7 @@ class Color implements Stringable
         }
 
         // Trim a leading '#' if present.
-        if ($str[0] === '#') {
-            $str = substr($str, 1);
-        }
+        $str = ltrim($str, '#');
 
         // Check the string is 3, 4, 6 or 8 hex digits.
         return in_array(strlen($str), [3, 4, 6, 8], true) && ctype_xdigit($str);
@@ -913,21 +916,6 @@ class Color implements Stringable
     #region Instance helper methods
 
     /**
-     * Set the red, green, blue, and alpha components all at the same time.
-     *
-     * NB: This is an internal function, and arguments are assumed to be in range for bytes.
-     *
-     * @param int<0, 255> $red The red component as a byte.
-     * @param int<0, 255> $green The green component as a byte.
-     * @param int<0, 255> $blue The blue component as a byte.
-     * @param int<0, 255> $alpha The alpha value as a byte.
-     */
-    private function setBytes(int $red, int $green, int $blue, int $alpha): void
-    {
-        $this->rgba = chr($red) . chr($green) . chr($blue) . chr($alpha);
-    }
-
-    /**
      * Get a byte value from the internal RGBA string.
      *
      * NB: This is an internal function, and the offset is assumed to be in range [0, 3].
@@ -941,15 +929,17 @@ class Color implements Stringable
     }
 
     /**
-     * If the HSL values haven't yet been computed, do it now and cache the result.
+     * Compute the hue, saturation and lightness from the RGB bytes, and store them.
      *
      * @return void
      */
     private function computeHsl(): void
     {
-        if ($this->hsl === null) {
-            $this->hsl = self::rgbToHsl($this->red, $this->green, $this->blue);
-        }
+        [
+            $this->hue,
+            $this->saturation,
+            $this->lightness,
+        ] = self::rgbToHsl($this->red, $this->green, $this->blue);
     }
 
     #endregion
@@ -957,9 +947,10 @@ class Color implements Stringable
     #region Static helper methods
 
     /**
-     * Create a color from HSL values and an alpha byte, and cache the HSL values.
+     * Create a color from HSL values and an alpha byte.
      *
-     * NB: This is an internal function, and the saturation and lightness are assumed to be valid percentages.
+     * The HSL values aren't cached, so the color's HSL properties are always derived from its RGB bytes, and equal
+     * colors report equal HSL values.
      *
      * @param float $hue The hue in degrees.
      * @param float $saturation The saturation as a percentage.
@@ -969,11 +960,8 @@ class Color implements Stringable
      */
     private static function createFromHsl(float $hue, float $saturation, float $lightness, int $alpha): self
     {
-        $hue = self::wrapHue($hue);
         [$red, $green, $blue] = self::hslToRgb($hue, $saturation, $lightness);
-        $color = new self($red, $green, $blue, $alpha);
-        $color->hsl = [$hue, $saturation, $lightness];
-        return $color;
+        return new self($red, $green, $blue, $alpha);
     }
 
     /**
@@ -1011,7 +999,7 @@ class Color implements Stringable
      */
     private static function validatePercent(float $percent): void
     {
-        if (!($percent >= 0 && $percent <= 100)) {
+        if (is_nan($percent) || $percent < 0 || $percent > 100) {
             throw new DomainException(
                 Stringify::prepEx('Invalid percentage: ?. Must be in the range [0, 100].', $percent)
             );
@@ -1034,7 +1022,7 @@ class Color implements Stringable
             return self::percentToByte($value);
         }
 
-        if (!($value >= 0 && $value <= 255)) {
+        if (is_nan($value) || $value < 0 || $value > 255) {
             throw new DomainException(
                 Stringify::prepEx('Invalid byte value: ?. Must be in the range [0, 255].', $value)
             );
