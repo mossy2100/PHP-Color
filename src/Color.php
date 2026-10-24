@@ -850,26 +850,12 @@ final class Color implements Stringable
      */
     public static function hexToBytes(string $hex): array
     {
-        // Normalize to 8 hex digits. This will throw if the hex string is invalid.
-        $hex = self::normalizeHex($hex);
+        // Normalize to 8 hex digits, then decode them to 4 bytes. normalizeHex() throws if the hex string is invalid,
+        // so hex2bin() can't fail.
+        $binary = hex2bin(self::normalizeHex($hex));
+        assert($binary !== false);
 
-        // Convert string into bytes.
-        /** @var int $red */
-        $red = hexdec(substr($hex, 0, 2));
-        /** @var int $green */
-        $green = hexdec(substr($hex, 2, 2));
-        /** @var int $blue */
-        $blue = hexdec(substr($hex, 4, 2));
-        /** @var int $alpha */
-        $alpha = hexdec(substr($hex, 6, 2));
-
-        // Assertions to satisfy phpstan.
-        assert($red >= 0 && $red <= 255);
-        assert($green >= 0 && $green <= 255);
-        assert($blue >= 0 && $blue <= 255);
-        assert($alpha >= 0 && $alpha <= 255);
-
-        return [$red, $green, $blue, $alpha];
+        return array_map(ord(...), str_split($binary));
     }
 
     /**
