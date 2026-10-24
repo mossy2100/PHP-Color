@@ -627,12 +627,28 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test withAlpha() throws DomainException for an out-of-range percentage.
+     * Test withAlpha() throws DomainException for an out-of-range or non-finite percentage.
      */
-    public function testWithAlphaPercentInvalid(): void
+    #[DataProvider('invalidPercentProvider')]
+    public function testWithAlphaPercentInvalid(float $percent): void
     {
         $this->expectException(DomainException::class);
-        new Color()->withAlpha(101, true);
+        new Color()->withAlpha($percent, true);
+    }
+
+    /**
+     * Data provider for invalid percentages.
+     *
+     * @return array<string, array{float}>
+     */
+    public static function invalidPercentProvider(): array
+    {
+        return [
+            'too high' => [101],
+            'negative' => [-1],
+            'NAN'      => [NAN],
+            'INF'      => [INF],
+        ];
     }
 
     /**
@@ -716,23 +732,23 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test withSaturation() throws DomainException for invalid value.
+     * Test withSaturation() throws DomainException for an out-of-range or non-finite percentage.
      */
-    public function testWithSaturationInvalid(): void
+    #[DataProvider('invalidPercentProvider')]
+    public function testWithSaturationInvalidPercent(float $percent): void
     {
-        $color = Color::fromString('red');
         $this->expectException(DomainException::class);
-        $color->withSaturation(150);
+        Color::fromString('red')->withSaturation($percent);
     }
 
     /**
-     * Test withLightness() throws DomainException for invalid value.
+     * Test withLightness() throws DomainException for an out-of-range or non-finite percentage.
      */
-    public function testWithLightnessInvalid(): void
+    #[DataProvider('invalidPercentProvider')]
+    public function testWithLightnessInvalidPercent(float $percent): void
     {
-        $color = Color::fromString('red');
         $this->expectException(DomainException::class);
-        $color->withLightness(-10);
+        Color::fromString('red')->withLightness($percent);
     }
 
     /**
@@ -1463,14 +1479,24 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test mix() throws DomainException for invalid percentage.
+     * Test mix() throws DomainException for an out-of-range or non-finite percentage.
      */
-    public function testMixInvalidPercent(): void
+    #[DataProvider('invalidPercentProvider')]
+    public function testMixInvalidPercent(float $percent): void
     {
         $color1 = Color::fromString('red');
         $color2 = Color::fromString('blue');
         $this->expectException(DomainException::class);
-        $color1->mix($color2, 150);
+        $color1->mix($color2, $percent);
+    }
+
+    /**
+     * Test mix() rounds a half-way component away from zero.
+     */
+    public function testMixRoundsHalfUp(): void
+    {
+        $mixed = new Color(0, 0, 0)->mix(new Color(1, 3, 5));
+        $this->assertSame([1, 2, 3, 255], array_values($mixed->toRgbaArray()));
     }
 
     #endregion
@@ -1579,6 +1605,15 @@ final class ColorTest extends TestCase
         $color2 = new Color(0, 0, 0, 200);
         $avg = Color::average($color1, $color2);
         $this->assertSame(150, $avg->alpha);
+    }
+
+    /**
+     * Test average() rounds a half-way component away from zero.
+     */
+    public function testAverageRoundsHalfUp(): void
+    {
+        $avg = Color::average(new Color(0, 0, 0), new Color(1, 3, 5));
+        $this->assertSame([1, 2, 3, 255], array_values($avg->toRgbaArray()));
     }
 
     /**
