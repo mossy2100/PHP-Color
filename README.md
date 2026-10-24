@@ -1,6 +1,7 @@
 # Mossy2100 PHP Color
 
-An immutable, memory-efficient Color class for PHP with support for RGB and HSL color spaces, CSS color names, and WCAG accessibility features.
+An immutable Color class for PHP with support for RGB and HSL color spaces, CSS color names, and WCAG accessibility
+features.
 
 **[License](LICENSE)** | **[Changelog](CHANGELOG.md)** | **[Documentation](docs/)**
 
@@ -12,8 +13,8 @@ An immutable, memory-efficient Color class for PHP with support for RGB and HSL 
 
 This package provides a comprehensive Color class for working with colors in PHP. The class is designed to be:
 
-- **Immutable** - Color values cannot be changed after creation, ensuring predictability and thread safety
-- **Memory-efficient** - Colors are stored internally as a 4-byte binary string
+- **Immutable** - Color values cannot be changed after creation, so a color can be shared safely
+- **Simple** - The RGBA components are read-only int properties, and HSL values are computed on first use
 - **Feature-rich** - Supports RGB, HSL, hex strings, CSS and extra color names, and accessibility calculations
 - **CSS-compatible** - Outputs to modern CSS color formats (hex, rgb, hsl)
 

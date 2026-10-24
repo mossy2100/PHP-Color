@@ -1,6 +1,6 @@
 {
     "name": "mossy2100/color",
-    "description": "Immutable, memory-efficient PHP Color class with RGB/HSL support, CSS color names, and WCAG accessibility features.",
+    "description": "Immutable PHP Color class with RGB/HSL support, CSS color names, and WCAG accessibility features.",
     "type": "library",
     "license": "MIT",
     "keywords": [

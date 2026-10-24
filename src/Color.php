@@ -44,61 +44,39 @@ final class Color implements Stringable
 
     #endregion
 
-    #region Internal representation
+    #region Properties
 
     /**
-     * Internal field to store color value.
+     * The red component of the color, as a byte in the range [0, 255].
      *
-     * The 32-bit color value stored as a 4-byte binary string (RGBA order).
-     *
-     * This approach was adopted over 32-bit unsigned int, which would not have worked on 32-bit systems because of
-     * the way PHP converts ints to floats when they're outside the int range.
-     * This approach is also preferable to storing 4 individual integers for the color components, as that would
-     * consume 16 bytes on a 32-bit system or 32 bytes on a 64-bit system.
-     *
-     * @var string
+     * @var int
      */
-    private string $rgba;
+    public readonly int $red;
+
+    /**
+     * The green component of the color, as a byte in the range [0, 255].
+     *
+     * @var int
+     */
+    public readonly int $green;
+
+    /**
+     * The blue component of the color, as a byte in the range [0, 255].
+     *
+     * @var int
+     */
+    public readonly int $blue;
+
+    /**
+     * The alpha component of the color, as a byte in the range [0, 255]. 255 is fully opaque, and 0 fully transparent.
+     *
+     * @var int
+     */
+    public readonly int $alpha;
 
     #endregion
 
     #region Property hooks
-
-    /**
-     * Get the red component of the color.
-     *
-     * @var int
-     */
-    public int $red {
-        get => $this->getByte(0);
-    }
-
-    /**
-     * Get the green component of the color.
-     *
-     * @var int
-     */
-    public int $green {
-        get => $this->getByte(1);
-    }
-
-    /**
-     * Get the blue component of the color.
-     *
-     * @var int
-     */
-    public int $blue {
-        get => $this->getByte(2);
-    }
-
-    /**
-     * Get the alpha component of the color.
-     *
-     * @var int
-     */
-    public int $alpha {
-        get => $this->getByte(3);
-    }
 
     /**
      * Get the hue of the color, as an angle in degrees in the range [0, 360).
@@ -206,7 +184,11 @@ final class Color implements Stringable
         self::validateByte($green);
         self::validateByte($blue);
         self::validateByte($alpha);
-        $this->rgba = chr($red) . chr($green) . chr($blue) . chr($alpha);
+
+        $this->red = $red;
+        $this->green = $green;
+        $this->blue = $blue;
+        $this->alpha = $alpha;
     }
 
     #endregion
@@ -339,7 +321,11 @@ final class Color implements Stringable
     #[Override]
     public function equal(mixed $other): bool
     {
-        return $other instanceof self && $this->rgba === $other->rgba;
+        return $other instanceof self
+            && $this->red === $other->red
+            && $this->green === $other->green
+            && $this->blue === $other->blue
+            && $this->alpha === $other->alpha;
     }
 
     #endregion
@@ -546,12 +532,10 @@ final class Color implements Stringable
      */
     public function toHex(bool $includeAlpha = true, bool $includeHash = true, bool $upperCase = false): string
     {
-        // Convert the 4-byte binary string to an 8-character hexadecimal string.
-        $hex = bin2hex($this->rgba);
-
-        // Remove the last 2 characters if alpha isn't required.
-        if (!$includeAlpha) {
-            $hex = substr($hex, 0, 6);
+        // Format the components as 2-digit hexadecimal numbers.
+        $hex = sprintf('%02x%02x%02x', $this->red, $this->green, $this->blue);
+        if ($includeAlpha) {
+            $hex .= sprintf('%02x', $this->alpha);
         }
 
         // Convert to upper-case if required.
@@ -897,19 +881,6 @@ final class Color implements Stringable
     #region Instance helper methods
 
     /**
-     * Get a byte value from the internal RGBA string.
-     *
-     * NB: This is an internal function, and the offset is assumed to be in range [0, 3].
-     *
-     * @param int $offset The offset, which will be 0 for red, 1 for green, 2 for blue, and 3 for alpha.
-     * @return int The byte value at the given position.
-     */
-    private function getByte(int $offset): int
-    {
-        return ord($this->rgba[$offset]);
-    }
-
-    /**
      * Compute the hue, saturation and lightness from the RGB bytes, and store them.
      *
      * @return void
@@ -950,10 +921,14 @@ final class Color implements Stringable
             $weight = $weights[$i];
             $alphaWeight = $color->alpha * $weight;
             $alphaSum += $alphaWeight;
-            for ($offset = 0; $offset < 3; $offset++) {
-                $component = $color->getByte($offset);
-                $premultiplied[$offset] += $component * $alphaWeight;
-                $plain[$offset] += $component * $weight;
+            $components = [
+                $color->red,
+                $color->green,
+                $color->blue,
+            ];
+            foreach ($components as $j => $component) {
+                $premultiplied[$j] += $component * $alphaWeight;
+                $plain[$j] += $component * $weight;
             }
         }
 

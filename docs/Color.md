@@ -1,6 +1,6 @@
 # Color
 
-Immutable, memory-efficient class for working with colors in PHP.
+Immutable class for working with colors in PHP.
 
 ---
 
@@ -15,13 +15,9 @@ The `Color` class provides a comprehensive implementation of color handling with
 
 All modification methods return new instances, maintaining immutability.
 
-Colors are stored internally in a memory-efficient way:
-- Only 4 bytes for RGBA color data
-- HSL values computed on-demand and cached
-- Immutability eliminates cache invalidation complexity
-
-This makes the class suitable for applications working with large numbers of colors, such as image processing or color
-palette generation.
+Storage:
+- The RGBA components are stored as 4 read-only int properties.
+- HSL values are computed on first use and stored, which is safe because colors are immutable.
 
 ### Units
 
