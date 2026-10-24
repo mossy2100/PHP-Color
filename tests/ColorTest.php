@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mossy2100\Color\Tests;
 
-use ArgumentCountError;
 use DomainException;
+use LengthException;
 use Mossy2100\Color\Color;
 use Mossy2100\Core\Exceptions\FormatException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -1573,11 +1573,12 @@ final class ColorTest extends TestCase
     }
 
     /**
-     * Test average() throws ArgumentCountError with no arguments.
+     * Test average() throws LengthException with no arguments.
      */
     public function testAverageNoColors(): void
     {
-        $this->expectException(ArgumentCountError::class);
+        $this->expectException(LengthException::class);
+        $this->expectExceptionMessage('Cannot average zero colors.');
         Color::average();
     }
 

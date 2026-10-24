@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   255)`. Replace `new Color('red')` with `Color::fromString('red')`.
 - **`Color` is now `final` (breaking).**
 - **Renamed the `validHex()` parameter from `$str` to `$hex` (breaking for named arguments).**
+- **`average()` throws `LengthException` instead of `ArgumentCountError` when given no colors (breaking).**
 - **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()` and `nameToBytes()`.
 - **Percentages replace fractions throughout (breaking),** as in CSS:
   - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.

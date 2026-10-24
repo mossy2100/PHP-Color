@@ -662,7 +662,7 @@ Find the average of several colors.
 $avg = Color::average($color1, $color2, $color3);
 ```
 
-**Throws:** `ArgumentCountError` if no colors are provided.
+**Throws:** `LengthException` if no colors are provided.
 
 ### rgbToHsl()
 

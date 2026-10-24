@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mossy2100\Color;
 
-use ArgumentCountError;
 use DomainException;
+use LengthException;
 use Mossy2100\Core\Enums\FloatFormat;
 use Mossy2100\Core\Exceptions\FormatException;
 use Mossy2100\Core\Floats;
@@ -672,14 +672,14 @@ final class Color implements Stringable
      * @static
      * @param Color ...$colors The colors to average.
      * @return self The average color.
-     * @throws ArgumentCountError If no colors are provided.
+     * @throws LengthException If no colors are provided.
      */
     public static function average(self ...$colors): self
     {
         // Get the number of colors and make sure we have at least one.
         $n = count($colors);
         if ($n === 0) {
-            throw new ArgumentCountError('At least one color must be provided.');
+            throw new LengthException('Cannot average zero colors.');
         }
 
         // If there's only one, return it.
