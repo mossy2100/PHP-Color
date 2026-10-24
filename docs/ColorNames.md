@@ -113,4 +113,4 @@ ColorNames::validName('notacolor');   // false
 
 ## See Also
 
-- **[Color](Color.md)** - `fromString()`, `nameToHex()` and `nameToBytes()` use this lookup
+- **[Color](Color.md)** - `fromString()` and `nameToHex()` use this lookup

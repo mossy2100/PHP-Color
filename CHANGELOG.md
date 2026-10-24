@@ -36,7 +36,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **`mix()` and `average()` premultiply by alpha, as CSS `color-mix()` does (breaking).** Mixing with a transparent
   color now fades a color without darkening it: red mixed 50% with `transparent` gives `#ff000080`, not `#80000080`.
   Results only change when the colors' alphas differ.
-- **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()` and `nameToBytes()`.
+- **Removed `parseToBytes()` (breaking).** Use `fromString()`, or `hexToBytes()`.
+- **Removed `nameToBytes()` (breaking).** Use `hexToBytes(nameToHex($name))`, or `fromString($name)` for a `Color`.
 - **Percentages replace fractions throughout (breaking),** as in CSS:
   - `fromRgba()` takes red, green, blue and alpha as percentages in [0, 100]. Use the constructor for bytes.
   - `fromHsla()` takes the saturation, lightness and alpha as percentages.

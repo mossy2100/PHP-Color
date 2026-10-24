@@ -715,16 +715,6 @@ Convert a color name to an 8-digit hex value (no leading '#').
 
 **Throws:** `DomainException` if the name is not valid.
 
-### nameToBytes()
-
-```php
-public static function nameToBytes(string $name): array
-```
-
-Convert a color name to RGBA bytes.
-
-**Throws:** `DomainException` if the name is not valid.
-
 ---
 
 ## See Also

@@ -1685,23 +1685,6 @@ final class ColorTest extends TestCase
         $this->assertSame('fafad2ff', Color::nameToHex(' LightGoldenrodYellow '));
     }
 
-    /**
-     * Test nameToBytes() returns correct bytes for color name.
-     */
-    public function testNameToBytes(): void
-    {
-        $this->assertSame([255, 0, 0, 255], Color::nameToBytes('red'));
-    }
-
-    /**
-     * Test nameToBytes() throws DomainException for invalid color name.
-     */
-    public function testNameToBytesInvalid(): void
-    {
-        $this->expectException(DomainException::class);
-        Color::nameToBytes('notacolor');
-    }
-
     #endregion
 
     #region Edge case tests

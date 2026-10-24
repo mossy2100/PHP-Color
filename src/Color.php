@@ -234,22 +234,19 @@ final class Color implements Stringable
      */
     public static function fromString(string $colorString): self
     {
-        $trimmed = trim($colorString);
+        // A color name maps to its hex value. Anything else is treated as a hex string.
+        $hex = ColorNames::lookupHex($colorString) ?? $colorString;
 
-        if (ColorNames::validName($trimmed)) {
-            $bytes = self::nameToBytes($trimmed);
-        } else {
-            try {
-                $bytes = self::hexToBytes($trimmed);
-            } catch (FormatException) {
-                throw new FormatException(Stringify::prepEx(
-                    'Invalid color string: ?. Must be a color name or hex color string.',
-                    $colorString
-                ));
-            }
+        try {
+            $bytes = self::hexToBytes($hex);
+        } catch (FormatException) {
+            throw new FormatException(Stringify::prepEx(
+                'Invalid color string: ?. Must be a color name or hex color string.',
+                $colorString
+            ));
         }
 
-        return new self($bytes[0], $bytes[1], $bytes[2], $bytes[3]);
+        return new self(...$bytes);
     }
 
     #endregion
@@ -834,20 +831,6 @@ final class Color implements Stringable
         }
 
         return $hex;
-    }
-
-    /**
-     * Convert a color name to RGBA bytes.
-     *
-     * @static
-     * @param string $name A CSS or extra color name.
-     * @return list<int<0, 255>> RGBA color components as array of bytes.
-     * @throws DomainException if the provided string is not a valid color name.
-     */
-    public static function nameToBytes(string $name): array
-    {
-        $hex = self::nameToHex($name);
-        return self::hexToBytes($hex);
     }
 
     #endregion
