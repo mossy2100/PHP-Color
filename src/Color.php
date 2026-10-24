@@ -137,6 +137,8 @@ final class Color implements Stringable
     /**
      * Get the perceived lightness (CIE L*) of the color in the range [0, 100].
      *
+     * @see https://en.wikipedia.org/wiki/CIELAB_color_space
+     *
      * @var float
      */
     public float $perceivedLightness {
@@ -501,7 +503,7 @@ final class Color implements Stringable
      * @return self The most accessible text color.
      * @throws FormatException If either of the provided text colors are invalid strings.
      * @see https://www.w3.org/TR/WCAG20/#contrast-ratiodef
-     * @see https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast.
+     * @see https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
      */
     public function bestTextColor(string|self $lightTextColor = 'white', string|self $darkTextColor = 'black'): self
     {
@@ -794,7 +796,7 @@ final class Color implements Stringable
     }
 
     /**
-     * Convert a hex string in CSS form to 4 RGBA bytes
+     * Convert a hex string in CSS form to 4 RGBA bytes.
      *
      * The allowed values can have an optional leading '#' followed by 3, 4, 6, or 8 lower- or upper-case hex digits.
      * If there are only 3 or 4 digits, the value is expanded to 6 or 8 digits respectively by repeating each digit.
@@ -1036,7 +1038,7 @@ final class Color implements Stringable
     }
 
     /**
-     * Format an angle in canonical CSS style, e.g. '123deg' or '12.345deg'
+     * Format an angle in canonical CSS style, e.g. '123deg' or '12.345deg'.
      *
      * @param float $angle The angle to format.
      * @return string The formatted angle string.
