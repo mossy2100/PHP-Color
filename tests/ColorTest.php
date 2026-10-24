@@ -1084,6 +1084,8 @@ final class ColorTest extends TestCase
             ['Blue'],
             ['transparent'],
             ['aliceblue'],
+            ['rebeccapurple'],
+            ['RebeccaPurple'],
         ];
     }
 
@@ -1102,6 +1104,23 @@ final class ColorTest extends TestCase
     public function testValidNameInvalid(): void
     {
         $this->assertFalse(Color::validName('notacolor'));
+        $this->assertFalse(Color::validName('amethyst'));
+    }
+
+    /**
+     * Test CSS_COLOR_NAMES has the 148 CSS named colors plus 'transparent', in UpperCamelCase, with valid hex values.
+     */
+    public function testCssColorNames(): void
+    {
+        $names = array_keys(Color::CSS_COLOR_NAMES);
+        $this->assertCount(149, $names);
+        $this->assertCount(149, array_unique(array_map(strtolower(...), $names)));
+        foreach (Color::CSS_COLOR_NAMES as $name => $hex) {
+            $this->assertMatchesRegularExpression('/^[A-Z][a-zA-Z]*$/', $name);
+            $this->assertMatchesRegularExpression('/^[0-9a-f]{8}$/', $hex);
+        }
+        $this->assertSame('663399ff', Color::CSS_COLOR_NAMES['RebeccaPurple']);
+        $this->assertSame('00000000', Color::CSS_COLOR_NAMES['Transparent']);
     }
 
     /**
@@ -1633,6 +1652,8 @@ final class ColorTest extends TestCase
     public function testNameToHex(): void
     {
         $this->assertSame('ff0000ff', Color::nameToHex('red'));
+        $this->assertSame('fafad2ff', Color::nameToHex('LIGHTGOLDENRODYELLOW'));
+        $this->assertSame('fafad2ff', Color::nameToHex(' LightGoldenrodYellow '));
     }
 
     /**

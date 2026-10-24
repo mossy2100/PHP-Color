@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- **`rebeccapurple`** (`#663399`), the CSS named color that was missing.
 - **`Color::fromString()`** creates a color from a CSS color name or hex string, and is the inverse of `__toString()`.
 
 ### Changed
@@ -18,6 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `Mossy2100\Color` (breaking),** matching the author's GitHub and Packagist name. Update `composer.json` and any
   `use` statements. It depends on `mossy2100/core`.
 - **Requires `mossy2100/core` `^4.0`.**
+- **`CSS_COLOR_NAMES` keys are now UpperCamelCase, e.g. `'AliceBlue'` (breaking for code that reads the constant
+  directly).** Name lookups are still case-insensitive.
+- **Removed `amethyst` from the color names (breaking),** since it isn't a CSS color.
 - **The constructor takes RGBA bytes (breaking):** `new Color(int $red = 0, int $green = 0, int $blue = 0, int $alpha =
   255)`. Replace `new Color('red')` with `Color::fromString('red')`.
 - **`Color` is now `final` (breaking).**
