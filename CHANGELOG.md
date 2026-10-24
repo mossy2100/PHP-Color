@@ -66,7 +66,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **Renamed package** from `galaxon/color` to `oceanmoon/color` — update your `composer.json` require accordingly.
+- **Renamed package** from `galaxon/color` to `oceanmoon/color`. Update your `composer.json` require accordingly.
 - **Renamed PHP namespaces** from `Galaxon\Color\*` to `OceanMoon\Color\*` throughout all source and test files.
 - Updated runtime dependency `galaxon/core` → `oceanmoon/core: ^2.0`.
 - Updated dev dependency `galaxon/coding-standard` → `oceanmoon/coding-standard: ^2.0`.
@@ -78,9 +78,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **`Color::formatFloat()`** — Now uses `Floats::format()` from Core for explicit precision/trailing-zero handling. Behavior is unchanged for normal values; very small values that would previously have leaked scientific notation (e.g. `1.0E-7`) into CSS output now render cleanly as `0` after rounding.
-- **`composer.json`** — Bumped `galaxon/core` constraint from `^1.0` to `^1.6`. This is a hard requirement: Core's traits were reorganised in v1.6.0 into `Traits/Asserts/` and `Traits/Comparison/` subnamespaces, and `Color` already imports `Galaxon\Core\Traits\Comparison\Equatable` (the new path). Older Core versions would fail to autoload. The bump also makes `Floats::format()` available.
-- **Documentation** — Updated `Color.md` "See Also" link for `Equatable` to point at the new `Traits/Comparison/Equatable.md` path.
+- **`Color::formatFloat()`**: now uses `Floats::format()` from Core for explicit precision/trailing-zero handling.
+  Behavior is unchanged for normal values; very small values that would previously have leaked scientific notation (e.g.
+  `1.0E-7`) into CSS output now render cleanly as `0` after rounding.
+- **`composer.json`**: bumped `galaxon/core` constraint from `^1.0` to `^1.6`. This is a hard requirement: Core's traits
+  were reorganised in v1.6.0 into `Traits/Asserts/` and `Traits/Comparison/` subnamespaces, and `Color` already imports
+  `Galaxon\Core\Traits\Comparison\Equatable` (the new path). Older Core versions would fail to autoload. The bump also
+  makes `Floats::format()` available.
+- **Documentation**: updated `Color.md` "See Also" link for `Equatable` to point at the new
+  `Traits/Comparison/Equatable.md` path.
 
 ---
 
@@ -88,8 +94,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **Exception types** — `normalizeHex()` and `hexToBytes()` now throw `FormatException` (was `DomainException`) for invalid hex strings, since these are string format validation errors.
-- **Exception messages** — `validateByte()` and `validateFraction()` now include the offending value and constraint in the message.
+- **Exception types**: `normalizeHex()` and `hexToBytes()` now throw `FormatException` (was `DomainException`) for
+  invalid hex strings, since these are string format validation errors.
+- **Exception messages**: `validateByte()` and `validateFraction()` now include the offending value and constraint in
+  the message.
 
 ### Documentation
 
@@ -146,8 +154,10 @@ This is the first stable release of Galaxon Color, ready for publication on Pack
   - `toRGBArray()` → `toRgbaArray()`
   - `isValidHex()` → `validHex()`
   - `isValidName()` → `validName()`
-- **`withRed()`, `withGreen()`, `withBlue()`, `withAlpha()`** now accept `int|float` (float values in range [0.0, 1.0] are converted to bytes)
-- **`bestTextColor()`** now accepts optional custom light/dark text colors (`string|Color`) and returns a `Color` object instead of a string
+- **`withRed()`, `withGreen()`, `withBlue()`, `withAlpha()`** now accept `int|float` (float values in range [0.0, 1.0]
+  are converted to bytes)
+- **`bestTextColor()`** now accepts optional custom light/dark text colors (`string|Color`) and returns a `Color` object
+  instead of a string
 
 ### Added
 
