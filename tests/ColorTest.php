@@ -441,8 +441,8 @@ final class ColorTest extends TestCase
         $color1 = Color::fromHsla(0, 100, 50);
         $color2 = Color::fromHsla(360, 100, 50);
         $color3 = Color::fromHsla(-360, 100, 50);
-        $this->assertTrue($color1->equal($color2));
-        $this->assertTrue($color1->equal($color3));
+        $this->assertSame($color2->toHex(), $color1->toHex());
+        $this->assertSame($color3->toHex(), $color1->toHex());
     }
 
     /**
@@ -476,7 +476,7 @@ final class ColorTest extends TestCase
     public function testFromHslaPropertiesMatchEqualColor(): void
     {
         $black = Color::fromHsla(120, 100, 0);
-        $this->assertTrue($black->equal(new Color()));
+        $this->assertSame(new Color()->toHex(), $black->toHex());
         $this->assertSame([
             'hue'        => 0.0,
             'saturation' => 0.0,
@@ -1322,7 +1322,7 @@ final class ColorTest extends TestCase
         $color = Color::fromString('black');
         $result = $color->bestTextColor();
         $this->assertInstanceOf(Color::class, $result);
-        $this->assertTrue($result->equal(Color::fromString('white')));
+        $this->assertSame(Color::fromString('white')->toHex(), $result->toHex());
     }
 
     /**
@@ -1332,7 +1332,7 @@ final class ColorTest extends TestCase
     {
         $color = Color::fromString('white');
         $result = $color->bestTextColor();
-        $this->assertTrue($result->equal(Color::fromString('black')));
+        $this->assertSame(Color::fromString('black')->toHex(), $result->toHex());
     }
 
     /**
@@ -1342,7 +1342,7 @@ final class ColorTest extends TestCase
     {
         $color = Color::fromString('darkblue');
         $result = $color->bestTextColor();
-        $this->assertTrue($result->equal(Color::fromString('white')));
+        $this->assertSame(Color::fromString('white')->toHex(), $result->toHex());
     }
 
     /**
@@ -1352,7 +1352,7 @@ final class ColorTest extends TestCase
     {
         $color = Color::fromString('yellow');
         $result = $color->bestTextColor();
-        $this->assertTrue($result->equal(Color::fromString('black')));
+        $this->assertSame(Color::fromString('black')->toHex(), $result->toHex());
     }
 
     /**
@@ -1362,7 +1362,7 @@ final class ColorTest extends TestCase
     {
         $color = Color::fromString('black');
         $result = $color->bestTextColor('ivory', 'navy');
-        $this->assertTrue($result->equal(Color::fromString('ivory')));
+        $this->assertSame(Color::fromString('ivory')->toHex(), $result->toHex());
     }
 
     /**
@@ -1374,7 +1374,7 @@ final class ColorTest extends TestCase
         $navy = Color::fromString('navy');
         $background = Color::fromString('white');
         $result = $background->bestTextColor($ivory, $navy);
-        $this->assertTrue($result->equal($navy));
+        $this->assertSame($navy->toHex(), $result->toHex());
     }
 
     /**
@@ -1424,7 +1424,7 @@ final class ColorTest extends TestCase
         $color1 = new Color(255, 0, 0);
         $color2 = new Color(0, 255, 0);
         $mixed = $color1->mix($color2, 100);
-        $this->assertTrue($color2->equal($mixed));
+        $this->assertSame($mixed->toHex(), $color2->toHex());
     }
 
     /**
@@ -1435,7 +1435,7 @@ final class ColorTest extends TestCase
         $color1 = new Color(255, 0, 0);
         $color2 = new Color(0, 255, 0);
         $mixed = $color1->mix($color2, 0);
-        $this->assertTrue($color1->equal($mixed));
+        $this->assertSame($mixed->toHex(), $color1->toHex());
     }
 
     /**
@@ -1566,7 +1566,7 @@ final class ColorTest extends TestCase
     {
         $color = Color::fromString('red');
         $avg = Color::average($color);
-        $this->assertTrue($color->equal($avg));
+        $this->assertSame($avg->toHex(), $color->toHex());
     }
 
     /**
@@ -1780,7 +1780,7 @@ final class ColorTest extends TestCase
     {
         $color1 = Color::fromHsla(0, 100, 50);
         $color2 = Color::fromHsla(360, 100, 50);
-        $this->assertTrue($color1->equal($color2));
+        $this->assertSame($color2->toHex(), $color1->toHex());
     }
 
     /**
@@ -1790,7 +1790,7 @@ final class ColorTest extends TestCase
     {
         $color1 = Color::fromHsla(120, 100, 50);
         $color2 = Color::fromHsla(-240, 100, 50);
-        $this->assertTrue($color1->equal($color2));
+        $this->assertSame($color2->toHex(), $color1->toHex());
     }
 
     #endregion
