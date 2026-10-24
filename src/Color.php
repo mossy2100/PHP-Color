@@ -247,8 +247,6 @@ final class Color implements Stringable
      */
     public static function fromHsla(float $hue, float $saturation, float $lightness, float $alpha = 100): self
     {
-        self::validatePercent($saturation);
-        self::validatePercent($lightness);
         return self::createFromHsl($hue, $saturation, $lightness, self::toByte($alpha, true));
     }
 
@@ -425,7 +423,6 @@ final class Color implements Stringable
      */
     public function withSaturation(float $saturation): self
     {
-        self::validatePercent($saturation);
         return self::createFromHsl($this->hue, $saturation, $this->lightness, $this->alpha);
     }
 
@@ -438,7 +435,6 @@ final class Color implements Stringable
      */
     public function withLightness(float $lightness): self
     {
-        self::validatePercent($lightness);
         return self::createFromHsl($this->hue, $this->saturation, $lightness, $this->alpha);
     }
 
@@ -1019,6 +1015,8 @@ final class Color implements Stringable
     /**
      * Create a color from HSL values and an alpha byte.
      *
+     * The hue, saturation and lightness are validated by hslToRgb().
+     *
      * The HSL values aren't cached, so the color's HSL properties are always derived from its RGB bytes, and equal
      * colors report equal HSL values.
      *
@@ -1027,6 +1025,7 @@ final class Color implements Stringable
      * @param float $lightness The lightness as a percentage.
      * @param int $alpha The alpha component as a byte.
      * @return self The new color.
+     * @throws DomainException If the hue is not finite, or the saturation or lightness is out of range.
      */
     private static function createFromHsl(float $hue, float $saturation, float $lightness, int $alpha): self
     {
