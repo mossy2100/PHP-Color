@@ -307,6 +307,8 @@ final class Color implements Stringable
     /**
      * Check if a given string is a valid CSS color name.
      *
+     * Names are case-insensitive, and surrounding whitespace is ignored.
+     *
      * @static
      * @param string $name A color name.
      * @return bool If the name is a valid CSS color name.
@@ -889,7 +891,7 @@ final class Color implements Stringable
      */
     public static function nameToHex(string $name): string
     {
-        $hex = self::findNameHex(trim($name));
+        $hex = self::findNameHex($name);
 
         // Check the provided color name is valid.
         if ($hex === null) {
@@ -949,7 +951,7 @@ final class Color implements Stringable
     #region Static helper methods
 
     /**
-     * Look up the hex value for a CSS color name, ignoring case.
+     * Look up the hex value for a CSS color name, ignoring case and surrounding whitespace.
      *
      * @param string $name The color name.
      * @return ?string The 8-digit hex value, or null if the name isn't a CSS color name.
@@ -957,7 +959,7 @@ final class Color implements Stringable
     private static function findNameHex(string $name): ?string
     {
         static $hexByLowerName = array_change_key_case(self::CSS_COLOR_NAMES);
-        return $hexByLowerName[strtolower($name)] ?? null;
+        return $hexByLowerName[strtolower(trim($name))] ?? null;
     }
 
     /**

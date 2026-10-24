@@ -1086,6 +1086,7 @@ final class ColorTest extends TestCase
             ['aliceblue'],
             ['rebeccapurple'],
             ['RebeccaPurple'],
+            [' red '],
         ];
     }
 
