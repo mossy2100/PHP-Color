@@ -370,6 +370,11 @@ public function withSaturation(float $saturation): self
 
 Create a new Color with the specified saturation, as a percentage.
 
+> [!NOTE]
+> A gray has a hue of 0, so saturating it gives a red, e.g. `Color::fromString('gray')->withSaturation(100)` is
+> `#ff0101ff`. This is standard HSL behaviour, and `withHue()` first doesn't help, since the result is still gray. To
+> tint a gray, use `fromHsla()` with the hue you want.
+
 **Returns:** `Color` - A new color with the given saturation.
 
 **Throws:** `DomainException` if the value is not in [0, 100].
