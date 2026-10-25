@@ -361,8 +361,7 @@ final class ColorTransformationTest extends TestCase
     {
         $color1 = new Color(255, 0, 0);
         $color2 = new Color(0, 255, 0);
-        $mixed = $color1->mix($color2, 100);
-        $this->assertSame($mixed->toHex(), $color2->toHex());
+        $this->assertSame($color2, $color1->mix($color2, 100));
     }
 
     /**
@@ -372,8 +371,7 @@ final class ColorTransformationTest extends TestCase
     {
         $color1 = new Color(255, 0, 0);
         $color2 = new Color(0, 255, 0);
-        $mixed = $color1->mix($color2, 0);
-        $this->assertSame($mixed->toHex(), $color1->toHex());
+        $this->assertSame($color1, $color1->mix($color2, 0));
     }
 
     /**

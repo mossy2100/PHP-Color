@@ -419,11 +419,11 @@ final class Color implements Stringable
 
         // Check for 0% other color (100% this).
         if ($percent === 0.0) {
-            return clone $this;
+            return $this;
         }
         // Check for 100% other color.
         if ($percent === 100.0) {
-            return clone $other;
+            return $other;
         }
 
         return self::blend([$this, $other], [
