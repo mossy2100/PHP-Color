@@ -86,6 +86,17 @@ final class ColorAggregationTest extends TestCase
     }
 
     /**
+     * Test average() accepts a spread array with string keys, for one color and for several.
+     */
+    public function testAverageStringKeyedSpread(): void
+    {
+        $red = Color::fromString('red');
+        $blue = Color::fromString('blue');
+        $this->assertSame($red, Color::average(...['bg' => $red]));
+        $this->assertSame('#800080ff', Color::average(...['bg' => $red, 'fg' => $blue])->toHex());
+    }
+
+    /**
      * Test average() throws LengthException with no arguments.
      */
     public function testAverageNoColors(): void

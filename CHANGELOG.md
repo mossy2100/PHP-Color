@@ -62,6 +62,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **`gamma()` throws `DomainException` for a value outside [0, 255],** instead of returning a meaningless result.
 - **`NAN` and `INF` are rejected** by the factories, `with*()` methods and `mix()`, instead of giving black, white or a
   warning.
+- **`average()` threw `TypeError` for a single color passed as a string-keyed spread,** e.g.
+  `Color::average(...['bg' => $red])`.
 
 ---
 

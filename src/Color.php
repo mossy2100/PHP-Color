@@ -458,6 +458,9 @@ final class Color implements Stringable
      */
     public static function average(self ...$colors): self
     {
+        // Reindex, since a spread array with string keys keeps them.
+        $colors = array_values($colors);
+
         // Get the number of colors and make sure we have at least one.
         $n = count($colors);
         if ($n === 0) {
@@ -469,7 +472,7 @@ final class Color implements Stringable
             return $colors[0];
         }
 
-        return self::blend(array_values($colors), array_fill(0, $n, 1.0));
+        return self::blend($colors, array_fill(0, $n, 1.0));
     }
 
     #endregion
