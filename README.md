@@ -97,7 +97,7 @@ echo $color->toHslString();  // 'hsl(24deg 100% 50% / 100%)'
 
 Immutable class for color manipulation with support for:
 - RGB and HSL color spaces with automatic conversion
-- CSS color names (148 standard names plus 'transparent'), and 296 extra color names
+- CSS color names (148 standard names plus 'transparent'), and around 300 extra color names
 - Hex string parsing (3, 4, 6, or 8 digits)
 - Immutable modification methods (withRed, withHue, etc.)
 - Color mixing and complementary colors
@@ -106,7 +106,8 @@ Immutable class for color manipulation with support for:
 
 ### [ColorNames](docs/ColorNames.md)
 
-The CSS named colors and 296 extra color names, mapped to hex values, with the case-insensitive lookup `Color` uses.
+The CSS named colors and around 300 extra color names, mapped to hex values, with the case-insensitive lookup `Color`
+uses.
 
 ---
 

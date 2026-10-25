@@ -11,9 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - **`Color::fromString()`** creates a color from a color name or hex string, and is the inverse of `__toString()`.
-- **`ColorNames`,** holding the color name tables and the lookup `Color` uses. `ColorNames::EXTRA` adds 296 color
-  names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every method that takes a color name accepts
-  them.
+- **`ColorNames`,** holding the color name tables and the lookup `Color` uses. `ColorNames::EXTRA` adds around 300
+  color names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every method that takes a color name
+  accepts them.
 - **`rebeccapurple`** (`#663399`), the CSS named color that was missing.
 
 ### Changed

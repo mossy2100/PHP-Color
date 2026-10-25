@@ -9,7 +9,7 @@ The color names that [`Color`](Color.md) recognises, and the case-insensitive lo
 `ColorNames` holds two tables of color names mapped to 6-digit RGB hex values:
 
 - `CSS` - the 148 CSS named colors.
-- `EXTRA` - 296 color names in common English use that aren't CSS named colors.
+- `EXTRA` - around 300 color names in common English use that aren't CSS named colors.
 
 Every `Color` method that takes a color name accepts names from both tables, plus `'transparent'`. Names are
 case-insensitive, and surrounding whitespace is ignored.
@@ -48,7 +48,7 @@ Color::fromString('transparent');  // RGBA: 0, 0, 0, 0
 public const array EXTRA
 ```
 
-296 color names in common English use that aren't CSS named colors, e.g. `'Amethyst'`, `'Aubergine'` and
+Around 300 color names in common English use that aren't CSS named colors, e.g. `'Amethyst'`, `'Aubergine'` and
 `'AirForceBlue'`, mapped to 6-digit RGB hex values. Each value is a consensus of several sources, including the xkcd
 color survey, Wikipedia, and paint and color references. The names are in UpperCamelCase.
 

@@ -8,7 +8,7 @@ Immutable class for working with colors in PHP.
 
 The `Color` class provides a comprehensive implementation of color handling with support for:
 - RGB and HSL color spaces
-- CSS color names (148 standard names plus 'transparent'), and 296 extra color names (see [ColorNames](ColorNames.md))
+- CSS color names (148 standard names plus 'transparent'), and around 300 extra color names (see [ColorNames](ColorNames.md))
 - Hex string parsing (3, 4, 6, or 8 digits)
 - WCAG accessibility calculations (contrast ratio, text color selection)
 - Color mixing and complementary colors
