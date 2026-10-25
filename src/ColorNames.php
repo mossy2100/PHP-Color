@@ -522,7 +522,7 @@ final class ColorNames
             + self::buildNameMap(self::EXTRA);
 
         // Normalize the name to match the map's keys.
-        $key = str_replace([' ', "\t", "\n", "\r", "\0", "\x0B", '-', '_'], '', strtolower($name));
+        $key = preg_replace('/[\s_-]+/', '', strtolower($name)) ?? '';
 
         return $hexByLowerName[$key] ?? $hexByLowerName[str_replace('grey', 'gray', $key)] ?? null;
     }

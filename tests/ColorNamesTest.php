@@ -76,6 +76,7 @@ final class ColorNamesTest extends TestCase
             'hyphens'            => ['air-force-blue', '5d8aa8ff'],
             'underscores'        => ['Air_Force_Blue', '5d8aa8ff'],
             'tab'                => ["alice\tblue", 'f0f8ffff'],
+            'form feed'          => ["alice\fblue", 'f0f8ffff'],
             'CSS name, spaced'   => ['Alice Blue', 'f0f8ffff'],
             'CSS grey name'      => ['DarkGrey', 'a9a9a9ff'],
             'grey for gray'      => ['DoveGrey', '6d6c6cff'],
@@ -101,6 +102,7 @@ final class ColorNamesTest extends TestCase
         $this->assertNull(ColorNames::lookupHex('notacolor'));
         $this->assertNull(ColorNames::lookupHex(''));
         $this->assertNull(ColorNames::lookupHex(' - '));
+        $this->assertNull(ColorNames::lookupHex("red\0"));
         $this->assertNull(ColorNames::lookupHex('air.force.blue'));
         $this->assertNull(ColorNames::lookupHex('PurpleGrey'));
     }
