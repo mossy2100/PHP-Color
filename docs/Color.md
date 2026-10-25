@@ -173,6 +173,10 @@ Create a color from a color name (e.g. 'Navy' or 'Amethyst') or hex string (3, 4
 
 The recognised names are listed in [`ColorNames`](ColorNames.md).
 
+> [!NOTE]
+> Names are checked before hex, and the '#' is optional, so a word made only of hex letters parses as hex. For
+> example, `'face'` gives `#ffaaccee`, so a mistyped name can give a color instead of throwing.
+
 **Returns:** `Color` - The new color.
 
 **Examples:**
