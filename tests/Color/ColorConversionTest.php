@@ -123,12 +123,7 @@ final class ColorConversionTest extends TestCase
     public function testToRgbaArray(): void
     {
         $color = new Color(10, 20, 30, 40);
-        $this->assertSame([
-            'red'   => 10,
-            'green' => 20,
-            'blue'  => 30,
-            'alpha' => 40,
-        ], $color->toRgbaArray());
+        $this->assertSame(['red' => 10, 'green' => 20, 'blue' => 30, 'alpha' => 40], $color->toRgbaArray());
     }
 
     #endregion
@@ -141,11 +136,7 @@ final class ColorConversionTest extends TestCase
     public function testToHslArray(): void
     {
         $color = Color::fromString('#ff6600');
-        $this->assertSame([
-            'hue'        => 24.0,
-            'saturation' => 100.0,
-            'lightness'  => 50.0,
-        ], $color->toHslArray());
+        $this->assertSame(['hue' => 24.0, 'saturation' => 100.0, 'lightness' => 50.0], $color->toHslArray());
     }
 
     #endregion
@@ -159,13 +150,13 @@ final class ColorConversionTest extends TestCase
     {
         $color = new Color(255, 102, 0, 250);
         $expected = [
-            'red'        => 255,
-            'green'      => 102,
-            'blue'       => 0,
-            'alpha'      => 250,
-            'hue'        => 24.0,
+            'red' => 255,
+            'green' => 102,
+            'blue' => 0,
+            'alpha' => 250,
+            'hue' => 24.0,
             'saturation' => 100.0,
-            'lightness'  => 50.0,
+            'lightness' => 50.0,
         ];
         $this->assertSame($expected, $color->toArray());
     }
@@ -182,12 +173,12 @@ final class ColorConversionTest extends TestCase
     public static function rgbToHslProvider(): array
     {
         return [
-            'red'    => [255, 0, 0, 0.0, 100.0, 50.0],
-            'green'  => [0, 255, 0, 120.0, 100.0, 50.0],
-            'blue'   => [0, 0, 255, 240.0, 100.0, 50.0],
-            'black'  => [0, 0, 0, 0.0, 0.0, 0.0],
-            'white'  => [255, 255, 255, 0.0, 0.0, 100.0],
-            'gray'   => [128, 128, 128, 0.0, 0.0, 50.196],
+            'red' => [255, 0, 0, 0.0, 100.0, 50.0],
+            'green' => [0, 255, 0, 120.0, 100.0, 50.0],
+            'blue' => [0, 0, 255, 240.0, 100.0, 50.0],
+            'black' => [0, 0, 0, 0.0, 0.0, 0.0],
+            'white' => [255, 255, 255, 0.0, 0.0, 100.0],
+            'gray' => [128, 128, 128, 0.0, 0.0, 50.196],
             'orange' => [255, 102, 0, 24.0, 100.0, 50.0],
         ];
     }
@@ -234,12 +225,12 @@ final class ColorConversionTest extends TestCase
     public static function hslToRgbProvider(): array
     {
         return [
-            'red'    => [0.0, 100.0, 50.0, 255, 0, 0],
-            'green'  => [120.0, 100.0, 50.0, 0, 255, 0],
-            'blue'   => [240.0, 100.0, 50.0, 0, 0, 255],
-            'black'  => [0.0, 0.0, 0.0, 0, 0, 0],
-            'white'  => [0.0, 0.0, 100.0, 255, 255, 255],
-            'gray'   => [0.0, 0.0, 50.0, 128, 128, 128],
+            'red' => [0.0, 100.0, 50.0, 255, 0, 0],
+            'green' => [120.0, 100.0, 50.0, 0, 255, 0],
+            'blue' => [240.0, 100.0, 50.0, 0, 0, 255],
+            'black' => [0.0, 0.0, 0.0, 0, 0, 0],
+            'white' => [0.0, 0.0, 100.0, 255, 255, 255],
+            'gray' => [0.0, 0.0, 50.0, 128, 128, 128],
             'orange' => [24.0, 100.0, 50.0, 255, 102, 0],
         ];
     }

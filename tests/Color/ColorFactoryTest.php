@@ -128,10 +128,10 @@ final class ColorFactoryTest extends TestCase
     public static function colorNameCaseProvider(): array
     {
         return [
-            'CSS name, canonical'    => ['LightGoldenrodYellow', '#fafad2ff'],
-            'CSS name, lower case'   => ['lightgoldenrodyellow', '#fafad2ff'],
-            'CSS name, upper case'   => ['LIGHTGOLDENRODYELLOW', '#fafad2ff'],
-            'extra name, canonical'  => ['AirForceBlue', '#5d8aa8ff'],
+            'CSS name, canonical' => ['LightGoldenrodYellow', '#fafad2ff'],
+            'CSS name, lower case' => ['lightgoldenrodyellow', '#fafad2ff'],
+            'CSS name, upper case' => ['LIGHTGOLDENRODYELLOW', '#fafad2ff'],
+            'extra name, canonical' => ['AirForceBlue', '#5d8aa8ff'],
             'extra name, lower case' => ['airforceblue', '#5d8aa8ff'],
             'extra name, upper case' => ['AIRFORCEBLUE', '#5d8aa8ff'],
         ];
@@ -278,12 +278,12 @@ final class ColorFactoryTest extends TestCase
     public static function invalidRgbaPercentProvider(): array
     {
         return [
-            'red as byte'    => [255, 0, 0, 100],
+            'red as byte' => [255, 0, 0, 100],
             'green negative' => [0, -1, 0, 100],
-            'blue too high'  => [0, 0, 100.1, 100],
+            'blue too high' => [0, 0, 100.1, 100],
             'alpha too high' => [0, 0, 0, 101],
-            'red NAN'        => [NAN, 0, 0, 100],
-            'alpha INF'      => [0, 0, 0, INF],
+            'red NAN' => [NAN, 0, 0, 100],
+            'alpha INF' => [0, 0, 0, INF],
         ];
     }
 
@@ -489,9 +489,9 @@ final class ColorFactoryTest extends TestCase
     {
         return [
             'saturation too high' => [150, 50, 100],
-            'saturation NAN'      => [NAN, 50, 100],
-            'lightness negative'  => [50, -10, 100],
-            'alpha too high'      => [50, 50, 101],
+            'saturation NAN' => [NAN, 50, 100],
+            'lightness negative' => [50, -10, 100],
+            'alpha too high' => [50, 50, 101],
         ];
     }
 
@@ -522,11 +522,7 @@ final class ColorFactoryTest extends TestCase
     {
         $black = Color::fromHsla(120, 100, 0);
         $this->assertSame(new Color()->toHex(), $black->toHex());
-        $this->assertSame([
-            'hue'        => 0.0,
-            'saturation' => 0.0,
-            'lightness'  => 0.0,
-        ], $black->toHslArray());
+        $this->assertSame(['hue' => 0.0, 'saturation' => 0.0, 'lightness' => 0.0], $black->toHslArray());
 
         $color = Color::fromHsla(10.123, 50, 50);
         $this->assertSame(Color::fromString($color->toHex())->toHslArray(), $color->toHslArray());

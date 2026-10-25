@@ -173,10 +173,7 @@ final class ColorAccessibilityTest extends TestCase
      */
     public static function invalidGammaByteProvider(): array
     {
-        return [
-            'negative' => [-5],
-            'too high' => [300],
-        ];
+        return ['negative' => [-5], 'too high' => [300]];
     }
 
     /**

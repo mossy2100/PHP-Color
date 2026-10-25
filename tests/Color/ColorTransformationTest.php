@@ -47,13 +47,7 @@ final class ColorTransformationTest extends TestCase
      */
     public static function invalidWithByteProvider(): array
     {
-        return [
-            'too high'  => [256],
-            'just over' => [255.4],
-            'negative'  => [-1],
-            'NAN'       => [NAN],
-            'INF'       => [INF],
-        ];
+        return ['too high' => [256], 'just over' => [255.4], 'negative' => [-1], 'NAN' => [NAN], 'INF' => [INF]];
     }
 
     /**
@@ -162,12 +156,7 @@ final class ColorTransformationTest extends TestCase
      */
     public static function invalidPercentProvider(): array
     {
-        return [
-            'too high' => [101],
-            'negative' => [-1],
-            'NAN'      => [NAN],
-            'INF'      => [INF],
-        ];
+        return ['too high' => [101], 'negative' => [-1], 'NAN' => [NAN], 'INF' => [INF]];
     }
 
     /**

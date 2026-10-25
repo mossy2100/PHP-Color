@@ -65,22 +65,22 @@ final class ColorNamesTest extends TestCase
     public static function knownNameProvider(): array
     {
         return [
-            'CSS name'           => ['AliceBlue', 'f0f8ffff'],
-            'lower case'         => ['aliceblue', 'f0f8ffff'],
-            'upper case'         => ['ALICEBLUE', 'f0f8ffff'],
+            'CSS name' => ['AliceBlue', 'f0f8ffff'],
+            'lower case' => ['aliceblue', 'f0f8ffff'],
+            'upper case' => ['ALICEBLUE', 'f0f8ffff'],
             'surrounding spaces' => [' Red ', 'ff0000ff'],
-            'extra name'         => ['Amethyst', '9a63c6ff'],
-            'transparent'        => ['transparent', '00000000'],
-            'transparent mixed'  => [' TransParent ', '00000000'],
-            'inner spaces'       => ['air force blue', '5d8aa8ff'],
-            'hyphens'            => ['air-force-blue', '5d8aa8ff'],
-            'underscores'        => ['Air_Force_Blue', '5d8aa8ff'],
-            'tab'                => ["alice\tblue", 'f0f8ffff'],
-            'form feed'          => ["alice\fblue", 'f0f8ffff'],
-            'CSS name, spaced'   => ['Alice Blue', 'f0f8ffff'],
-            'CSS grey name'      => ['DarkGrey', 'a9a9a9ff'],
-            'grey for gray'      => ['DoveGrey', '6d6c6cff'],
-            'grey, spaced'       => ['dove grey', '6d6c6cff'],
+            'extra name' => ['Amethyst', '9a63c6ff'],
+            'transparent' => ['transparent', '00000000'],
+            'transparent mixed' => [' TransParent ', '00000000'],
+            'inner spaces' => ['air force blue', '5d8aa8ff'],
+            'hyphens' => ['air-force-blue', '5d8aa8ff'],
+            'underscores' => ['Air_Force_Blue', '5d8aa8ff'],
+            'tab' => ["alice\tblue", 'f0f8ffff'],
+            'form feed' => ["alice\fblue", 'f0f8ffff'],
+            'CSS name, spaced' => ['Alice Blue', 'f0f8ffff'],
+            'CSS grey name' => ['DarkGrey', 'a9a9a9ff'],
+            'grey for gray' => ['DoveGrey', '6d6c6cff'],
+            'grey, spaced' => ['dove grey', '6d6c6cff'],
         ];
     }
 

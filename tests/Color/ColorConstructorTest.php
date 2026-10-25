@@ -59,9 +59,9 @@ final class ColorConstructorTest extends TestCase
     public static function invalidByteProvider(): array
     {
         return [
-            'red too high'   => [256, 0, 0, 255],
+            'red too high' => [256, 0, 0, 255],
             'green negative' => [0, -1, 0, 255],
-            'blue too high'  => [0, 0, 300, 255],
+            'blue too high' => [0, 0, 300, 255],
             'alpha too high' => [0, 0, 0, 256],
         ];
     }

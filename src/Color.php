@@ -427,10 +427,7 @@ final class Color implements Stringable
             return $other;
         }
 
-        return self::blend([$this, $other], [
-            100 - $percent,
-            $percent,
-        ]);
+        return self::blend([$this, $other], [100 - $percent, $percent]);
     }
 
     /**
@@ -627,13 +624,7 @@ final class Color implements Stringable
      */
     public function toRgbaArray(): array
     {
-        return [
-            'red'   => $this->red,
-            'green' => $this->green,
-            'blue'  => $this->blue,
-            'alpha' => $this->alpha,
-
-        ];
+        return ['red' => $this->red, 'green' => $this->green, 'blue' => $this->blue, 'alpha' => $this->alpha];
     }
 
     /**
@@ -646,12 +637,7 @@ final class Color implements Stringable
      */
     public function toHslArray(): array
     {
-        return [
-            'hue'        => $this->hue,
-            'saturation' => $this->saturation,
-            'lightness'  => $this->lightness,
-
-        ];
+        return ['hue' => $this->hue, 'saturation' => $this->saturation, 'lightness' => $this->lightness];
     }
 
     /**
@@ -724,11 +710,7 @@ final class Color implements Stringable
             $s = min($c / (1 - abs(2 * $l - 1)), 1.0);
         }
 
-        return [
-            $h,
-            $s * 100,
-            $l * 100,
-        ];
+        return [$h, $s * 100, $l * 100];
     }
 
     /**
@@ -762,11 +744,7 @@ final class Color implements Stringable
             return self::percentToByte(self::clampPercent($c * 100));
         };
 
-        return [
-            $f(0),
-            $f(8),
-            $f(4),
-        ];
+        return [$f(0), $f(8), $f(4)];
     }
 
     /**
@@ -830,11 +808,7 @@ final class Color implements Stringable
      */
     private function computeHsl(): void
     {
-        [
-            $this->hue,
-            $this->saturation,
-            $this->lightness,
-        ] = self::rgbToHsl($this->red, $this->green, $this->blue);
+        [$this->hue, $this->saturation, $this->lightness] = self::rgbToHsl($this->red, $this->green, $this->blue);
     }
 
     #endregion
@@ -864,11 +838,7 @@ final class Color implements Stringable
             $weight = $weights[$i];
             $alphaWeight = $color->alpha * $weight;
             $alphaSum += $alphaWeight;
-            $components = [
-                $color->red,
-                $color->green,
-                $color->blue,
-            ];
+            $components = [$color->red, $color->green, $color->blue];
             foreach ($components as $j => $component) {
                 $premultiplied[$j] += $component * $alphaWeight;
                 $plain[$j] += $component * $weight;

@@ -24,15 +24,7 @@ final class ColorValidationTest extends TestCase
      */
     public static function validHexProvider(): array
     {
-        return [
-            ['#abc'],
-            ['#1234'],
-            ['#abcdef'],
-            ['#12345678'],
-            ['abc'],
-            ['ABCDEF'],
-            ['#ABCDEF'],
-        ];
+        return [['#abc'], ['#1234'], ['#abcdef'], ['#12345678'], ['abc'], ['ABCDEF'], ['#ABCDEF']];
     }
 
     /**
@@ -51,16 +43,7 @@ final class ColorValidationTest extends TestCase
      */
     public static function invalidHexProvider(): array
     {
-        return [
-            [''],
-            ['#'],
-            ['#ab'],
-            ['#abcde'],
-            ['#abcdefgh'],
-            ['#gggggg'],
-            ['##abc'],
-            ['notahex'],
-        ];
+        return [[''], ['#'], ['#ab'], ['#abcde'], ['#abcdefgh'], ['#gggggg'], ['##abc'], ['notahex']];
     }
 
     /**
