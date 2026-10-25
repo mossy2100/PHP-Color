@@ -503,7 +503,11 @@ final class ColorNames
     #region Inspection methods
 
     /**
-     * Convert a CSS or extra color name to an 8-digit hex value, ignoring case and surrounding whitespace.
+     * Convert a CSS or extra color name to an 8-digit hex value.
+     *
+     * Case, whitespace, hyphens and underscores are ignored, so 'air force blue' and 'air-force-blue' both match
+     * 'AirForceBlue'. If a name containing 'grey' isn't found, it's looked up again with 'gray', so 'DoveGrey' matches
+     * 'DoveGray'.
      *
      * The map is built once. Since `+` keeps the left operand's entry for a duplicate key, CSS names take precedence if
      * a name is ever in both tables.
@@ -516,7 +520,11 @@ final class ColorNames
         static $hexByLowerName = self::TRANSPARENT
             + self::buildNameMap(self::CSS)
             + self::buildNameMap(self::EXTRA);
-        return $hexByLowerName[strtolower(trim($name))] ?? null;
+
+        // Normalize the name to match the map's keys.
+        $key = str_replace([' ', "\t", "\n", "\r", "\0", "\x0B", '-', '_'], '', strtolower($name));
+
+        return $hexByLowerName[$key] ?? $hexByLowerName[str_replace('grey', 'gray', $key)] ?? null;
     }
 
     #endregion
@@ -526,7 +534,8 @@ final class ColorNames
     /**
      * Check if a given string is a known color name: a CSS named color, an extra color name, or 'transparent'.
      *
-     * Names are case-insensitive, and surrounding whitespace is ignored.
+     * Names are matched as in lookupHex(), ignoring case, whitespace, hyphens and underscores, and accepting 'grey' for
+     * 'gray'.
      *
      * @param string $name A color name.
      * @return bool If the name is a known color name.

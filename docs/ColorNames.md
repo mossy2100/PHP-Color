@@ -11,8 +11,14 @@ The color names that [`Color`](Color.md) recognises, and the case-insensitive lo
 - `CSS` - the 148 CSS named colors.
 - `EXTRA` - around 300 color names in common English use that aren't CSS named colors.
 
-Every `Color` method that takes a color name accepts names from both tables, plus `'transparent'`. Names are
-case-insensitive, and surrounding whitespace is ignored.
+Every `Color` method that takes a color name accepts names from both tables, plus `'transparent'`. Names are matched
+leniently:
+
+- Case is ignored.
+- Whitespace, hyphens and underscores are ignored, so `'air force blue'` and `'air-force-blue'` both match
+  `'AirForceBlue'`.
+- If a name containing `'grey'` isn't found, it's looked up again with `'gray'`, so `'DoveGrey'` matches `'DoveGray'`.
+  The CSS `Grey` names match directly.
 
 `ColorNames` is a static class, and can't be instantiated.
 
@@ -72,18 +78,20 @@ Color::fromString('airforceblue');  // #5d8aa8ff
 public static function lookupHex(string $name): ?string
 ```
 
-Look up a color name's hex value, ignoring case and surrounding whitespace. CSS names take precedence if a name is
-ever in both tables.
+Look up a color name's hex value, matching names as described in the [Overview](#overview). CSS names take precedence
+if a name is ever in both tables.
 
 **Returns:** `?string` - The 8-digit RGBA hex value, with no leading '#', or `null` if the name isn't known.
 
 **Examples:**
 
 ```php
-ColorNames::lookupHex('AliceBlue');    // 'f0f8ffff'
-ColorNames::lookupHex(' amethyst ');   // '9a63c6ff'
-ColorNames::lookupHex('transparent');  // '00000000'
-ColorNames::lookupHex('notacolor');    // null
+ColorNames::lookupHex('AliceBlue');       // 'f0f8ffff'
+ColorNames::lookupHex(' amethyst ');      // '9a63c6ff'
+ColorNames::lookupHex('air force blue');  // '5d8aa8ff'
+ColorNames::lookupHex('DoveGrey');        // '6d6c6cff'
+ColorNames::lookupHex('transparent');     // '00000000'
+ColorNames::lookupHex('notacolor');       // null
 ```
 
 ---
@@ -97,7 +105,7 @@ public static function validName(string $name): bool
 ```
 
 Check if a string is a known color name: a CSS named color, an extra color name, or `'transparent'`. Names are
-case-insensitive, and surrounding whitespace is ignored.
+matched as described in the [Overview](#overview).
 
 **Returns:** `bool` - `true` if the name is a known color name, `false` otherwise.
 
@@ -106,6 +114,7 @@ case-insensitive, and surrounding whitespace is ignored.
 ```php
 ColorNames::validName('red');         // true
 ColorNames::validName(' Amethyst ');  // true
+ColorNames::validName('Dove Grey');   // true
 ColorNames::validName('notacolor');   // false
 ```
 

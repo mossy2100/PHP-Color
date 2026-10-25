@@ -107,8 +107,7 @@ Immutable class for color manipulation with support for:
 
 ### [ColorNames](docs/ColorNames.md)
 
-The CSS named colors and around 300 extra color names, mapped to hex values, with the case-insensitive lookup `Color`
-uses.
+The CSS named colors and around 300 extra color names, mapped to hex values, with the name lookup `Color` uses.
 
 ---
 

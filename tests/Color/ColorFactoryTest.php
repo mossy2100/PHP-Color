@@ -155,6 +155,16 @@ final class ColorFactoryTest extends TestCase
     }
 
     /**
+     * Test fromString() ignores spaces, hyphens and underscores in names, and accepts 'grey' for 'gray'.
+     */
+    public function testFromStringLenientName(): void
+    {
+        $this->assertSame('#5d8aa8ff', Color::fromString('air force blue')->toHex());
+        $this->assertSame('#5d8aa8ff', Color::fromString('air-force_blue')->toHex());
+        $this->assertSame('#6d6c6cff', Color::fromString('Dove Grey')->toHex());
+    }
+
+    /**
      * Test fromString() with 'transparent' color name.
      */
     public function testFromStringTransparent(): void

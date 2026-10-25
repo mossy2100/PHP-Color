@@ -169,9 +169,10 @@ public static function fromString(string $colorString): self
 ```
 
 Create a color from a color name (e.g. 'Navy' or 'Amethyst') or hex string (3, 4, 6, or 8 hex digits, with or without
-'#'). Names are case-insensitive, and surrounding whitespace is ignored. It's the inverse of `__toString()`.
+'#'). Surrounding whitespace is ignored. It's the inverse of `__toString()`.
 
-The recognised names are listed in [`ColorNames`](ColorNames.md).
+The recognised names are listed in [`ColorNames`](ColorNames.md#overview). Names ignore case, whitespace, hyphens and
+underscores, and `'grey'` is accepted for `'gray'`.
 
 > [!NOTE]
 > Names are checked before hex, and the '#' is optional, so a word made only of hex letters parses as hex. For
@@ -182,9 +183,10 @@ The recognised names are listed in [`ColorNames`](ColorNames.md).
 **Examples:**
 
 ```php
-// From color names (case-insensitive)
+// From color names
 $red = Color::fromString('red');
 $blue = Color::fromString('Blue');
+$airForceBlue = Color::fromString('air force blue');
 $transparent = Color::fromString('transparent');
 
 // From hex strings

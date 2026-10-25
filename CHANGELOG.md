@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   color names in common English use that aren't CSS colors, e.g. `'Amethyst'`. Every method that takes a color name
   accepts them.
 - **`rebeccapurple`** (`#663399`), the CSS named color that was missing.
+- **Lenient color names.** Whitespace, hyphens and underscores in a name are ignored, so `'air force blue'` matches
+  `AirForceBlue`, and `'grey'` is accepted for `'gray'`, so `'DoveGrey'` matches `DoveGray`.
 
 ### Changed
 

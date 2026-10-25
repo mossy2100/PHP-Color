@@ -72,11 +72,20 @@ final class ColorNamesTest extends TestCase
             'extra name'         => ['Amethyst', '9a63c6ff'],
             'transparent'        => ['transparent', '00000000'],
             'transparent mixed'  => [' TransParent ', '00000000'],
+            'inner spaces'       => ['air force blue', '5d8aa8ff'],
+            'hyphens'            => ['air-force-blue', '5d8aa8ff'],
+            'underscores'        => ['Air_Force_Blue', '5d8aa8ff'],
+            'tab'                => ["alice\tblue", 'f0f8ffff'],
+            'CSS name, spaced'   => ['Alice Blue', 'f0f8ffff'],
+            'CSS grey name'      => ['DarkGrey', 'a9a9a9ff'],
+            'grey for gray'      => ['DoveGrey', '6d6c6cff'],
+            'grey, spaced'       => ['dove grey', '6d6c6cff'],
         ];
     }
 
     /**
-     * Test lookupHex() returns the 8-digit hex value of a known name, ignoring case and surrounding whitespace.
+     * Test lookupHex() returns the 8-digit hex value of a known name, ignoring case, whitespace, hyphens and
+     * underscores, and accepting 'grey' for 'gray'.
      */
     #[DataProvider('knownNameProvider')]
     public function testLookupHexKnownName(string $name, string $hex): void
@@ -91,7 +100,9 @@ final class ColorNamesTest extends TestCase
     {
         $this->assertNull(ColorNames::lookupHex('notacolor'));
         $this->assertNull(ColorNames::lookupHex(''));
-        $this->assertNull(ColorNames::lookupHex('air force blue'));
+        $this->assertNull(ColorNames::lookupHex(' - '));
+        $this->assertNull(ColorNames::lookupHex('air.force.blue'));
+        $this->assertNull(ColorNames::lookupHex('PurpleGrey'));
     }
 
     /**
@@ -131,11 +142,14 @@ final class ColorNamesTest extends TestCase
             [' red '],
             ['Amethyst'],
             ['airforceblue'],
+            ['air force blue'],
+            ['dove-grey'],
         ];
     }
 
     /**
-     * Test validName() returns true for CSS and extra color names, ignoring case and surrounding whitespace.
+     * Test validName() returns true for CSS and extra color names, ignoring case, whitespace, hyphens and underscores,
+     * and accepting 'grey' for 'gray'.
      */
     #[DataProvider('validNameProvider')]
     public function testValidName(string $name): void
@@ -149,7 +163,7 @@ final class ColorNamesTest extends TestCase
     public function testValidNameInvalid(): void
     {
         $this->assertFalse(ColorNames::validName('notacolor'));
-        $this->assertFalse(ColorNames::validName('air force blue'));
+        $this->assertFalse(ColorNames::validName('air.force.blue'));
     }
 
     #endregion

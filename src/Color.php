@@ -226,8 +226,9 @@ final class Color implements Stringable
      * Create a color from a color name or hex color string.
      *
      * A color name is a CSS named color or one of the extra color names (see ColorNames).
-     * A hex string has 3, 4, 6, or 8 hex digits, with or without a leading '#'. Names are case-insensitive.
-     * Surrounding whitespace is ignored.
+     * A hex string has 3, 4, 6, or 8 hex digits, with or without a leading '#'. Surrounding whitespace is ignored.
+     * Names are matched as in ColorNames::lookupHex(), ignoring case, whitespace, hyphens and underscores, and
+     * accepting 'grey' for 'gray'.
      *
      * @static
      * @param string $colorString A color name or hex color string.
