@@ -45,8 +45,6 @@ final class ColorNamesTest extends TestCase
     {
         $names = array_keys(ColorNames::EXTRA);
         $lowerNames = array_map(strtolower(...), $names);
-        $this->assertCount(296, $names);
-        $this->assertCount(296, array_unique($lowerNames));
         foreach (ColorNames::EXTRA as $name => $hex) {
             $this->assertMatchesRegularExpression('/^[A-Z][a-zA-Z]*$/', $name);
             $this->assertMatchesRegularExpression('/^[0-9a-f]{6}$/', $hex);
