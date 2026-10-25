@@ -41,6 +41,7 @@ documentation.
 
 - PHP ^8.4
 - ext-ctype
+- ext-intl, through `mossy2100/core`, for `toRgbString()` and `toHslString()`
 - mossy2100/core
 
 ---
