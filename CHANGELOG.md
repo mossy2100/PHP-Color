@@ -66,6 +66,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   warning.
 - **`average()` threw `TypeError` for a single color passed as a string-keyed spread,** e.g.
   `Color::average(...['bg' => $red])`.
+- **`==` and `in_array()` treated equal colors as different once one had its HSL properties read.** `hue`,
+  `saturation` and `lightness` are now computed on each access rather than cached.
 
 ---
 

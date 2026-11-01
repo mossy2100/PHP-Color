@@ -55,5 +55,19 @@ final class ColorComparisonTest extends TestCase
         $this->assertFalse($color->equal('red'));
     }
 
+    /**
+     * Test == and in_array() agree with equal() after a color's HSL properties are read.
+     */
+    public function testLooseEqualityAfterReadingHsl(): void
+    {
+        $color1 = new Color(255, 0, 0);
+        $color2 = new Color(255, 0, 0);
+        $this->assertSame(0.0, $color1->hue);
+        $this->assertTrue($color1->equal($color2));
+        $this->assertTrue($color1 == $color2);
+        // phpcs:ignore SlevomatCodingStandard.Functions.StrictCall.StrictParameterMissing -- Loose on purpose.
+        $this->assertTrue(in_array($color2, [$color1]));
+    }
+
     #endregion
 }

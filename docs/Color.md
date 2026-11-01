@@ -77,7 +77,7 @@ fully transparent.
 public float $hue { get; }
 ```
 
-The hue of the color as an angle in degrees in the range [0, 360). Computed on first access and cached.
+The hue of the color as an angle in degrees in the range [0, 360). Computed from the RGB bytes on each access.
 
 ### saturation
 
@@ -85,7 +85,7 @@ The hue of the color as an angle in degrees in the range [0, 360). Computed on f
 public float $saturation { get; }
 ```
 
-The saturation of the color as a percentage in the range [0, 100]. Computed on first access and cached.
+The saturation of the color as a percentage in the range [0, 100]. Computed from the RGB bytes on each access.
 
 ### lightness
 
@@ -93,7 +93,7 @@ The saturation of the color as a percentage in the range [0, 100]. Computed on f
 public float $lightness { get; }
 ```
 
-The lightness of the color as a percentage in the range [0, 100]. Computed on first access and cached.
+The lightness of the color as a percentage in the range [0, 100]. Computed from the RGB bytes on each access.
 
 ### relativeLuminance
 
@@ -285,7 +285,8 @@ Color::validHex('notahex');   // false
 public function equal(mixed $other): bool
 ```
 
-Check if two colors are equal (all RGBA values match).
+Check if two colors are equal (all RGBA values match). `==` gives the same result, since a color's only stored state is
+its RGBA bytes.
 
 **Returns:** `bool` - `true` if the value is a `Color` with the same RGBA components, `false` otherwise.
 

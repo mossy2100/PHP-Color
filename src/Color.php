@@ -69,48 +69,63 @@ final class Color implements Stringable
     /**
      * Get the hue of the color, as an angle in degrees in the range [0, 360).
      *
-     * Computed from the RGB bytes on first access, along with the other HSL properties, and stored.
+     * Computed from the RGB bytes on each access.
      *
      * @var float
      */
-    public private(set) float $hue {
+    public float $hue {
         get {
-            if (!isset($this->hue)) {
-                $this->computeHsl();
+            [$min, $max] = $this->minMax();
+            $c = $max - $min;
+
+            // A gray has a hue of 0.
+            if ($c === 0) {
+                return 0.0;
             }
-            return $this->hue;
+
+            $h = match ($max) {
+                $this->red => 60 * ($this->green - $this->blue) / $c,
+                $this->green => 60 * ($this->blue - $this->red) / $c + 120,
+                default => 60 * ($this->red - $this->green) / $c + 240,
+            };
+
+            // Normalize the hue to [0, 360).
+            return Floats::wrap($h, 360, false);
         }
     }
 
     /**
      * Get the saturation of the color as a percentage in the range [0, 100].
      *
-     * Computed from the RGB bytes on first access, along with the other HSL properties, and stored.
+     * Computed from the RGB bytes on each access.
      *
      * @var float
      */
-    public private(set) float $saturation {
+    public float $saturation {
         get {
-            if (!isset($this->saturation)) {
-                $this->computeHsl();
+            [$min, $max] = $this->minMax();
+
+            // A gray has a saturation of 0.
+            if ($max === $min) {
+                return 0.0;
             }
-            return $this->saturation;
+
+            // Chroma divided by 1 - |2L - 1|, with both scaled by 255 so the arithmetic is exact until the division.
+            return 100 * ($max - $min) / (255 - abs($max + $min - 255));
         }
     }
 
     /**
      * Get the lightness of the color as a percentage in the range [0, 100].
      *
-     * Computed from the RGB bytes on first access, along with the other HSL properties, and stored.
+     * Computed from the RGB bytes on each access.
      *
      * @var float
      */
-    public private(set) float $lightness {
+    public float $lightness {
         get {
-            if (!isset($this->lightness)) {
-                $this->computeHsl();
-            }
-            return $this->lightness;
+            [$min, $max] = $this->minMax();
+            return 50 * ($min + $max) / 255;
         }
     }
 
@@ -673,44 +688,8 @@ final class Color implements Stringable
      */
     public static function rgbToHsl(int $red, int $green, int $blue): array
     {
-        // Check the red, green and blue bytes are in range:
-        self::validateByte($red);
-        self::validateByte($green);
-        self::validateByte($blue);
-
-        // Convert to fractions.
-        $r = $red / 255;
-        $g = $green / 255;
-        $b = $blue / 255;
-
-        // Get the min and max values.
-        $min = min($r, $g, $b);
-        $max = max($r, $g, $b);
-        $c = $max - $min;
-        $l = ($min + $max) / 2;
-
-        // Check for gray.
-        if (Floats::approxEqual($c, 0)) {
-            $h = 0.0;
-            $s = 0.0;
-        } else {
-            // Calculate hue and wrap to [0, 360).
-            if ($max === $r) {
-                $h = fmod(($g - $b) / $c, 6);
-            } elseif ($max === $g) {
-                $h = ($b - $r) / $c + 2;
-            } else { // $max === $b
-                $h = ($r - $g) / $c + 4;
-            }
-            $h = self::wrapHue($h * 60);
-
-            // Calculate saturation. Rounding error can push it just past 1, hence the clamp.
-            // Note: $l cannot be 0 or 1 here because that would require $c == 0,
-            // which is handled by the `if` branch above.
-            $s = min($c / (1 - abs(2 * $l - 1)), 1.0);
-        }
-
-        return [$h, $s * 100, $l * 100];
+        $color = new self($red, $green, $blue);
+        return [$color->hue, $color->saturation, $color->lightness];
     }
 
     /**
@@ -727,8 +706,11 @@ final class Color implements Stringable
      */
     public static function hslToRgb(float $hue, float $saturation, float $lightness): array
     {
-        // Normalize the hue angle.
-        $hue = self::wrapHue($hue);
+        // Validate and normalize the hue angle.
+        if (!is_finite($hue)) {
+            throw new DomainException(Stringify::prepEx('Invalid hue: ?. Must be finite.', $hue));
+        }
+        $hue = Floats::wrap($hue, 360, false);
 
         // Validate saturation and lightness, and convert them to fractions.
         self::validatePercent($saturation);
@@ -802,13 +784,13 @@ final class Color implements Stringable
     #region Instance helper methods
 
     /**
-     * Compute the hue, saturation and lightness from the RGB bytes, and store them.
+     * Get the smallest and largest of the RGB bytes.
      *
-     * @return void
+     * @return array{int, int} The minimum and maximum bytes.
      */
-    private function computeHsl(): void
+    private function minMax(): array
     {
-        [$this->hue, $this->saturation, $this->lightness] = self::rgbToHsl($this->red, $this->green, $this->blue);
+        return [min($this->red, $this->green, $this->blue), max($this->red, $this->green, $this->blue)];
     }
 
     #endregion
@@ -963,21 +945,6 @@ final class Color implements Stringable
     private static function percentToByte(float $percent): int
     {
         return (int) round($percent * 255 / 100);
-    }
-
-    /**
-     * Wrap the hue angle to the range [0, 360).
-     *
-     * @param float $hue The hue angle to wrap.
-     * @return float The wrapped hue angle.
-     * @throws DomainException If the hue is not finite.
-     */
-    private static function wrapHue(float $hue): float
-    {
-        if (!is_finite($hue)) {
-            throw new DomainException(Stringify::prepEx('Invalid hue: ?. Must be finite.', $hue));
-        }
-        return Floats::wrap($hue, 360, false);
     }
 
     /**
