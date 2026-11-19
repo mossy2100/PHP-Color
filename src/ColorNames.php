@@ -492,9 +492,7 @@ final class ColorNames
      *
      * @codeCoverageIgnore
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     #endregion
 
@@ -515,9 +513,7 @@ final class ColorNames
      */
     public static function lookupHex(string $name): ?string
     {
-        static $hexByLowerName = self::TRANSPARENT
-            + self::buildNameMap(self::CSS)
-            + self::buildNameMap(self::EXTRA);
+        static $hexByLowerName = self::TRANSPARENT + self::buildNameMap(self::CSS) + self::buildNameMap(self::EXTRA);
 
         // Normalize the name to match the map's keys.
         $key = preg_replace('/[\s_-]+/', '', strtolower($name)) ?? '';

@@ -47,7 +47,7 @@ final class ColorAccessibilityTest extends TestCase
         $this->assertEqualsWithDelta(
             $color1->contrastRatio($color2),
             $color2->contrastRatio($color1),
-            0.001
+            0.001,
         );
     }
 

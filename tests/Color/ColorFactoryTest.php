@@ -570,7 +570,7 @@ final class ColorFactoryTest extends TestCase
                 $color->red * 100 / 255,
                 $color->green * 100 / 255,
                 $color->blue * 100 / 255,
-                $alpha
+                $alpha,
             );
             $this->assertSame($color->toHex(), $hsl->toHex());
             $this->assertSame($color->toHex(), $rgb->toHex());

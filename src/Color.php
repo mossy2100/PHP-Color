@@ -28,7 +28,7 @@ final class Color implements Stringable
      */
     private const float EPSILON = 216 / 24389; // 0.008856451679...
 
-    private const float KAPPA = 24389 / 27;  // 903.296296...
+    private const float KAPPA = 24389 / 27; // 903.296296...
 
     #endregion
 
@@ -217,7 +217,7 @@ final class Color implements Stringable
             self::toByte($red, true),
             self::toByte($green, true),
             self::toByte($blue, true),
-            self::toByte($alpha, true)
+            self::toByte($alpha, true),
         );
     }
 
@@ -260,7 +260,7 @@ final class Color implements Stringable
         } catch (FormatException) {
             throw new FormatException(Stringify::prepEx(
                 'Invalid color string: ?. Must be a color name or hex color string.',
-                $colorString
+                $colorString,
             ));
         }
 
@@ -310,11 +310,8 @@ final class Color implements Stringable
     #[Override]
     public function equal(mixed $other): bool
     {
-        return $other instanceof self
-            && $this->red === $other->red
-            && $this->green === $other->green
-            && $this->blue === $other->blue
-            && $this->alpha === $other->alpha;
+        return $other instanceof self && $this->red === $other->red && $this->green === $other->green
+            && $this->blue === $other->blue && $this->alpha === $other->alpha;
     }
 
     #endregion
@@ -664,7 +661,7 @@ final class Color implements Stringable
     {
         return array_merge(
             $this->toRgbaArray(),
-            $this->toHslArray()
+            $this->toHslArray(),
         );
     }
 
@@ -829,8 +826,8 @@ final class Color implements Stringable
 
         // Divide out the weights to get the blended components.
         $rgb = $alphaSum > 0
-            ? array_map(static fn ($sum) => (int) round($sum / $alphaSum), $premultiplied)
-            : array_map(static fn ($sum) => (int) round($sum / $totalWeight), $plain);
+            ? array_map(static fn($sum) => (int) round($sum / $alphaSum), $premultiplied)
+            : array_map(static fn($sum) => (int) round($sum / $totalWeight), $plain);
         $alpha = (int) round($alphaSum / $totalWeight);
 
         return new self($rgb[0], $rgb[1], $rgb[2], $alpha);
@@ -894,7 +891,7 @@ final class Color implements Stringable
     {
         if (is_nan($percent) || $percent < 0 || $percent > 100) {
             throw new DomainException(
-                Stringify::prepEx('Invalid percentage: ?. Must be in the range [0, 100].', $percent)
+                Stringify::prepEx('Invalid percentage: ?. Must be in the range [0, 100].', $percent),
             );
         }
     }
@@ -917,7 +914,7 @@ final class Color implements Stringable
 
         if (is_nan($value) || $value < 0 || $value > 255) {
             throw new DomainException(
-                Stringify::prepEx('Invalid byte value: ?. Must be in the range [0, 255].', $value)
+                Stringify::prepEx('Invalid byte value: ?. Must be in the range [0, 255].', $value),
             );
         }
         return (int) round($value);
