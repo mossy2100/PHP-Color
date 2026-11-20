@@ -584,7 +584,7 @@ final class Color implements Stringable
         }
 
         // Add a leading '#' if required.
-        return $includeHash ? "#$hex" : $hex;
+        return $includeHash ? "#{$hex}" : $hex;
     }
 
     /**
@@ -598,7 +598,7 @@ final class Color implements Stringable
     public function toRgbString(): string
     {
         $a = self::formatPercent(self::byteToPercent($this->alpha));
-        return "rgb($this->red $this->green $this->blue / $a)";
+        return "rgb({$this->red} {$this->green} {$this->blue} / {$a})";
     }
 
     /**
@@ -613,7 +613,7 @@ final class Color implements Stringable
         $s = self::formatPercent($this->saturation);
         $l = self::formatPercent($this->lightness);
         $a = self::formatPercent(self::byteToPercent($this->alpha));
-        return "hsl($h $s $l / $a)";
+        return "hsl({$h} {$s} {$l} / {$a})";
     }
 
     /**
@@ -751,9 +751,9 @@ final class Color implements Stringable
         }
 
         // Expand string to 8 characters as needed.
-        $rgb = $len === 6 ? $hex : ($hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2]);
-        $a = $len === 4 ? ($hex[3] . $hex[3]) : 'ff';
-        return $rgb . $a;
+        $rgb = $len === 6 ? $hex : "{$hex[0]}{$hex[0]}{$hex[1]}{$hex[1]}{$hex[2]}{$hex[2]}";
+        $a = $len === 4 ? "{$hex[3]}{$hex[3]}" : 'ff';
+        return "{$rgb}{$a}";
     }
 
     /**
@@ -876,7 +876,7 @@ final class Color implements Stringable
     private static function validateByte(int $byte): void
     {
         if ($byte < 0 || $byte > 255) {
-            throw new DomainException("Invalid byte value: $byte. Must be in the range [0, 255].");
+            throw new DomainException("Invalid byte value: {$byte}. Must be in the range [0, 255].");
         }
     }
 

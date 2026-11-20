@@ -117,7 +117,7 @@ final class ColorNamesTest extends TestCase
     public function testLookupHexEveryName(): void
     {
         foreach (ColorNames::CSS + ColorNames::EXTRA as $name => $hex) {
-            $this->assertSame($hex . 'ff', ColorNames::lookupHex($name));
+            $this->assertSame("{$hex}ff", ColorNames::lookupHex($name));
         }
     }
 

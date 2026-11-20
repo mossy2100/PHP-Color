@@ -553,7 +553,7 @@ final class ColorNames
     {
         $map = [];
         foreach ($colors as $name => $hex) {
-            $map[strtolower($name)] = $hex . 'ff';
+            $map[strtolower($name)] = "{$hex}ff";
         }
         return $map;
     }
